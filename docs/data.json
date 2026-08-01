@@ -657,7 +657,9 @@
         "bosch-bmp280",
         "m5-env3"
       ],
-      "image": "assets/parts/bosch-bme280.svg",
+      "image": "assets/parts/bosch-bme280.png",
+      "image_source": "vendor",
+      "image_source_url": "https://www.adafruit.com/product/2652",
       "use_cases": [
         "room T/RH/pressure",
         "VPD calculation input"
@@ -668,7 +670,8 @@
         "pressure",
         "i2c",
         "budget"
-      ]
+      ],
+      "image_large": "assets/parts/bosch-bme280-lg.png"
     },
     {
       "id": "bosch-bme680",
@@ -747,7 +750,9 @@
         "sensirion-sen55",
         "bosch-bme280"
       ],
-      "image": "assets/parts/bosch-bme680.svg",
+      "image": "assets/parts/bosch-bme680.png",
+      "image_source": "vendor",
+      "image_source_url": "https://www.adafruit.com/product/3660",
       "use_cases": [
         "room T/RH/pressure",
         "VOC trend tracking"
@@ -759,7 +764,8 @@
         "humidity",
         "i2c",
         "drying"
-      ]
+      ],
+      "image_large": "assets/parts/bosch-bme680-lg.png"
     },
     {
       "id": "bosch-bmp280",
@@ -832,7 +838,9 @@
         "bosch-bme280",
         "m5-env3"
       ],
-      "image": "assets/parts/bosch-bmp280.svg",
+      "image": "assets/parts/bosch-bmp280.png",
+      "image_source": "vendor",
+      "image_source_url": "https://www.adafruit.com/product/2651",
       "use_cases": [
         "barometric pressure for altitude compensation"
       ],
@@ -840,7 +848,8 @@
         "pressure",
         "i2c",
         "budget"
-      ]
+      ],
+      "image_large": "assets/parts/bosch-bmp280-lg.png"
     },
     {
       "id": "chill-division-sdi12",
@@ -1810,7 +1819,9 @@
       "alternatives": [
         "solenoid-valve-24vac"
       ],
-      "image": "assets/parts/hunter-pgv-solenoid.svg",
+      "image": "assets/parts/hunter-pgv-solenoid.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://www.hunterirrigation.com/irrigation-product/valves/1-12-and-2-pgv",
       "use_cases": [
         "irrigation zone valve",
         "shot-based fertigation"
@@ -1821,7 +1832,8 @@
         "irrigation",
         "24vac",
         "zone"
-      ]
+      ],
+      "image_large": "assets/parts/hunter-pgv-solenoid-lg.png"
     },
     {
       "id": "hx711-adc",
@@ -3129,7 +3141,9 @@
         "chill-division-sdi12",
         "thc-s-rs485"
       ],
-      "image": "assets/parts/meter-teros12.svg",
+      "image": "assets/parts/meter-teros12.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://metergroup.com/products/teros-12/",
       "use_cases": [
         "substrate dryback tracking",
         "pore-water EC monitoring",
@@ -3163,7 +3177,8 @@
         "sdi12",
         "crop-steering",
         "field-proven"
-      ]
+      ],
+      "image_large": "assets/parts/meter-teros12-lg.png"
     },
     {
       "id": "mfrc522-rfid",
@@ -3695,7 +3710,9 @@
         "amiad-screen-filter",
         "meter-teros12"
       ],
-      "image": "assets/parts/netafim-pcj-dripper.svg",
+      "image": "assets/parts/netafim-pcj-dripper.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://www.netafim.com/en/products-and-solutions/product-offering/drip-irrigation-products/pcj-online-dripper/",
       "use_cases": [
         "even per-plant delivery",
         "pressure-compensated fertigation"
@@ -3705,7 +3722,8 @@
         "emitter",
         "irrigation",
         "pressure-compensating"
-      ]
+      ],
+      "image_large": "assets/parts/netafim-pcj-dripper-lg.png"
     },
     {
       "id": "pcf8563-rtc",
@@ -4252,7 +4270,9 @@
         "netafim-pcj-dripper",
         "pressure-reducing-valve"
       ],
-      "image": "assets/parts/senninger-pressure-regulator.svg",
+      "image": "assets/parts/senninger-pressure-regulator.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://agriculture.hunterirrigation.com/irrigation-product/prl",
       "use_cases": [
         "per-zone pressure regulation",
         "independent simultaneous zones"
@@ -4262,7 +4282,8 @@
         "regulator",
         "irrigation",
         "zone"
-      ]
+      ],
+      "image_large": "assets/parts/senninger-pressure-regulator-lg.png"
     },
     {
       "id": "sensirion-scd30",

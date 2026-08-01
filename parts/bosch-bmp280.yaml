@@ -54,7 +54,9 @@ alternatives:
   - m5-env3
 use_cases:
 - barometric pressure for altitude compensation
-image: assets/parts/bosch-bmp280.svg
+image: assets/parts/bosch-bmp280.png
+image_source_url: https://www.adafruit.com/product/2651
+image_source: vendor
 tags:
   - pressure
   - i2c

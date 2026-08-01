@@ -60,14 +60,19 @@ parts:
     page: https://shop.m5stack.com/products/env-iii-unit-with-temperature-humidity-air-pressure-sensor-sht30-qmp6988
     source: vendor
   bosch-bme280:
-    page: https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/
-    source: manufacturer
+    # Bosch Sensortec no longer publishes per-product pages, only PDFs, so this
+    # falls back to the vendor breakout - which is the form most people buy.
+    page: https://www.adafruit.com/product/2652
+    match: '2652'
+    source: vendor
   bosch-bme680:
-    page: https://www.bosch-sensortec.com/products/environmental-sensors/gas-sensors/bme680/
-    source: manufacturer
+    page: https://www.adafruit.com/product/3660
+    match: '3660'
+    source: vendor
   bosch-bmp280:
-    page: https://www.bosch-sensortec.com/products/environmental-sensors/pressure-sensors/bmp280/
-    source: manufacturer
+    page: https://www.adafruit.com/product/2651
+    match: '2651'
+    source: vendor
 
   # ── Substrate sensing ───────────────────────────────────────────────
   meter-teros12:
@@ -179,10 +184,10 @@ parts:
     direct: https://www.hunterirrigation.com/sites/default/files/styles/related_products/public/2023/06/27/pd-valves_pgv101_0.jpg?itok=rziv87rw
     source: manufacturer
   amiad-screen-filter:
-    page: https://www.amiad.com/productPage.asp?id=61
+    page: https://www.amiad.com/product/tagline/
     source: manufacturer
   netafim-pcj-dripper:
-    page: https://www.netafim.com/en/products/dripper/pcj/
+    page: https://www.netafim.com/en/products-and-solutions/product-offering/drip-irrigation-products/pcj-online-dripper/
     source: manufacturer
   senninger-pressure-regulator:
     page: https://www.senninger.com/product/prv-pressure-regulator

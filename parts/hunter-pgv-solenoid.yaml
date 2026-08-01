@@ -74,7 +74,11 @@ alternatives:
 use_cases:
 - irrigation zone valve
 - "shot-based fertigation"
-image: assets/parts/hunter-pgv-solenoid.svg
+image: assets/parts/hunter-pgv-solenoid.png
+image_source: manufacturer
+image_source_url: https://www.hunterirrigation.com/irrigation-product/valves/1-12-and-2-pgv
+image_credit: >-
+  Hunter PGV-101-ASV shown (PGV valve with an Accu-Sync regulator fitted). This entry is the plain PGV-101; the valve body is the same.
 tags:
 - solenoid
 - valve

@@ -62,7 +62,9 @@ works_with:
 use_cases:
 - "even per-plant delivery"
 - "pressure-compensated fertigation"
-image: assets/parts/netafim-pcj-dripper.svg
+image: assets/parts/netafim-pcj-dripper.png
+image_source_url: https://www.netafim.com/en/products-and-solutions/product-offering/drip-irrigation-products/pcj-online-dripper/
+image_source: manufacturer
 tags:
 - dripper
 - emitter

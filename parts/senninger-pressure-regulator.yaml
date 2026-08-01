@@ -47,7 +47,12 @@ works_with:
 use_cases:
 - "per-zone pressure regulation"
 - independent simultaneous zones
-image: assets/parts/senninger-pressure-regulator.svg
+image: assets/parts/senninger-pressure-regulator.png
+image_source: manufacturer
+image_source_url: https://agriculture.hunterirrigation.com/irrigation-product/prl
+image_credit: >-
+  Senninger PRL low-flow inline regulator, shown marked 10 PSI. This entry is the
+  20 psi variant - same body, different preset.
 tags:
 - pressure
 - regulator

@@ -62,7 +62,9 @@ alternatives:
 use_cases:
 - room T/RH/pressure
 - VOC trend tracking
-image: assets/parts/bosch-bme680.svg
+image: assets/parts/bosch-bme680.png
+image_source_url: https://www.adafruit.com/product/3660
+image_source: vendor
 tags:
   - voc
   - gas

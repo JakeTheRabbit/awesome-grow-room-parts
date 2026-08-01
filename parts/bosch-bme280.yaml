@@ -62,7 +62,9 @@ alternatives:
 use_cases:
 - room T/RH/pressure
 - VPD calculation input
-image: assets/parts/bosch-bme280.svg
+image: assets/parts/bosch-bme280.png
+image_source_url: https://www.adafruit.com/product/2652
+image_source: vendor
 tags:
   - temperature
   - humidity
