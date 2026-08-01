@@ -53,7 +53,9 @@ platforms:
   - Arduino
 alternatives:
   - atlas-ezo-ph
-image: assets/parts/dfrobot-gravity-orp.svg
+image: assets/parts/dfrobot-gravity-orp.png
+image_source_url: https://www.dfrobot.com/product-1071.html
+image_source: manufacturer
 tags:
   - orp
   - fertigation

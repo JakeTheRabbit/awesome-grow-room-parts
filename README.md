@@ -309,6 +309,27 @@ Documented dead ends. Listed so nobody repeats the work.
   truth — a part that failed here may work fine in your conditions, and vice
   versa. Contributions that contradict the seed data with evidence are welcome.
 
+## Product images
+
+Thumbnails are **self-hosted**, never hotlinked — a vendor reorganising their CDN
+must not break the catalogue. Each image is downloaded, normalised to a square
+white-backed PNG at two sizes, and committed.
+
+Product images remain **the property of their respective manufacturers and
+vendors**, and are reproduced here for the sole purpose of identifying the part
+being catalogued. Every image records `image_source` and `image_source_url` in
+its part file, so the origin of any picture is traceable in one step.
+
+Preference order when sourcing: the manufacturer's own product page or press
+kit, then a vendor listing, then nothing. Where no usable image is found the
+entry keeps a generated placeholder — a truthful placeholder beats a wrong or
+misleading picture.
+
+**Takedown:** if you hold rights to an image here and would like it removed,
+open an issue on this repository, or contact the maintainer through the GitHub
+profile linked from it. Images are removed on request, no argument — the entry
+falls back to a generated placeholder and nothing else about it changes.
+
 ## Licence
 
 Catalogue data and documentation: [CC BY 4.0](LICENSE).

@@ -69,7 +69,9 @@ works_with:
 - m5stack-atom-lite
 alternatives:
 - atlas-ezo-rtd
-image: assets/parts/ds18b20.svg
+image: assets/parts/ds18b20.png
+image_source_url: https://www.adafruit.com/product/381
+image_source: vendor
 example:
   lang: yaml
   title: DS18B20 water temperature (modern one_wire component)

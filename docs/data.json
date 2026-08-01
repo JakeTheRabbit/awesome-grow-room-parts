@@ -150,7 +150,7 @@
         "bh1750",
         "cwt-ps-par"
       ],
-      "image": "assets/parts/as7341.svg",
+      "image": "assets/parts/as7341.png",
       "example": {
         "lang": "yaml",
         "title": "AS7341 with gain and integration pinned",
@@ -241,7 +241,7 @@
       "alternatives": [
         "cwt-bl-ec-4400"
       ],
-      "image": "assets/parts/atlas-ezo-ec.svg",
+      "image": "assets/parts/atlas-ezo-ec.png",
       "tags": [
         "ec",
         "fertigation",
@@ -343,7 +343,7 @@
       "alternatives": [
         "cwt-bl-ec-4400"
       ],
-      "image": "assets/parts/atlas-ezo-ph.svg",
+      "image": "assets/parts/atlas-ezo-ph.png",
       "example": {
         "lang": "yaml",
         "title": "EZO-pH on I2C with temperature compensation",
@@ -432,7 +432,7 @@
       "alternatives": [
         "ds18b20"
       ],
-      "image": "assets/parts/atlas-ezo-rtd.svg",
+      "image": "assets/parts/atlas-ezo-rtd.png",
       "tags": [
         "temperature",
         "fertigation",
@@ -524,7 +524,7 @@
         "as7341",
         "cwt-ps-par"
       ],
-      "image": "assets/parts/bh1750.svg",
+      "image": "assets/parts/bh1750.png",
       "example": {
         "lang": "yaml",
         "title": "BH1750 as a photoperiod / driver-failure check",
@@ -1312,7 +1312,7 @@
       "alternatives": [
         "atlas-ezo-ph"
       ],
-      "image": "assets/parts/dfrobot-gravity-orp.svg",
+      "image": "assets/parts/dfrobot-gravity-orp.png",
       "tags": [
         "orp",
         "fertigation",
@@ -1397,7 +1397,7 @@
       "alternatives": [
         "atlas-ezo-rtd"
       ],
-      "image": "assets/parts/ds18b20.svg",
+      "image": "assets/parts/ds18b20.png",
       "example": {
         "lang": "yaml",
         "title": "DS18B20 water temperature (modern one_wire component)",
@@ -1790,7 +1790,7 @@
         "load-cell-50kg",
         "m5stack-dial"
       ],
-      "image": "assets/parts/hx711-adc.svg",
+      "image": "assets/parts/hx711-adc.png",
       "example": {
         "lang": "yaml",
         "title": "HX711 CO2 cylinder scale",
@@ -2148,7 +2148,7 @@
         "sensirion-sht30",
         "bosch-bme280"
       ],
-      "image": "assets/parts/m5-env3.svg",
+      "image": "assets/parts/m5-env3.png",
       "example": {
         "lang": "yaml",
         "title": "ENV III - SHT30 + QMP6988 on one Grove port",
@@ -2241,7 +2241,7 @@
         "m5stack-4relay",
         "ssr-25da"
       ],
-      "image": "assets/parts/m5stack-2ch-relay.svg",
+      "image": "assets/parts/m5stack-2ch-relay.png",
       "tags": [
         "relay",
         "i2c",
@@ -2335,7 +2335,7 @@
       "alternatives": [
         "ssr-25da"
       ],
-      "image": "assets/parts/m5stack-4relay.svg",
+      "image": "assets/parts/m5stack-4relay.png",
       "example": {
         "lang": "yaml",
         "title": "4-Relay with the full flood-safety pattern",
@@ -2544,7 +2544,7 @@
         "m5stack-atoms3-lite",
         "m5stack-poesp32"
       ],
-      "image": "assets/parts/m5stack-atom-lite.svg",
+      "image": "assets/parts/m5stack-atom-lite.png",
       "tags": [
         "esp32",
         "wifi",
@@ -2636,7 +2636,7 @@
       "alternatives": [
         "m5stack-atom-lite"
       ],
-      "image": "assets/parts/m5stack-atoms3-lite.svg",
+      "image": "assets/parts/m5stack-atoms3-lite.png",
       "tags": [
         "esp32s3",
         "wifi",
@@ -2724,7 +2724,7 @@
         "mfrc522-rfid",
         "meter-teros12"
       ],
-      "image": "assets/parts/m5stack-dial.svg",
+      "image": "assets/parts/m5stack-dial.png",
       "tags": [
         "display",
         "hmi",
@@ -3168,7 +3168,7 @@
       "alternatives": [
         "mlx90640-thermal"
       ],
-      "image": "assets/parts/mlx90614-ncir.svg",
+      "image": "assets/parts/mlx90614-ncir.png",
       "tags": [
         "thermal",
         "leaf-temperature",
@@ -3270,7 +3270,7 @@
         "m5stack-poesp32",
         "tca9548a-mux"
       ],
-      "image": "assets/parts/mlx90640-thermal.svg",
+      "image": "assets/parts/mlx90640-thermal.png",
       "example": {
         "lang": "yaml",
         "title": "MLX90640 tuned for canopy leaf temperature",
@@ -4090,7 +4090,7 @@
         "sensirion-scd41",
         "sensirion-scd40"
       ],
-      "image": "assets/parts/sensirion-scd30.svg",
+      "image": "assets/parts/sensirion-scd30.png",
       "tags": [
         "co2",
         "ndir",
@@ -4171,7 +4171,7 @@
         "sensirion-scd41",
         "sensirion-scd30"
       ],
-      "image": "assets/parts/sensirion-scd40.svg",
+      "image": "assets/parts/sensirion-scd40.png",
       "tags": [
         "co2",
         "ndir",
@@ -4296,7 +4296,7 @@
         "sensirion-scd40",
         "sensirion-scd30"
       ],
-      "image": "assets/parts/sensirion-scd41.svg",
+      "image": "assets/parts/sensirion-scd41.png",
       "example": {
         "lang": "yaml",
         "title": "SCD41 with the range clamp used on all 29 deployments",
@@ -4407,7 +4407,7 @@
         "sensirion-scd41",
         "m5stack-poesp32"
       ],
-      "image": "assets/parts/sensirion-sen55.svg",
+      "image": "assets/parts/sensirion-sen55.png",
       "example": {
         "lang": "yaml",
         "title": "SEN55 with the deployed VOC/NOx tuning",
@@ -4508,7 +4508,7 @@
         "bosch-bme280",
         "m5-env3"
       ],
-      "image": "assets/parts/sensirion-sht30.svg",
+      "image": "assets/parts/sensirion-sht30.png",
       "tags": [
         "temperature",
         "humidity",
@@ -4592,7 +4592,7 @@
         "sensirion-sht30",
         "m5-env3"
       ],
-      "image": "assets/parts/sensirion-sht40.svg",
+      "image": "assets/parts/sensirion-sht40.png",
       "tags": [
         "temperature",
         "humidity",
@@ -5067,7 +5067,7 @@
         "mlx90640-thermal",
         "mfrc522-rfid"
       ],
-      "image": "assets/parts/tca9548a-mux.svg",
+      "image": "assets/parts/tca9548a-mux.png",
       "example": {
         "lang": "yaml",
         "title": "Two SCD4x on one bus via a mux (moved off 0x70)",

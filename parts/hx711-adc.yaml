@@ -55,7 +55,9 @@ platforms:
 works_with:
   - load-cell-50kg
   - m5stack-dial
-image: assets/parts/hx711-adc.svg
+image: assets/parts/hx711-adc.png
+image_source_url: https://www.sparkfun.com/products/13879
+image_source: vendor
 tags:
   - load-cell
   - co2-cylinder

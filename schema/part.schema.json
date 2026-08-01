@@ -240,6 +240,44 @@
       "description": "Repo-relative, self-hosted. Never hotlink a marketplace image - they rot. A generated placeholder is fine."
     },
     "image_credit": { "type": "string", "maxLength": 200 },
+    "image_source": {
+      "type": "string",
+      "enum": ["manufacturer", "vendor", "press-kit", "own-photo", "generated-placeholder"],
+      "description": "Where the thumbnail came from. 'generated-placeholder' means scripts/gen_thumbnails.py drew it and no real photograph was found - that is honest, not a failure."
+    },
+    "image_source_url": {
+      "type": "string",
+      "pattern": "^https?://",
+      "description": "The page the image was taken from, so provenance stays traceable and a takedown request can be honoured."
+    },
+    "use_cases": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 8,
+      "items": { "type": "string", "minLength": 4, "maxLength": 120 },
+      "description": "What the part is actually FOR in a grow room, phrased concretely - 'substrate dryback tracking', 'CO2 injection interlock', 'leaf surface temperature for VPD accuracy'. For a deployed part, describe how it is genuinely wired and used, not what the datasheet blurb claims."
+    },
+    "accuracy": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["metric", "spec"],
+        "properties": {
+          "metric": { "type": "string", "maxLength": 60 },
+          "spec": { "type": "string", "maxLength": 160, "description": "The manufacturer's stated figure, copied - never rounded, never inferred." },
+          "conditions": { "type": "string", "maxLength": 200, "description": "The range or conditions the figure is specified over. Omitting these can make a spec look better than it is." },
+          "range": { "type": "string", "maxLength": 120 }
+        }
+      },
+      "description": "Manufacturer-stated accuracy, sourced from the datasheet named in `datasheet_url` - never estimated, inferred or rounded. Absent is correct for parts where accuracy is not a meaningful concept (relays, fittings, pipe); filler text is not."
+    },
+    "datasheet_url": {
+      "type": "string",
+      "pattern": "^https?://",
+      "description": "The manufacturer datasheet backing `accuracy`. Required whenever `accuracy` is present."
+    },
     "example": {
       "type": "object",
       "additionalProperties": false,
@@ -259,6 +297,11 @@
     }
   },
   "allOf": [
+    {
+      "comment": "An accuracy figure with no datasheet behind it is exactly the unsourced claim this catalogue exists to avoid.",
+      "if": { "required": ["accuracy"] },
+      "then": { "required": ["datasheet_url"] }
+    },
     {
       "if": {
         "properties": { "quality_tier": { "const": "field-proven" } },

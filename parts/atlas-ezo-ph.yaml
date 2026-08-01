@@ -74,7 +74,9 @@ works_with:
   - peristaltic-pump-doser
 alternatives:
   - cwt-bl-ec-4400
-image: assets/parts/atlas-ezo-ph.svg
+image: assets/parts/atlas-ezo-ph.png
+image_source_url: https://atlas-scientific.com/embedded-solutions/ezo-ph-circuit/
+image_source: manufacturer
 tags:
   - ph
   - fertigation

@@ -78,7 +78,9 @@ works_with:
 - tca9548a-mux
 alternatives:
 - ssr-25da
-image: assets/parts/m5stack-4relay.svg
+image: assets/parts/m5stack-4relay.png
+image_source_url: https://shop.m5stack.com/products/4-relay-unit
+image_source: vendor
 example:
   lang: yaml
   title: 4-Relay with the full flood-safety pattern

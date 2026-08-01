@@ -64,7 +64,9 @@ alternatives:
   - sensirion-sht40
   - bosch-bme280
   - m5-env3
-image: assets/parts/sensirion-sht30.svg
+image: assets/parts/sensirion-sht30.png
+image_source_url: https://sensirion.com/products/catalog/SHT30-DIS-B
+image_source: manufacturer
 tags:
   - temperature
   - humidity

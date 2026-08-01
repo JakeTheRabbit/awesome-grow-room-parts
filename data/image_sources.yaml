@@ -1,0 +1,176 @@
+# Where each part's product image comes from.
+#
+# Images are DOWNLOADED and self-hosted (see scripts/fetch_images.py), never
+# hotlinked - a vendor reorganising their CDN must not break the catalogue.
+#
+# Preference order:
+#   1. the manufacturer's own product page / press kit
+#   2. a vendor listing, only where the manufacturer publishes no usable image
+#   3. nothing - keep the generated placeholder. A truthful placeholder beats a
+#      wrong or misleading picture.
+#
+# Product images remain the property of their respective manufacturers and are
+# used here for identification only. See the licence note in README.md.
+#
+# Fields per entry:
+#   page   - the page to scrape for an image (also recorded as provenance)
+#   direct - a direct image URL, when the page scrape picks the wrong thing
+#   match  - regex to prefer among the candidates found on the page
+#   source - manufacturer | vendor | press-kit | own-photo
+
+parts:
+  # ── Air quality & CO2 ───────────────────────────────────────────────
+  sensirion-scd41:
+    page: https://sensirion.com/products/catalog/SCD41
+    source: manufacturer
+  sensirion-scd40:
+    page: https://sensirion.com/products/catalog/SCD40
+    source: manufacturer
+  sensirion-scd30:
+    page: https://sensirion.com/products/catalog/SCD30
+    source: manufacturer
+  sensirion-sen55:
+    page: https://sensirion.com/products/catalog/SEN55
+    source: manufacturer
+  sensirion-sht30:
+    page: https://sensirion.com/products/catalog/SHT30-DIS-B
+    source: manufacturer
+  sensirion-sht40:
+    page: https://sensirion.com/products/catalog/SHT40
+    source: manufacturer
+  m5stack-airq:
+    page: https://shop.m5stack.com/products/m5stack-airq-air-quality-kit-w-m5stamps3
+    source: vendor
+  m5-env3:
+    page: https://shop.m5stack.com/products/env-iii-unit-with-temperature-humidity-air-pressure-sensor-sht30-qmp6988
+    source: vendor
+  bosch-bme280:
+    page: https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/
+    source: manufacturer
+  bosch-bme680:
+    page: https://www.bosch-sensortec.com/products/environmental-sensors/gas-sensors/bme680/
+    source: manufacturer
+  bosch-bmp280:
+    page: https://www.bosch-sensortec.com/products/environmental-sensors/pressure-sensors/bmp280/
+    source: manufacturer
+
+  # ── Substrate sensing ───────────────────────────────────────────────
+  meter-teros12:
+    page: https://metergroup.com/products/teros-12/
+    source: manufacturer
+  growlink-terralink:
+    page: https://www.growlink.com/terralink
+    source: manufacturer
+  chill-division-sdi12:
+    page: https://github.com/Chill-Division/sdi12-substrate-sensor
+    source: manufacturer
+
+  # ── Thermal & optical ───────────────────────────────────────────────
+  mlx90640-thermal:
+    page: https://www.adafruit.com/product/4407
+    match: '4407'
+    source: vendor
+  mlx90614-ncir:
+    page: https://www.adafruit.com/product/1747
+    match: '1747'
+    source: vendor
+
+  # ── Light measurement ───────────────────────────────────────────────
+  bh1750:
+    page: https://www.adafruit.com/product/4681
+    match: '4681'
+    source: vendor
+  as7341:
+    page: https://www.adafruit.com/product/4698
+    match: '4698'
+    source: vendor
+
+  # ── Controllers & boards ────────────────────────────────────────────
+  m5stack-atom-lite:
+    page: https://shop.m5stack.com/products/atom-lite-esp32-development-kit
+    source: vendor
+  m5stack-atoms3-lite:
+    page: https://shop.m5stack.com/products/atoms3-lite-esp32s3-dev-kit
+    source: vendor
+  m5stack-dial:
+    page: https://shop.m5stack.com/products/m5stack-dial-esp32-s3-smart-rotary-knob-w-1-28-round-touch-screen
+    source: vendor
+  m5stack-poesp32:
+    page: https://shop.m5stack.com/products/atom-poe-kit-with-w5500-hy601742e
+    source: vendor
+  wt32-eth01:
+    page: https://www.wireless-tag.com/portfolio/wt32-eth01/
+    source: manufacturer
+  w5500-eth-module:
+    page: https://www.wiznet.io/product-item/w5500/
+    source: manufacturer
+
+  # ── Actuation & relays ──────────────────────────────────────────────
+  m5stack-4relay:
+    page: https://shop.m5stack.com/products/4-relay-unit
+    source: vendor
+  m5stack-2ch-relay:
+    page: https://shop.m5stack.com/products/2-channel-spst-relay-unit
+    source: vendor
+  kincony-f16-relay:
+    page: https://www.kincony.com/esp32-16-channel-relay-module-kc868-a16.html
+    source: manufacturer
+
+  # ── Access control & presence ───────────────────────────────────────
+  mfrc522-rfid:
+    page: https://www.adafruit.com/product/364
+    match: '364'
+    source: vendor
+
+  # ── Bus infrastructure ──────────────────────────────────────────────
+  tca9548a-mux:
+    page: https://www.adafruit.com/product/2717
+    match: '2717'
+    source: vendor
+  pcf8563-rtc:
+    page: https://www.adafruit.com/product/3295
+    match: '3295'
+    source: vendor
+
+  # ── Water & fertigation ─────────────────────────────────────────────
+  atlas-ezo-ph:
+    page: https://atlas-scientific.com/embedded-solutions/ezo-ph-circuit/
+    source: manufacturer
+  atlas-ezo-ec:
+    page: https://atlas-scientific.com/embedded-solutions/ezo-conductivity-circuit/
+    source: manufacturer
+  atlas-ezo-rtd:
+    page: https://atlas-scientific.com/embedded-solutions/ezo-rtd-temperature-circuit/
+    source: manufacturer
+  dfrobot-gravity-orp:
+    page: https://www.dfrobot.com/product-1071.html
+    source: manufacturer
+  hx711-adc:
+    page: https://www.sparkfun.com/products/13879
+    source: vendor
+  ds18b20:
+    page: https://www.adafruit.com/product/381
+    match: '381'
+    source: vendor
+  tygon-chemical-tubing:
+    page: https://www.processsystems.saint-gobain.com/tygon-a-60-g
+    source: manufacturer
+
+  # ── Irrigation hardware ─────────────────────────────────────────────
+  hunter-pgv-solenoid:
+    page: https://www.hunterindustries.com/irrigation-product/valves/pgv
+    source: manufacturer
+  amiad-screen-filter:
+    page: https://www.amiad.com/productPage.asp?id=61
+    source: manufacturer
+  netafim-pcj-dripper:
+    page: https://www.netafim.com/en/products/dripper/pcj/
+    source: manufacturer
+  senninger-pressure-regulator:
+    page: https://www.senninger.com/product/prv-pressure-regulator
+    source: manufacturer
+
+  # ── Energy monitoring ───────────────────────────────────────────────
+  shelly-pro-3em:
+    page: https://www.shelly.com/products/shelly-pro-3em-120a
+    source: manufacturer

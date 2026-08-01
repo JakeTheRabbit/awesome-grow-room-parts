@@ -70,7 +70,9 @@ works_with:
 alternatives:
 - bh1750
 - cwt-ps-par
-image: assets/parts/as7341.svg
+image: assets/parts/as7341.png
+image_source_url: https://www.adafruit.com/product/4698
+image_source: vendor
 example:
   lang: yaml
   title: AS7341 with gain and integration pinned

@@ -83,7 +83,9 @@ platforms:
 works_with:
 - m5stack-poesp32
 - tca9548a-mux
-image: assets/parts/mlx90640-thermal.svg
+image: assets/parts/mlx90640-thermal.png
+image_source_url: https://www.adafruit.com/product/4407
+image_source: vendor
 example:
   lang: yaml
   title: MLX90640 tuned for canopy leaf temperature

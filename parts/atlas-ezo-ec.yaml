@@ -59,7 +59,9 @@ works_with:
   - atlas-ezo-rtd
 alternatives:
   - cwt-bl-ec-4400
-image: assets/parts/atlas-ezo-ec.svg
+image: assets/parts/atlas-ezo-ec.png
+image_source_url: https://atlas-scientific.com/embedded-solutions/ezo-conductivity-circuit/
+image_source: manufacturer
 tags:
   - ec
   - fertigation

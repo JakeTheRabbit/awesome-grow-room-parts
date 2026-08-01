@@ -74,7 +74,9 @@ works_with:
   - m5stack-airq
   - sensirion-scd41
   - m5stack-poesp32
-image: assets/parts/sensirion-sen55.svg
+image: assets/parts/sensirion-sen55.png
+image_source_url: https://sensirion.com/products/catalog/SEN55
+image_source: manufacturer
 tags:
   - pm25
   - voc

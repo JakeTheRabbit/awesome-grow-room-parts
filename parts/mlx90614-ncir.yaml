@@ -76,7 +76,9 @@ works_with:
 - tca9548a-mux
 alternatives:
 - mlx90640-thermal
-image: assets/parts/mlx90614-ncir.svg
+image: assets/parts/mlx90614-ncir.png
+image_source_url: https://www.adafruit.com/product/1747
+image_source: vendor
 tags:
 - thermal
 - leaf-temperature

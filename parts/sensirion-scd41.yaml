@@ -95,7 +95,9 @@ works_with:
 alternatives:
   - sensirion-scd40
   - sensirion-scd30
-image: assets/parts/sensirion-scd41.svg
+image: assets/parts/sensirion-scd41.png
+image_source_url: https://sensirion.com/products/catalog/SCD41
+image_source: manufacturer
 tags:
   - co2
   - ndir

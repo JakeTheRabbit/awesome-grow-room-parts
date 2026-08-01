@@ -56,7 +56,9 @@ works_with:
   - atlas-ezo-ec
 alternatives:
   - ds18b20
-image: assets/parts/atlas-ezo-rtd.svg
+image: assets/parts/atlas-ezo-rtd.png
+image_source_url: https://atlas-scientific.com/embedded-solutions/ezo-rtd-temperature-circuit/
+image_source: manufacturer
 tags:
   - temperature
   - fertigation
