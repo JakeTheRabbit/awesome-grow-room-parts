@@ -17,6 +17,21 @@
 #   direct - a direct image URL, when the page scrape picks the wrong thing
 #   match  - regex to prefer among the candidates found on the page
 #   source - manufacturer | vendor | press-kit | own-photo
+#
+# BLOCKED SOURCES
+# Some manufacturers reject automated requests outright. Verified 2026-08-02:
+#   403 bot-protected: hunterirrigation.com, senninger.com, metergroup.com,
+#                      melexis.com, shelly.com
+#   404/500 on the URLs tried: bosch-sensortec.com, netafim.com, amiad.com,
+#                      growlink.com, kincony.com, wiznet.io
+# Adding a Referer and a browser User-Agent does NOT get past the first group -
+# they fingerprint the client, not the headers.
+#
+# The route that does work: open the product page in a real browser, fetch the
+# image from within the page context (same-origin, so it is permitted), read it
+# back as a base64 data URL and write it out at the two sizes. That is manual
+# per image, which is why these entries still show placeholders rather than
+# being quietly filled with something approximate.
 
 parts:
   # ── Air quality & CO2 ───────────────────────────────────────────────
@@ -158,7 +173,10 @@ parts:
 
   # ── Irrigation hardware ─────────────────────────────────────────────
   hunter-pgv-solenoid:
-    page: https://www.hunterindustries.com/irrigation-product/valves/pgv
+    # The PGV landing page redirects to the 1.5"/2" models; this is the 1" PGV-101
+    # studio shot, which is the model this entry is actually about.
+    page: https://www.hunterirrigation.com/irrigation-product/valves/1-12-and-2-pgv
+    direct: https://www.hunterirrigation.com/sites/default/files/styles/related_products/public/2023/06/27/pd-valves_pgv101_0.jpg?itok=rziv87rw
     source: manufacturer
   amiad-screen-filter:
     page: https://www.amiad.com/productPage.asp?id=61
