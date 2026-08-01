@@ -120,6 +120,11 @@ code,.mono{font-family:var(--mono);font-size:11.5px}
 .chipmini{display:inline-block;padding:0 5px;border-radius:9px;background:var(--raised);
   border:1px solid var(--line);color:var(--dim);font-size:10.5px;margin-right:3px}
 .empty-cell{color:var(--quiet)}
+/* Derived (converted) money is visually demoted so it never reads as a price
+   anyone actually quoted. The ~ is part of the rendered text, not decoration. */
+.derived{color:var(--quiet);font-style:italic;cursor:help}
+#fxnote{color:var(--quiet)}
+#fxnote code{color:var(--dim)}
 
 /* inline detail drawer */
 tr.drawer>td{padding:0;max-width:none;white-space:normal;background:var(--surface);
@@ -235,6 +240,11 @@ tr.collide td{background:rgba(176,74,74,.13)}
     <div class="pop hidden" id="facetPop"></div></div>
   <div class="ctl"><button class="btn" id="colBtn" aria-expanded="false">Columns &#9662;</button>
     <div class="pop right hidden" id="colPop"></div></div>
+  <div class="seg" id="currency" title="Display currency. Secondary figures are derived, not quoted.">
+    <button data-c="NZD" aria-pressed="true">NZ$</button>
+    <button data-c="USD" aria-pressed="false">US$</button>
+    <button data-c="both" aria-pressed="false">Both</button>
+  </div>
   <div class="seg" id="view">
     <button data-v="table" aria-pressed="true">Table</button>
     <button data-v="cards" aria-pressed="false">Cards</button>
@@ -244,6 +254,7 @@ tr.collide td{background:rgba(176,74,74,.13)}
 <div class="statusrow" id="statusrow">
   <span><b id="count">0</b> parts</span>
   <button class="linkish hidden" id="clear">Clear filters</button>
+  <span id="fxnote"></span>
   <span class="spacer"></span>
   <button class="linkish" id="share">Copy shareable link</button>
 </div>
@@ -288,6 +299,68 @@ const EMPTY = '<span class="empty-cell">&mdash;</span>';
 const nom = p => { const v=p.voltage||{}; return v.nominal ?? v.max ?? v.min ?? null; };
 const priceOf = p => (p.price && p.price.observed != null) ? p.price.observed : null;
 
+/* ── Currency ──────────────────────────────────────────────────────────────
+   Each part records ONE canonical observed price in the currency actually
+   paid. Everything else is derived here from data/fx.yaml, so a conversion
+   can never go stale in a part file.                                       */
+const FX = DB.fx || {};
+const FX_BASE = FX.base || 'NZD';
+const FX_RATES = FX.rates || {};
+const CURRENCIES = [FX_BASE].concat(Object.keys(FX_RATES));
+const SYM = {NZD:'NZ$', USD:'US$', AUD:'A$', EUR:'€', GBP:'£', CNY:'¥'};
+const sym = c => SYM[c] || ((c||'') + ' ');
+
+/* Convert a part's canonical price into `to`. Returns null when the part has
+   no observed price, or when its currency has no rate and so cannot honestly
+   be converted - we show the original rather than invent a number. */
+function convert(p, to){
+  const v = priceOf(p); if(v == null) return null;
+  const from = (p.price.currency) || FX_BASE;
+  if(from === to) return v;
+  // Normalise to base first, then out to the target.
+  let base;
+  if(from === FX_BASE) base = v;
+  else if(FX_RATES[from]) base = v / FX_RATES[from];
+  else return null;
+  if(to === FX_BASE) return base;
+  return FX_RATES[to] ? base * FX_RATES[to] : null;
+}
+/* Single normalised figure used for SORTING, independent of what is being
+   displayed - flipping the currency toggle must not reorder the table. */
+const priceBase = p => convert(p, FX_BASE);
+
+const money = (amount, cur) => sym(cur) + amount.toFixed(2);
+
+/* Renders the price cell honouring the currency toggle. The derived figure is
+   marked with ~ and a `derived` class so it never reads as a quoted price. */
+function priceHTML(p){
+  if(priceOf(p) == null) return (p.price && p.price.band) ? esc(p.price.band) : EMPTY;
+  const own = p.price.currency || FX_BASE;
+  const mode = state.currency;
+  const shown = mode === 'both' ? own : mode;
+  const primary = convert(p, shown);
+  if(primary == null)  // no rate for this pair - show what was actually paid
+    return '<span title="No exchange rate available for '+esc(own)+'">'+esc(money(priceOf(p), own))+'</span>';
+  let html = esc(money(primary, shown));
+  if(mode === 'both'){
+    const others = CURRENCIES.filter(c=>c!==own)
+      .map(c=>{ const a=convert(p,c); return a==null?null:'~'+esc(money(a,c)); })
+      .filter(Boolean);
+    if(others.length) html += ' <span class="derived" title="'+esc(fxTip())+'">('+others.join(' ')+')</span>';
+  } else if(shown !== own){
+    html = '<span class="derived" title="'+esc(fxTip())+'">~'+esc(money(primary, shown))+'</span>';
+  }
+  return html;
+}
+function fxNoteHTML(){
+  const pairs=Object.keys(FX_RATES).map(c=>'1 '+FX_BASE+' = '+FX_RATES[c]+' '+c).join(', ');
+  return '· converted at <code>'+esc(pairs)+'</code> ('+esc(FX.rate_date||'undated')+
+    ') — <span class="derived">italic ~figures are derived, not quoted</span>';
+}
+const fxTip = () => 'Derived at 1 '+FX_BASE+' = '+
+  Object.keys(FX_RATES).map(c=>FX_RATES[c]+' '+c).join(', ')+
+  ' (rate date '+(FX.rate_date||'unknown')+'). Indicative mid-market only.';
+
 /* Column registry. Every schema field is available as a column; `def` marks
    the default-on set. `num` selects a numeric comparator - string compare
    would put "16777216" above "2097152", the classic table-sort bug. */
@@ -306,9 +379,11 @@ const COLS = [
    cell:p=>(p.bus||[]).map(b=>'<span class="chipmini">'+esc(b)+'</span>').join('')||EMPTY},
   {id:'i2c', label:'I²C', def:true, sort:p=>(p.i2c&&p.i2c.address)||null,
    cell:p=>(p.i2c&&p.i2c.address)?'<code class="addr">'+esc(p.i2c.address)+'</code>':EMPTY},
-  {id:'price', label:'Price', def:true, num:true, sort:p=>priceOf(p),
-   cell:p=>priceOf(p)!=null?esc((p.price.currency||'')+' '+priceOf(p).toFixed(2))
-        :((p.price&&p.price.band)?esc(p.price.band):EMPTY)},
+  /* Sorts on the base-currency figure, never on what is displayed, so
+     flipping the currency toggle cannot reorder the table. Parts with no
+     observed price return null and keep the existing missing-last behaviour. */
+  {id:'price', label:'Price', def:true, num:true, sort:p=>priceBase(p),
+   cell:p=>priceHTML(p)},
   {id:'voltage', label:'Voltage', def:true, num:true, sort:p=>nom(p),
    cell:p=>nom(p)!=null?esc(nom(p)+' V'):EMPTY},
 
@@ -362,7 +437,7 @@ const FACETS = [
 
 const LSKEY='agrp.view.v1';
 const state = {cols:COLS.filter(c=>c.def).map(c=>c.id), sort:'deployment_count', dir:-1,
-  q:'', facets:{}, view:'table', density:'compact', open:null};
+  q:'', facets:{}, view:'table', density:'compact', currency:'NZD', open:null};
 
 function loadState(){
   try{ const s=JSON.parse(localStorage.getItem(LSKEY)||'{}');
@@ -371,6 +446,7 @@ function loadState(){
     if(s.dir===1||s.dir===-1) state.dir=s.dir;
     if(s.view) state.view=s.view;
     if(s.density) state.density=s.density;
+    if(s.currency) state.currency=s.currency;
   }catch(e){}
   /* A shared URL must render exactly as sent, so it wins over localStorage. */
   const u=new URLSearchParams(location.search);
@@ -380,12 +456,13 @@ function loadState(){
   if(u.get('q')) state.q=u.get('q');
   if(u.get('view')) state.view=u.get('view');
   if(u.get('density')) state.density=u.get('density');
+  if(u.get('cur')) state.currency=u.get('cur');
   FACETS.forEach(f=>{ const v=u.get('f_'+f[0]); if(v) state.facets[f[0]]=new Set(v.split('|')); });
   if(state.cols.indexOf('name')===-1) state.cols.unshift('name');
 }
 function saveState(){
   try{ localStorage.setItem(LSKEY, JSON.stringify({cols:state.cols,sort:state.sort,
-    dir:state.dir,view:state.view,density:state.density})); }catch(e){}
+    dir:state.dir,view:state.view,density:state.density,currency:state.currency})); }catch(e){}
 }
 function shareURL(){
   const u=new URLSearchParams();
@@ -394,6 +471,7 @@ function shareURL(){
   if(state.q) u.set('q',state.q);
   if(state.view!=='table') u.set('view',state.view);
   if(state.density!=='compact') u.set('density',state.density);
+  if(state.currency!=='NZD') u.set('cur',state.currency);
   Object.keys(state.facets).forEach(k=>{ const s=state.facets[k];
     if(s&&s.size) u.set('f_'+k,Array.from(s).join('|')); });
   return location.origin+location.pathname+'?'+u.toString();
@@ -490,8 +568,10 @@ function detailHTML(p){
       i2c+=' · <b>also occupies</b> '+p.i2c.also_occupies.map(a=>'<code>'+esc(a)+'</code>').join(' ');
     if(p.i2c.how_to_change) i2c+='<div class="note">'+esc(p.i2c.how_to_change)+'</div>';
   }
-  const price=p.price?esc((p.price.observed!=null?(p.price.currency||'')+' '+p.price.observed:p.price.band)
-      +(p.price.observed_date?' (observed '+p.price.observed_date+')':'')):'';
+  const price=p.price
+    ? priceHTML(p) + (p.price.observed_date?' <span class="note" style="margin:0">observed '+
+        esc(p.price.observed_date)+'</span>':'')
+    : '';
   const sec=(t,h)=>h?'<div class="dsec"><h4>'+t+'</h4>'+h+'</div>':'';
   const ul=a=>(a&&a.length)?'<ul>'+a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'';
   const refs=(a,l)=>(a&&a.length)?'<div class="dsec"><h4>'+l+'</h4><div class="chips">'+
@@ -660,6 +740,13 @@ document.getElementById('density').addEventListener('click',e=>{
   Array.prototype.forEach.call(e.currentTarget.children,b=>b.setAttribute('aria-pressed',String(b.dataset.d===d)));
   saveState();
 });
+document.getElementById('currency').addEventListener('click',e=>{
+  const c=e.target.dataset?e.target.dataset.c:null; if(!c) return;
+  state.currency=c;
+  Array.prototype.forEach.call(e.currentTarget.children,
+    b=>b.setAttribute('aria-pressed',String(b.dataset.c===c)));
+  render(); renderRecipes();   // sort key is base-currency, so order is unchanged
+});
 document.getElementById('share').addEventListener('click',e=>{
   const url=shareURL();
   history.replaceState(null,'',url);
@@ -757,13 +844,16 @@ function renderRecipes(){
     const rows=(r.items||[]).map(it=>{
       const p=byId[it.part];
       if(!p) return '<tr><td colspan="4">Unknown part <code>'+esc(it.part)+'</code></td></tr>';
-      const unit=(p.price&&p.price.observed!=null)?p.price.observed:null;
-      if(unit!=null){ total+=unit*(it.qty||1); cur=p.price.currency||cur; } else partial=true;
+      /* Line items are converted into ONE display currency before summing -
+         adding raw figures across currencies would silently produce nonsense. */
+      const disp = state.currency==='both' ? FX_BASE : state.currency;
+      const unit = convert(p, disp);
+      if(unit!=null){ total+=unit*(it.qty||1); cur=disp; } else partial=true;
       return '<tr><td data-label="Part"><a href="#" data-goto="'+esc(p.id)+'">'+esc(p.name)+'</a>'+
         '<div class="sub">'+esc(it.role||'')+'</div></td>'+
         '<td class="num" data-label="Qty">'+(it.qty||1)+'</td>'+
-        '<td class="num" data-label="Unit">'+(unit!=null?esc(unit.toFixed(2)):'—')+'</td>'+
-        '<td class="num" data-label="Line">'+(unit!=null?esc((unit*(it.qty||1)).toFixed(2)):'—')+'</td></tr>';
+        '<td class="num" data-label="Unit">'+(unit!=null?esc(money(unit,disp)):'—')+'</td>'+
+        '<td class="num" data-label="Line">'+(unit!=null?esc(money(unit*(it.qty||1),disp)):'—')+'</td></tr>';
     }).join('');
     return '<div class="rec"><h3>'+esc(r.name)+'</h3><div class="sum">'+esc(r.summary||'')+'</div>'+
       '<div class="crow" style="margin-bottom:10px">'+
@@ -773,7 +863,7 @@ function renderRecipes(){
       '<div class="bordered scrollx"><table><thead><tr><th>Part</th><th class="num">Qty</th>'+
       '<th class="num">Unit</th><th class="num">Line</th></tr></thead><tbody>'+rows+'</tbody>'+
       '<tfoot><tr><td colspan="3" class="num"><b>Total'+(partial?' (priced items only)':'')+'</b></td>'+
-      '<td class="num"><span class="tot">'+esc(cur)+' '+total.toFixed(2)+'</span></td></tr></tfoot>'+
+      '<td class="num"><span class="tot">'+esc(cur?money(total,cur):total.toFixed(2))+'</span></td></tr></tfoot>'+
       '</table></div>'+
       (r.notes?'<div class="note"><b>Notes.</b> '+esc(r.notes)+'</div>':'')+
       (r.watch_out?'<div class="note" style="margin-top:6px"><div class="warnbox"><b>Watch out.</b> '+
@@ -788,6 +878,9 @@ Array.prototype.forEach.call(document.getElementById('view').children,
   b=>b.setAttribute('aria-pressed',String(b.dataset.v===state.view)));
 Array.prototype.forEach.call(document.getElementById('density').children,
   b=>b.setAttribute('aria-pressed',String(b.dataset.d===state.density)));
+Array.prototype.forEach.call(document.getElementById('currency').children,
+  b=>b.setAttribute('aria-pressed',String(b.dataset.c===state.currency)));
+document.getElementById('fxnote').innerHTML = FX.rates ? fxNoteHTML() : '';
 render(); renderI2C(); renderRecipes();
 </script>
 </body>

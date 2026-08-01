@@ -46,6 +46,9 @@ protocol_settings: SDI-12, 1200 baud 7-E-1 half duplex
 voltage: { min: 3.6, max: 15.0, nominal: 12.0 }
 price:
   band: "$$"                        # $ <25, $$ 25-100, $$$ 100-500, $$$$ 500+
+  # Record what YOU actually paid, in the currency you actually paid in.
+  # Do NOT pre-convert and do NOT add a second currency - other currencies are
+  # derived at build time from data/fx.yaml. Hand-written conversions drift.
   observed: 85.0
   currency: NZD
   observed_date: "2026-03-01"
@@ -96,6 +99,32 @@ Then generate a thumbnail and validate:
 python scripts/gen_thumbnails.py   # makes a placeholder if you have no photo
 python scripts/validate.py
 ```
+
+---
+
+## Prices and currency
+
+Each part carries **one** price: `observed` + `currency`, being what was actually
+paid. Every other currency shown on the site and in the README is **derived at
+build time** from [`data/fx.yaml`](data/fx.yaml), which holds the rate, the
+market date it refers to, and its source.
+
+- **Record what you paid.** Paid in EUR? Put `observed: 72.0, currency: EUR`.
+  Do not convert it to NZD or USD first, and never write two currencies into a
+  part file - a hand-written conversion is a number nobody will ever update.
+- **No observed price?** Omit `observed` and `currency` and give only the
+  `band`. That is a legitimate state; do not invent a figure to fill the gap.
+  The band is currency-agnostic and is exactly the fallback for this case.
+- **Derived figures are marked.** The site renders them italic with a `~`
+  prefix (`NZ$120 (~US$71)`) and a tooltip naming the rate and its date, so a
+  conversion is never mistaken for a quoted price.
+- **Only currencies listed in `data/fx.yaml` under `rates` can be converted.**
+  A part priced in a currency with no rate is displayed in its own currency
+  only - it is not silently dropped or guessed at.
+
+To refresh the rate: update `rates`, `rate_date`, `captured` and `source` in
+`data/fx.yaml`, then re-run `build_site.py` and `gen_readme.py`. Never edit a
+converted number anywhere else; they are all generated.
 
 ---
 

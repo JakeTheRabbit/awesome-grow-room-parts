@@ -56,7 +56,13 @@ def main():
         shutil.rmtree(dst_assets, ignore_errors=True)
         shutil.copytree(src_assets, dst_assets)
 
-    payload = {"parts": parts, "recipes": recipes}
+    # Secondary-currency prices are DERIVED in the browser from each part's one
+    # canonical observed price, using this single rate table. Nothing is stored
+    # twice, so a stale conversion cannot hide in a part file.
+    fx_path = os.path.join(ROOT, "data", "fx.yaml")
+    fx = yaml.safe_load(open(fx_path, encoding="utf-8")) if os.path.isfile(fx_path) else {}
+
+    payload = {"parts": parts, "recipes": recipes, "fx": fx}
     blob = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
     # </script> inside any string would terminate the embedding script tag early.
     blob = blob.replace("</", "<\\/")
@@ -74,7 +80,9 @@ def main():
 
     i2c = sum(1 for p in parts if (p.get("i2c") or {}).get("address"))
     size = os.path.getsize(os.path.join(DOCS, "index.html")) / 1024
+    rates = ", ".join(f"1 {fx.get('base')} = {v} {k}" for k, v in (fx.get("rates") or {}).items())
     print(f"docs/index.html  {size:.0f} KB  ({len(parts)} parts, {i2c} on I2C, {len(recipes)} recipes)")
+    print(f"fx: {rates or 'none'}  (rate date {fx.get('rate_date', '?')})")
     return 0
 
 

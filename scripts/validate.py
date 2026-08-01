@@ -6,6 +6,7 @@ credentials that should never have been committed.
 Run:  python scripts/validate.py
 Exit: 0 clean, 1 if anything failed.
 """
+import datetime
 import json
 import os
 import re
@@ -168,6 +169,35 @@ def main():
     for addr, members in sorted(by_addr.items()):
         if len(members) > 1:
             warn("i2c", f"{addr} shared by {len(members)} parts: {', '.join(sorted(members))}")
+
+    # data/fx.yaml drives every derived price on the site and in the README.
+    # A malformed or partial rate table would silently mis-price the catalogue.
+    fx_path = os.path.join(ROOT, "data", "fx.yaml")
+    if not os.path.isfile(fx_path):
+        err("data/fx.yaml", "missing - derived prices cannot be generated")
+    else:
+        fx = yaml.safe_load(open(fx_path, encoding="utf-8")) or {}
+        for field in ("base", "rates", "rate_date", "captured", "source"):
+            if not fx.get(field):
+                err("data/fx.yaml", f"missing required field '{field}'")
+        for cur, rate in (fx.get("rates") or {}).items():
+            if not isinstance(rate, (int, float)) or rate <= 0:
+                err("data/fx.yaml", f"rate for {cur} must be a positive number")
+        # Currencies used by parts that have no rate cannot be converted. Not an
+        # error - they render in their own currency - but worth surfacing.
+        known = {fx.get("base")} | set(fx.get("rates") or {})
+        used = {(p.get("price") or {}).get("currency")
+                for p in parts.values() if isinstance(p, dict) and (p.get("price") or {}).get("observed") is not None}
+        for cur in sorted(c for c in used - known if c):
+            warn("data/fx.yaml", f"no rate for {cur}; those prices show in {cur} only")
+        rate_date = str(fx.get("rate_date") or "")
+        if rate_date:
+            try:
+                age = (datetime.date.today() - datetime.date.fromisoformat(rate_date)).days
+                if age > 180:
+                    warn("data/fx.yaml", f"rate is {age} days old - consider refreshing")
+            except ValueError:
+                err("data/fx.yaml", f"rate_date '{rate_date}' is not YYYY-MM-DD")
 
     for w in warnings:
         print(f"WARN  {w}")

@@ -27,6 +27,47 @@ TIER_LABEL = {
 TIER_ORDER = {"field-proven": 0, "works": 1, "experimental": 2, "avoid": 3}
 
 
+SYMBOL = {"NZD": "NZ$", "USD": "US$", "AUD": "A$", "EUR": "€", "GBP": "£", "CNY": "¥"}
+
+
+def load_fx():
+    path = os.path.join(ROOT, "data", "fx.yaml")
+    return yaml.safe_load(open(path, encoding="utf-8")) if os.path.isfile(path) else {}
+
+
+def money(amount, currency):
+    return f"{SYMBOL.get(currency, currency + ' ')}{amount:,.2f}"
+
+
+def price_cell(part, fx):
+    """One canonical price, with every other currency DERIVED from data/fx.yaml.
+
+    Derived figures carry a ~ so the table never presents a conversion as a
+    price someone actually quoted. Parts with no observed price fall back to
+    the currency-agnostic band - which is exactly why the band exists.
+    """
+    price = part.get("price") or {}
+    if price.get("observed") is None:
+        return price.get("band", "")
+    base = fx.get("base", "NZD")
+    rates = fx.get("rates") or {}
+    own = price.get("currency") or base
+    head = money(price["observed"], own)
+    if own == base:
+        in_base = price["observed"]
+    elif rates.get(own):
+        in_base = price["observed"] / rates[own]
+    else:
+        return head                      # no rate for this currency - never invent one
+    derived = []
+    for cur in [base] + list(rates):
+        if cur == own:
+            continue
+        amount = in_base if cur == base else in_base * rates[cur]
+        derived.append("(~" + money(amount, cur) + ")")
+    return head + (" " + " ".join(derived) if derived else "")
+
+
 def esc(text):
     return str(text or "").replace("|", "\\|").replace("\n", " ")
 
@@ -37,6 +78,8 @@ def main():
         if name.endswith((".yaml", ".yml")):
             parts.append(yaml.safe_load(open(os.path.join(ROOT, "parts", name), encoding="utf-8")))
 
+    fx = load_fx()
+
     by_cat = defaultdict(list)
     for p in parts:
         by_cat[p["category"]].append(p)
@@ -45,6 +88,15 @@ def main():
         f"_{len(parts)} parts. Generated from `parts/*.yaml` by "
         f"`scripts/gen_readme.py` — edit the YAML, not this table._\n",
     ]
+    rates = ", ".join(f"1 {fx.get('base')} = {v} {k}"
+                      for k, v in (fx.get("rates") or {}).items())
+    if rates:
+        out.append(
+            "_Prices: each part records **one** price - what was actually paid, in the "
+            "currency it was paid in. Figures marked `~` are **derived, not quoted**, "
+            f"converted at `{rates}` (rate date {fx.get('rate_date', 'unknown')}; see "
+            "[`data/fx.yaml`](data/fx.yaml)). Rates move, so treat the band as the "
+            "durable signal. Parts with no observed price show a band only._\n")
 
     # Lead with the evidence, since that is the point of the list.
     proven = sorted([p for p in parts if p.get("quality_tier") == "field-proven"],
@@ -54,8 +106,7 @@ def main():
     out.append("| Part | Live configs | Bus | I²C | Price | Notes |")
     out.append("|---|---:|---|---|---|---|")
     for p in proven:
-        price = p.get("price") or {}
-        pr = f"{price.get('currency','')} {price.get('observed')}" if price.get("observed") else price.get("band", "")
+        pr = price_cell(p, fx)
         out.append(
             f"| [{esc(p['name'])}](parts/{p['id']}.yaml) | {p.get('deployment_count','')} | "
             f"{esc('/'.join(p.get('bus', [])))} | {esc((p.get('i2c') or {}).get('address',''))} | "
@@ -80,8 +131,7 @@ def main():
         out.append("|---|---|---:|---|---|---|")
         for p in sorted(by_cat[cat], key=lambda p: (TIER_ORDER.get(p.get("quality_tier"), 9),
                                                     -(p.get("deployment_count") or 0), p["name"])):
-            price = p.get("price") or {}
-            pr = f"{price.get('currency','')} {price.get('observed')}" if price.get("observed") else price.get("band", "")
+            pr = price_cell(p, fx)
             dep = p.get("deployment_count")
             out.append(
                 f"| [{esc(p['name'])}](parts/{p['id']}.yaml) | "

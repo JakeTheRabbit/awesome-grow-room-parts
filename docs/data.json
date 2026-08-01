@@ -4621,5 +4621,16 @@
       "notes": "SDI-12 is the whole point: it is 1200 baud 7-E-1 half-duplex on a single data line, so several probes share one wire, each on its own SDI-12 address (0, 1, 2 ...). Set addresses ONE AT A TIME with a single probe on the bus, or you will address the wrong device and spend an afternoon confused. ESPHome needs two external components for this - ssieb's half-duplex uart fork and his sdi12 component - because neither is in core.",
       "watch_out": "Raw VWC counts are NOT volumetric water content. The fleet configs apply a cubic calibration polynomial to convert raw to theta, and that polynomial is specific to the medium - the coco-coir curve is wrong for rockwool and very wrong for peat. Calibrate against gravimetric samples from YOUR substrate before you steer anything on these numbers. Probe placement matters more than probe brand: same depth, same distance from an emitter, same position in the block, every zone. Inconsistent placement produces zone-to-zone differences that are pure artefact."
     }
-  ]
+  ],
+  "fx": {
+    "base": "NZD",
+    "rates": {
+      "USD": 0.5879
+    },
+    "rate_date": "2026-08-01",
+    "captured": "2026-08-02",
+    "source": "open.er-api.com /v6/latest/NZD, reporting 1 NZD = 0.587891 USD for 2026-08-01. Rounded to 4 decimal places.",
+    "cross_check": "Corroborated by xe.com mid-market (1 NZD = 0.5878 USD, same day) and by the ECB reference rate via frankfurter.dev (1 NZD = 0.5863 USD for 2026-07-31). The three agree to within about 0.3%, which is well inside the noise on hardware pricing.",
+    "note": "These conversions are indicative only. They are a mid-market snapshot, not a retail rate - a card payment or an international transfer will land a few percent worse once spread and fees are applied. Component prices move further and faster than currencies do, so treat the price BAND ($ / $$ / $$$ / $$$$) as the durable signal and any specific figure as a point-in-time observation. Only currencies listed in `rates` can be derived; a part priced in a currency with no rate here is displayed in its own currency only."
+  }
 }

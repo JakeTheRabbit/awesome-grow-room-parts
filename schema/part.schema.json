@@ -111,10 +111,18 @@
         "band": {
           "type": "string",
           "enum": ["$", "$$", "$$$", "$$$$"],
-          "description": "$ = under 25, $$ = 25-100, $$$ = 100-500, $$$$ = 500+ (NZD, indicative)."
+          "description": "Currency-agnostic magnitude, and the fallback for parts with no observed price. Roughly: $ = under 25, $$ = 25-100, $$$ = 100-500, $$$$ = 500+ (USD-equivalent, indicative)."
         },
-        "observed": { "type": "number", "minimum": 0 },
-        "currency": { "type": "string", "enum": ["NZD", "USD", "EUR", "GBP", "AUD", "CNY"] },
+        "observed": {
+          "type": "number",
+          "minimum": 0,
+          "description": "The ONE canonical price: what was actually paid, in the currency it was actually paid in. Do NOT pre-convert and do NOT add a second currency here - other currencies are derived at generate time from data/fx.yaml, so hand-written conversions would drift."
+        },
+        "currency": {
+          "type": "string",
+          "enum": ["NZD", "USD", "EUR", "GBP", "AUD", "CNY"],
+          "description": "Currency of `observed`. Record what you paid. Only currencies present in data/fx.yaml `rates` can be converted for display; others are shown as-is."
+        },
         "observed_date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
         "note": { "type": "string", "maxLength": 300 }
       }

@@ -1,0 +1,40 @@
+# Foreign exchange rates used to DERIVE secondary prices for display.
+#
+# Part files record ONE canonical price: whatever was actually paid, in the
+# currency it was actually paid in. Every other currency shown on the site and
+# in the README is computed from that canonical figure using the rates below.
+# Nothing is hand-written twice, so nothing can drift.
+#
+# This file is the single place a rate lives. To refresh it: update `rates`,
+# `rate_date` and `captured`, then re-run `python scripts/build_site.py` and
+# `python scripts/gen_readme.py`. Do not edit converted numbers anywhere else -
+# they are generated.
+
+base: NZD
+
+# Units of the target currency per 1 unit of `base`.
+rates:
+  USD: 0.5879
+
+# The market date the rate itself refers to.
+rate_date: "2026-08-01"
+# The date this file was last updated.
+captured: "2026-08-02"
+
+source: >-
+  open.er-api.com /v6/latest/NZD, reporting 1 NZD = 0.587891 USD for
+  2026-08-01. Rounded to 4 decimal places.
+cross_check: >-
+  Corroborated by xe.com mid-market (1 NZD = 0.5878 USD, same day) and by the
+  ECB reference rate via frankfurter.dev (1 NZD = 0.5863 USD for 2026-07-31).
+  The three agree to within about 0.3%, which is well inside the noise on
+  hardware pricing.
+
+note: >-
+  These conversions are indicative only. They are a mid-market snapshot, not a
+  retail rate - a card payment or an international transfer will land a few
+  percent worse once spread and fees are applied. Component prices move further
+  and faster than currencies do, so treat the price BAND ($ / $$ / $$$ / $$$$)
+  as the durable signal and any specific figure as a point-in-time observation.
+  Only currencies listed in `rates` can be derived; a part priced in a currency
+  with no rate here is displayed in its own currency only.
