@@ -124,6 +124,17 @@
           "description": "Currency of `observed`. Record what you paid. Only currencies present in data/fx.yaml `rates` can be converted for display; others are shown as-is."
         },
         "observed_date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "source": {
+          "type": "string",
+          "enum": ["receipt", "invoice", "listing", "estimate", "unknown"],
+          "description": "Provenance of `observed`. 'receipt'/'invoice' = a real transaction - what was actually paid, after any trade or negotiated pricing. 'listing' = a vendor's advertised price, not necessarily paid by anyone. 'estimate' = a best guess, and the weakest signal. Budgeting a build means something different depending on which of these you are reading, so say which it is.",
+          "default": "estimate"
+        },
+        "unit": {
+          "type": "string",
+          "maxLength": 60,
+          "description": "What one unit of `observed` buys, when it is not simply one item - e.g. 'per 200 m roll', 'per 5.8 m length', 'per metre'. Receipt lines routinely price a roll, bundle or cut length; without this the number misleads."
+        },
         "note": { "type": "string", "maxLength": 300 }
       }
     },

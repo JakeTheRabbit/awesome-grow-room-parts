@@ -1,0 +1,67 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: netafim-pcj-dripper
+name: Netafim PCJ pressure-compensating dripper
+manufacturer: Netafim
+part_numbers:
+- 40200-044320
+- PCJ-CNL
+category: Irrigation hardware
+subcategory: Pressure-compensating emitter with spike and tube
+bus:
+- None
+protocol_settings: Pressure-compensating from roughly 0.5 to 4 bar. Flow rates 2 / 4 / 8 L/h depending
+  on model.
+price:
+  band: $
+  observed: 1.23
+  unit: per dripper, incl. spike and tube
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: receipt
+vendors:
+- name: Netafim (manufacturer)
+  url: https://www.netafim.com/en/products/dripper/pcj/
+  part_number: PCJ
+- name: Irrigation Express
+  url: https://www.irrigationexpress.com.au/netafim-pcj-dripper
+  part_number: 40200-044320
+ip_rating: IP68
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 6
+deployment_evidence:
+- room-1-irrigation-relays.yaml
+- room-1-row1-back-sdi12.yaml
+- room-1-row2-back-sdi12.yaml
+- room-1-row3-back-sdi12.yaml
+- espoe-multiplexer-irrigation-relays.yaml
+- room-3-solenoid-relays.yaml
+evidence: The emitter behind every substrate-sensing zone in this fleet - the VWC and pore-water EC numbers
+  those probes report are only meaningful because delivery per plant is even, which is exactly what pressure
+  compensation buys.
+failure_modes:
+- Non-compensating drippers on a long run deliver more at the near end - the resulting VWC spread reads
+  as sensor disagreement when it is actually a plumbing problem.
+- The CNL (anti-drain) variants stop siphoning between shots; without them the line drains after every
+  irrigation and the first part of the next shot is air.
+- Root intrusion into the outlet on media that stays saturated.
+- Spikes pull out of coir under their own tube weight if the tube is not clipped - the emitter then waters
+  the floor and the block dries out unnoticed.
+notes: 'Pressure compensation is the whole point: without it, per-plant delivery varies along the line
+  and every substrate reading you take is comparing plants that got different amounts of water. If you
+  are steering a crop on VWC, this is not the place to save money. Pair the anti-drain (CNL) version with
+  the line flush valve.'
+platforms:
+- Standalone
+works_with:
+- netafim-lateral-pipe
+- netafim-line-flush-valve
+- amiad-screen-filter
+- meter-teros12
+image: assets/parts/netafim-pcj-dripper.svg
+tags:
+- dripper
+- emitter
+- irrigation
+- pressure-compensating

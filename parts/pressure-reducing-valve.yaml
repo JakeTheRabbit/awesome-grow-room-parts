@@ -1,0 +1,55 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: pressure-reducing-valve
+name: Adjustable pressure reducing valve (15-50 mm)
+manufacturer: generic (Bermad / Dorot class)
+part_numbers:
+- 228-MG143-100
+category: Irrigation hardware
+subcategory: Adjustable mains pressure reducer
+bus:
+- None
+protocol_settings: Set downstream pressure with the adjusting screw against a gauge. Typical dripline
+  target 1.0-2.0 bar.
+price:
+  band: $$$
+  observed: 152.15
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: receipt
+vendors:
+- name: Irrigation Express
+  url: https://www.irrigationexpress.com.au/pressure-reducing-valve
+  part_number: 228-MG143-100
+ip_rating: IP68
+calibration_required: one-point
+calibration_notes: Set it against a real gauge at the far end of the run while a zone is actually flowing.
+  Static pressure with everything closed tells you nothing useful - the number that matters is dynamic.
+quality_tier: works
+deployment_count: 1
+deployment_evidence:
+- espoe-main-pump.yaml
+evidence: One on the main feed. Only needed once per system rather than per zone, which is why the count
+  is low - it is not a reflection of how well it works.
+failure_modes:
+- Set too high and pressure-compensating drippers still regulate, but every fitting and the filter housing
+  live near their limit - failures show up at the joints, not the emitters.
+- Set too low and PCJ drippers drop out of their compensating range, so delivery becomes uneven again
+  and you lose the whole benefit of buying them.
+- Diaphragm perishes over years and the valve drifts open, usually unnoticed until something downstream
+  splits.
+notes: Mains pressure in most buildings is far above what dripline wants, and PCJ emitters only compensate
+  up to about 4 bar. This is the part that makes the rest of the system's ratings honest. Fit a gauge
+  downstream permanently - a NZ$20 gauge turns an invisible problem into an obvious one.
+platforms:
+- Standalone
+works_with:
+- amiad-screen-filter
+- netafim-pcj-dripper
+- senninger-pressure-regulator
+image: assets/parts/pressure-reducing-valve.svg
+tags:
+- pressure
+- regulator
+- irrigation
+- mains

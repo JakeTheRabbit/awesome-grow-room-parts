@@ -26,6 +26,7 @@ voltage:
 price:
   band: $
   observed: 8.0
+  source: estimate
   currency: NZD
   observed_date: '2026-03-01'
   note: Clone modules are a few dollars; quality varies wildly.

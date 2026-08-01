@@ -49,6 +49,9 @@ def price_cell(part, fx):
     price = part.get("price") or {}
     if price.get("observed") is None:
         return price.get("band", "")
+    # A receipt figure and a guess are different kinds of claim - mark which.
+    tag = {"receipt": " ^r", "invoice": " ^r", "listing": " ^l"}.get(price.get("source"), "")
+    unit = f" _{price['unit']}_" if price.get("unit") else ''
     base = fx.get("base", "NZD")
     rates = fx.get("rates") or {}
     own = price.get("currency") or base
@@ -58,14 +61,14 @@ def price_cell(part, fx):
     elif rates.get(own):
         in_base = price["observed"] / rates[own]
     else:
-        return head                      # no rate for this currency - never invent one
+        return head + tag + unit         # no rate for this currency - never invent one
     derived = []
     for cur in [base] + list(rates):
         if cur == own:
             continue
         amount = in_base if cur == base else in_base * rates[cur]
         derived.append("(~" + money(amount, cur) + ")")
-    return head + (" " + " ".join(derived) if derived else "")
+    return head + (" " + " ".join(derived) if derived else "") + tag + unit
 
 
 def esc(text):
@@ -96,7 +99,9 @@ def main():
             "currency it was paid in. Figures marked `~` are **derived, not quoted**, "
             f"converted at `{rates}` (rate date {fx.get('rate_date', 'unknown')}; see "
             "[`data/fx.yaml`](data/fx.yaml)). Rates move, so treat the band as the "
-            "durable signal. Parts with no observed price show a band only._\n")
+            "durable signal. Parts with no observed price show a band only. "
+            "`^r` = from a purchase receipt (what was actually paid); `^l` = a vendor "
+            "listing; unmarked = an estimate._\n")
 
     # Lead with the evidence, since that is the point of the list.
     proven = sorted([p for p in parts if p.get("quality_tier") == "field-proven"],

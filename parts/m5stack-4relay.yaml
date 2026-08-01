@@ -24,9 +24,12 @@ voltage:
   note: Contacts rated 250VAC/10A or 30VDC/10A, but derate hard for inductive loads.
 price:
   band: $$
-  observed: 38.0
+  observed: 22.72
+  source: receipt
   currency: NZD
-  observed_date: '2026-03-01'
+  observed_date: "2026-03-01"
+  note: >-
+    Trade price from a purchase receipt. The M5Stack list price for the same unit is around NZ$33, so this reflects a distributor rate rather than RRP.
 vendors:
 - name: M5Stack
   url: https://shop.m5stack.com/products/4-relay-unit

@@ -19,6 +19,7 @@ voltage:
 price:
   band: $$$
   observed: 430.0
+  source: estimate
   currency: NZD
   observed_date: "2026-03-01"
   note: The reference-grade option. This is why the cheaper SDI-12 clones exist.

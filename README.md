@@ -109,9 +109,9 @@ python scripts/check_links.py     # vendor/driver link rot
 
 <!-- AUTOGEN:PARTS START -->
 
-_51 parts. Generated from `parts/*.yaml` by `scripts/gen_readme.py` — edit the YAML, not this table._
+_66 parts. Generated from `parts/*.yaml` by `scripts/gen_readme.py` — edit the YAML, not this table._
 
-_Prices: each part records **one** price - what was actually paid, in the currency it was paid in. Figures marked `~` are **derived, not quoted**, converted at `1 NZD = 0.5879 USD` (rate date 2026-08-01; see [`data/fx.yaml`](data/fx.yaml)). Rates move, so treat the band as the durable signal. Parts with no observed price show a band only._
+_Prices: each part records **one** price - what was actually paid, in the currency it was paid in. Figures marked `~` are **derived, not quoted**, converted at `1 NZD = 0.5879 USD` (rate date 2026-08-01; see [`data/fx.yaml`](data/fx.yaml)). Rates move, so treat the band as the durable signal. Parts with no observed price show a band only. `^r` = from a purchase receipt (what was actually paid); `^l` = a vendor listing; unmarked = an estimate._
 
 ### Field-proven core
 
@@ -120,9 +120,9 @@ Parts named in the stated number of live production ESPHome device configs.
 | Part | Live configs | Bus | I²C | Price | Notes |
 |---|---:|---|---|---|---|
 | [M5Stack PoESP32 / ESP32 Ethernet unit (IP101G PHY)](parts/m5stack-poesp32.yaml) | 48 | Ethernet/PoE/Grove/I2C/UART |  | NZ$65.00 (~US$38.21) | PoE ESP32 node with wired Ethernet PHY |
-| [Sensirion SCD41 true NDIR CO2 sensor](parts/sensirion-scd41.yaml) | 29 | I2C/Grove | 0x62 | NZ$52.00 (~US$30.57) | CO2 / temperature / humidity |
+| [Sensirion SCD41 true NDIR CO2 sensor](parts/sensirion-scd41.yaml) | 29 | I2C/Grove | 0x62 | NZ$77.11 (~US$45.33) ^l | CO2 / temperature / humidity |
 | [MFRC522 / RC522 13.56 MHz RFID reader](parts/mfrc522-rfid.yaml) | 19 | I2C/SPI | 0x28 | NZ$8.00 (~US$4.70) | 13.56 MHz MIFARE reader |
-| [M5Stack 4-Relay Unit](parts/m5stack-4relay.yaml) | 18 | I2C/Grove | 0x26 | NZ$38.00 (~US$22.34) | 4-channel I2C relay module, Grove |
+| [M5Stack 4-Relay Unit](parts/m5stack-4relay.yaml) | 18 | I2C/Grove | 0x26 | NZ$22.72 (~US$13.36) ^r | 4-channel I2C relay module, Grove |
 | [M5Stack ATOM Lite (ESP32-PICO)](parts/m5stack-atom-lite.yaml) | 14 | WiFi/BLE/I2C/UART/Grove/GPIO |  | NZ$18.00 (~US$10.58) | Compact WiFi ESP32 |
 | [METER TEROS 12 substrate VWC / EC / temperature probe](parts/meter-teros12.yaml) | 14 | SDI-12 |  | NZ$430.00 (~US$252.80) | SDI-12 dielectric probe |
 | [PCF8563 real-time clock](parts/pcf8563-rtc.yaml) | 13 | I2C | 0x51 | NZ$6.00 (~US$3.53) | I2C real-time clock with battery backup |
@@ -130,16 +130,23 @@ Parts named in the stated number of live production ESPHome device configs.
 | [M5Stack AirQ (SEN55 + SCD40 air quality node)](parts/m5stack-airq.yaml) | 8 | I2C/WiFi/BLE | 0x69 | NZ$145.00 (~US$85.25) | Integrated multi-sensor node |
 | [Sensirion SEN55 PM / VOC / NOx / T / RH module](parts/sensirion-sen55.yaml) | 8 | I2C | 0x69 | NZ$125.00 (~US$73.49) | Particulate + VOC + NOx |
 | [SSR-25DA solid state relay](parts/ssr-25da.yaml) | 8 | GPIO |  | NZ$18.00 (~US$10.58) | DC-controlled AC solid state relay |
+| [Hunter PGV 24 VAC irrigation solenoid valve](parts/hunter-pgv-solenoid.yaml) | 6 | Mains |  | NZ$47.06 (~US$27.67) ^r | 24 VAC in-line solenoid zone valve |
 | [Infiwin MT22 SDI-12 substrate probe](parts/infiwin-mt22.yaml) | 6 | SDI-12 |  | NZ$85.00 (~US$49.97) | SDI-12 dielectric probe (budget) |
+| [Netafim white lateral dripline pipe (20 mm, 3 bar)](parts/netafim-lateral-pipe.yaml) | 6 | None |  | NZ$182.00 (~US$107.00) ^r _per 200 m roll_ | 20 mm LDPE lateral, 200 m roll |
+| [Netafim PCJ pressure-compensating dripper](parts/netafim-pcj-dripper.yaml) | 6 | None |  | NZ$1.23 (~US$0.72) ^r _per dripper, incl. spike and tube_ | Pressure-compensating emitter with spike and tube |
 | [M5Stack Dial (round display + rotary encoder + RFID)](parts/m5stack-dial.yaml) | 5 | I2C/SPI/WiFi/Grove/GPIO | 0x28 | NZ$110.00 (~US$64.67) | Round touch display node |
 | [Sensirion SHT30 temperature & humidity sensor](parts/sensirion-sht30.yaml) | 5 | I2C | 0x44 | NZ$12.00 (~US$7.05) | Temperature / humidity |
+| [Amiad 25 mm compact screen filter (130 micron)](parts/amiad-screen-filter.yaml) | 4 | None |  | NZ$48.82 (~US$28.70) ^r | In-line screen filter, stainless element |
 | [HX711 24-bit load cell amplifier](parts/hx711-adc.yaml) | 4 | GPIO |  | NZ$6.00 (~US$3.53) | Load cell front end |
 | [Load cell (50kg half-bridge or 200kg bar)](parts/load-cell-50kg.yaml) | 4 | Analog |  | NZ$15.00 (~US$8.82) | Strain gauge load cell |
 | [M5Stack ENV III Unit (SHT30 + QMP6988)](parts/m5-env3.yaml) | 4 | I2C/Grove | 0x44 | NZ$18.00 (~US$10.58) | Temperature / humidity / pressure |
-| [MLX90640 32x24 thermal camera array](parts/mlx90640-thermal.yaml) | 4 | I2C | 0x33 | NZ$120.00 (~US$70.55) | 32x24 far-infrared thermopile array |
-| [Peristaltic dosing pump (12/24V, relay or PWM driven)](parts/peristaltic-pump-doser.yaml) | 4 | GPIO/PWM/UART |  | NZ$65.00 (~US$38.21) | Nutrient dosing pump |
+| [MLX90640 32x24 thermal camera array](parts/mlx90640-thermal.yaml) | 4 | I2C | 0x33 | NZ$115.50 (~US$67.90) ^l | 32x24 far-infrared thermopile array |
+| [Peristaltic dosing pump (12/24V, relay or PWM driven)](parts/peristaltic-pump-doser.yaml) | 4 | GPIO/PWM/UART |  | NZ$51.32 (~US$30.17) ^r | Nutrient dosing pump |
+| [25 mm PVC pressure pipe (PN12)](parts/pvc-pressure-pipe-25.yaml) | 4 | None |  | NZ$15.49 (~US$9.11) ^r _per 5.8 m length_ | Rigid mains-side distribution pipe |
+| [240 V to 24 VAC 150 VA transformer](parts/transformer-24vac.yaml) | 4 | Mains |  | NZ$95.90 (~US$56.38) ^r | Mains-to-24 VAC supply for solenoid valves |
+| [Tygon A-60-G chemical-resistant peristaltic tubing](parts/tygon-chemical-tubing.yaml) | 4 | None |  | NZ$14.59 (~US$8.58) ^r _per metre_ | Peristaltic pump tubing, chemical dispensing grade |
 | [Growlink TerraLink substrate probe](parts/growlink-terralink.yaml) | 3 | SDI-12 |  | $$$ | SDI-12 dielectric probe |
-| [24VAC irrigation solenoid valve](parts/solenoid-valve-24vac.yaml) | 3 | Mains |  | NZ$42.00 (~US$24.69) | Zone valve |
+| [24VAC irrigation solenoid valve](parts/solenoid-valve-24vac.yaml) | 3 | Mains |  | NZ$47.06 (~US$27.67) ^r | Zone valve |
 
 ### Hall of shame
 
@@ -163,15 +170,16 @@ Documented dead ends. Listed so nobody repeats the work.
 
 | Part | Tier | Live | Bus | I²C | Price |
 |---|---|---:|---|---|---|
-| [M5Stack 4-Relay Unit](parts/m5stack-4relay.yaml) | **field-proven** | 18 | I2C/Grove | 0x26 | NZ$38.00 (~US$22.34) |
+| [M5Stack 4-Relay Unit](parts/m5stack-4relay.yaml) | **field-proven** | 18 | I2C/Grove | 0x26 | NZ$22.72 (~US$13.36) ^r |
 | [SSR-25DA solid state relay](parts/ssr-25da.yaml) | **field-proven** | 8 | GPIO |  | NZ$18.00 (~US$10.58) |
+| [M5Stack 2-channel SPST relay unit](parts/m5stack-2ch-relay.yaml) | works |  | I2C/Grove | 0x25 | NZ$24.75 (~US$14.55) ^l |
 | [KinCony F16 16-channel relay controller](parts/kincony-f16-relay.yaml) | experimental | 1 | Ethernet/RS485/Modbus/I2C | 0x24 | NZ$210.00 (~US$123.46) |
 
 #### Air quality & CO2
 
 | Part | Tier | Live | Bus | I²C | Price |
 |---|---|---:|---|---|---|
-| [Sensirion SCD41 true NDIR CO2 sensor](parts/sensirion-scd41.yaml) | **field-proven** | 29 | I2C/Grove | 0x62 | NZ$52.00 (~US$30.57) |
+| [Sensirion SCD41 true NDIR CO2 sensor](parts/sensirion-scd41.yaml) | **field-proven** | 29 | I2C/Grove | 0x62 | NZ$77.11 (~US$45.33) ^l |
 | [M5Stack AirQ (SEN55 + SCD40 air quality node)](parts/m5stack-airq.yaml) | **field-proven** | 8 | I2C/WiFi/BLE | 0x69 | NZ$145.00 (~US$85.25) |
 | [Sensirion SEN55 PM / VOC / NOx / T / RH module](parts/sensirion-sen55.yaml) | **field-proven** | 8 | I2C | 0x69 | NZ$125.00 (~US$73.49) |
 | [Sensirion SHT30 temperature & humidity sensor](parts/sensirion-sht30.yaml) | **field-proven** | 5 | I2C | 0x44 | NZ$12.00 (~US$7.05) |
@@ -208,11 +216,26 @@ Documented dead ends. Listed so nobody repeats the work.
 |---|---|---:|---|---|---|
 | [M5Stack Dial (round display + rotary encoder + RFID)](parts/m5stack-dial.yaml) | **field-proven** | 5 | I2C/SPI/WiFi/Grove/GPIO | 0x28 | NZ$110.00 (~US$64.67) |
 
+#### Energy monitoring
+
+| Part | Tier | Live | Bus | I²C | Price |
+|---|---|---:|---|---|---|
+| [Shelly Pro 3EM three-phase energy meter](parts/shelly-pro-3em.yaml) | works |  | Ethernet/WiFi/Mains |  | NZ$249.99 (~US$146.97) ^l |
+
 #### Irrigation hardware
 
 | Part | Tier | Live | Bus | I²C | Price |
 |---|---|---:|---|---|---|
-| [24VAC irrigation solenoid valve](parts/solenoid-valve-24vac.yaml) | **field-proven** | 3 | Mains |  | NZ$42.00 (~US$24.69) |
+| [Hunter PGV 24 VAC irrigation solenoid valve](parts/hunter-pgv-solenoid.yaml) | **field-proven** | 6 | Mains |  | NZ$47.06 (~US$27.67) ^r |
+| [Netafim PCJ pressure-compensating dripper](parts/netafim-pcj-dripper.yaml) | **field-proven** | 6 | None |  | NZ$1.23 (~US$0.72) ^r _per dripper, incl. spike and tube_ |
+| [Netafim white lateral dripline pipe (20 mm, 3 bar)](parts/netafim-lateral-pipe.yaml) | **field-proven** | 6 | None |  | NZ$182.00 (~US$107.00) ^r _per 200 m roll_ |
+| [240 V to 24 VAC 150 VA transformer](parts/transformer-24vac.yaml) | **field-proven** | 4 | Mains |  | NZ$95.90 (~US$56.38) ^r |
+| [25 mm PVC pressure pipe (PN12)](parts/pvc-pressure-pipe-25.yaml) | **field-proven** | 4 | None |  | NZ$15.49 (~US$9.11) ^r _per 5.8 m length_ |
+| [Amiad 25 mm compact screen filter (130 micron)](parts/amiad-screen-filter.yaml) | **field-proven** | 4 | None |  | NZ$48.82 (~US$28.70) ^r |
+| [24VAC irrigation solenoid valve](parts/solenoid-valve-24vac.yaml) | **field-proven** | 3 | Mains |  | NZ$47.06 (~US$27.67) ^r |
+| [Netafim automatic line flush valve (16 mm)](parts/netafim-line-flush-valve.yaml) | works | 2 | None |  | NZ$12.38 (~US$7.28) ^r |
+| [Senninger 20 psi fixed pressure regulator](parts/senninger-pressure-regulator.yaml) | works | 2 | None |  | NZ$22.32 (~US$13.12) ^r |
+| [Adjustable pressure reducing valve (15-50 mm)](parts/pressure-reducing-valve.yaml) | works | 1 | None |  | NZ$152.15 (~US$89.45) ^r |
 
 #### Light measurement
 
@@ -243,7 +266,8 @@ Documented dead ends. Listed so nobody repeats the work.
 
 | Part | Tier | Live | Bus | I²C | Price |
 |---|---|---:|---|---|---|
-| [MLX90640 32x24 thermal camera array](parts/mlx90640-thermal.yaml) | **field-proven** | 4 | I2C | 0x33 | NZ$120.00 (~US$70.55) |
+| [MLX90640 32x24 thermal camera array](parts/mlx90640-thermal.yaml) | **field-proven** | 4 | I2C | 0x33 | NZ$115.50 (~US$67.90) ^l |
+| [MLX90614 non-contact IR thermometer (M5Stack NCIR)](parts/mlx90614-ncir.yaml) | works |  | I2C/Grove | 0x5a | NZ$33.52 (~US$19.71) ^l |
 
 #### Water & fertigation
 
@@ -251,9 +275,12 @@ Documented dead ends. Listed so nobody repeats the work.
 |---|---|---:|---|---|---|
 | [HX711 24-bit load cell amplifier](parts/hx711-adc.yaml) | **field-proven** | 4 | GPIO |  | NZ$6.00 (~US$3.53) |
 | [Load cell (50kg half-bridge or 200kg bar)](parts/load-cell-50kg.yaml) | **field-proven** | 4 | Analog |  | NZ$15.00 (~US$8.82) |
-| [Peristaltic dosing pump (12/24V, relay or PWM driven)](parts/peristaltic-pump-doser.yaml) | **field-proven** | 4 | GPIO/PWM/UART |  | NZ$65.00 (~US$38.21) |
+| [Peristaltic dosing pump (12/24V, relay or PWM driven)](parts/peristaltic-pump-doser.yaml) | **field-proven** | 4 | GPIO/PWM/UART |  | NZ$51.32 (~US$30.17) ^r |
+| [Tygon A-60-G chemical-resistant peristaltic tubing](parts/tygon-chemical-tubing.yaml) | **field-proven** | 4 | None |  | NZ$14.59 (~US$8.58) ^r _per metre_ |
 | [Ultrasonic distance sensor for tank level](parts/ultrasonic-tank-sensor.yaml) | works | 3 | GPIO/UART/I2C | 0x57 | NZ$25.00 (~US$14.70) |
-| [Float switch (tank level interlock)](parts/float-switch.yaml) | works | 1 | GPIO |  | NZ$8.00 (~US$4.70) |
+| [Metric food-grade push-to-connect check valve (10 mm)](parts/foodgrade-check-valve.yaml) | works | 2 | None |  | NZ$31.50 (~US$18.52) ^r |
+| [Float switch (tank level interlock)](parts/float-switch.yaml) | works | 1 | GPIO |  | NZ$13.65 (~US$8.02) ^r |
+| [Submersible clean/dirty water transfer pump (750 W)](parts/submersible-transfer-pump.yaml) | works | 1 | Mains |  | $$ |
 | [DS18B20 1-Wire temperature probe](parts/ds18b20.yaml) | works |  | 1-Wire |  | NZ$9.00 (~US$5.29) |
 | [Atlas Scientific EZO-EC conductivity circuit + probe](parts/atlas-ezo-ec.yaml) | experimental | 1 | I2C/UART | 0x64 | NZ$245.00 (~US$144.04) |
 | [Atlas Scientific EZO-RTD temperature circuit + PT-1000 probe](parts/atlas-ezo-rtd.yaml) | experimental | 1 | I2C/UART | 0x66 | NZ$140.00 (~US$82.31) |

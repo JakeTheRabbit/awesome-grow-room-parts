@@ -1,0 +1,51 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: foodgrade-check-valve
+name: Metric food-grade push-to-connect check valve (10 mm)
+manufacturer: generic (push-to-connect, food grade)
+part_numbers:
+- FFCVM10
+category: Water & fertigation
+subcategory: One-way valve for dosing lines
+bus:
+- None
+protocol_settings: 10 mm push-to-connect. Directional - flow arrow must point away from the stock tank.
+price:
+  band: $$
+  observed: 31.5
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: receipt
+vendors:
+- name: John Guest / equivalent push-to-connect distributor
+  url: https://www.johnguest.com/products/
+  part_number: FFCVM10
+ip_rating: IP68
+calibration_required: none
+quality_tier: works
+deployment_count: 2
+deployment_evidence:
+- espoe-peristaltic-pumps.yaml
+- atlas-reservoir.yaml
+evidence: On the dosing lines out of the peristaltic heads. Cheap protection against the failure where
+  a stock concentrate siphons back into a shared line.
+failure_modes:
+- Fitted backwards it silently blocks the dose - the pump runs, reports success, and nothing arrives.
+- Cracking pressure is not zero; a very low-flow peristaltic head may struggle to open it, so check the
+  head can actually shift it.
+- Non-food-grade equivalents leach into nutrient concentrate and perish in acid.
+notes: The reason to fit one is not the pump - it is the shared manifold. Without a check valve per dosing
+  line, concentrated pH-down can migrate up another pump's line into a different stock container, which
+  ruins the stock and is genuinely hazardous to handle.
+platforms:
+- Standalone
+works_with:
+- peristaltic-pump-doser
+- tygon-chemical-tubing
+- stm32-abd-doser
+image: assets/parts/foodgrade-check-valve.svg
+tags:
+- check-valve
+- dosing
+- fertigation
+- backflow

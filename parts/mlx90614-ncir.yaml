@@ -1,0 +1,85 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: mlx90614-ncir
+name: MLX90614 non-contact IR thermometer (M5Stack NCIR)
+manufacturer: Melexis / M5Stack
+part_numbers:
+- MLX90614
+- MLX90614ESF-BAA
+- U004 NCIR
+category: Thermal & optical
+subcategory: Single-point infrared surface thermometer
+bus:
+- I2C
+- Grove
+i2c:
+  address: '0x5a'
+  configurable: true
+  how_to_change: Address is stored in on-chip EEPROM and can be rewritten, but few libraries expose it.
+    Treat as fixed at 0x5A; use a mux for several.
+voltage:
+  min: 3.0
+  max: 5.0
+  nominal: 3.3
+  logic: 3.3
+price:
+  band: $$
+  observed: 33.52
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: listing
+vendors:
+- name: M5Stack NCIR Unit
+  url: https://shop.m5stack.com/products/ncir-sensor-unit
+  part_number: U004
+- name: Melexis (manufacturer)
+  url: https://www.melexis.com/en/product/MLX90614/
+  part_number: MLX90614ESF-BAA
+ip_rating: none
+calibration_required: factory
+calibration_notes: Factory-calibrated, but like any IR sensor it reports a temperature that assumes an
+  emissivity. Green foliage is about 0.95, not the 1.0 most libraries default to - leave it at 1.0 and
+  leaf temperature reads low.
+quality_tier: works
+deployment_count: 0
+deployment_evidence: []
+evidence: No active config in the current fleet - canopy temperature here is measured with the MLX90640
+  array instead. Catalogued because it is by far the cheapest route to a leaf-temperature signal, and
+  leaf VPD beats air VPD as a steering input.
+failure_modes:
+- Field of view is a CONE, roughly 35 degrees on the BAA. Mount it too far back and you are averaging
+  leaf, pot, floor and lamp into one number.
+- Reads the first opaque surface it sees - a leaf that moves out of frame silently changes what you are
+  measuring.
+- Emissivity left at 1.0 under-reads foliage by several degrees, which quietly corrupts any leaf-VPD calculation
+  downstream.
+- Sensitive to its own ambient temperature; mounting it near a driver or in the lamp's radiant path biases
+  it.
+notes: One spot versus the MLX90640's 768 - much cheaper, and adequate if you only need a single representative
+  canopy point. Mount it close enough that the cone sees leaf and nothing else, and set emissivity to
+  0.95 before believing any number it gives you.
+drivers:
+- name: ESPHome mlx90614 (external component)
+  url: https://github.com/esphome/esphome/pull/2934
+  kind: esphome-external
+- name: Melexis MLX90614 datasheet
+  url: https://www.melexis.com/en/product/MLX90614/
+  kind: datasheet
+platforms:
+- ESPHome
+- Home Assistant
+- Arduino
+- MicroPython
+- M5Stack
+works_with:
+- m5stack-atom-lite
+- tca9548a-mux
+alternatives:
+- mlx90640-thermal
+image: assets/parts/mlx90614-ncir.svg
+tags:
+- thermal
+- leaf-temperature
+- i2c
+- vpd
+- infrared

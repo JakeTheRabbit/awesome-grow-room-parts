@@ -16,9 +16,12 @@ voltage:
   note: 24VAC is the irrigation industry standard - it is deliberately NOT DC and not mains. Needs a 24VAC transformer and a relay rated for inductive AC loads.
 price:
   band: $$
-  observed: 42.0
+  observed: 47.06
+  source: receipt
   currency: NZD
   observed_date: "2026-03-01"
+  note: >-
+    Receipt price for a Hunter PGV 25mm 24VAC valve. The same figure appears on two separate purchase lines, so it is a settled trade price rather than a one-off.
 vendors:
   - name: Hunter Industries PGV
     url: https://www.hunterindustries.com/irrigation-product/valves/pgv

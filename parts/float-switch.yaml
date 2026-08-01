@@ -16,9 +16,12 @@ voltage:
   note: Dry contact - wire to a GPIO with INPUT_PULLUP and let the float pull it to ground.
 price:
   band: $
-  observed: 8.0
+  observed: 13.65
+  source: receipt
   currency: NZD
   observed_date: "2026-03-01"
+  note: >-
+    Receipt price for a small vertical float switch. A heavier-duty variant on the same receipt was NZ$66.43 - if you need a long stem or a higher switching current, budget for that end instead.
 vendors:
   - name: AliExpress (search float switch tank)
     url: https://www.aliexpress.com/w/wholesale-liquid-float-switch.html

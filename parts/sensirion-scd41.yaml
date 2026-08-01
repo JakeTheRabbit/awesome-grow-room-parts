@@ -24,10 +24,12 @@ voltage:
   note: M5Stack Grove unit accepts 5V and regulates onboard.
 price:
   band: $$
-  observed: 52.0
+  observed: 77.11
+  source: listing
   currency: NZD
   observed_date: "2026-03-01"
-  note: M5Stack CO2L Grove unit. Bare SCD41 modules are cheaper but need your own cabling.
+  note: >-
+    Vendor listing price for the M5Stack CO2L Grove unit (the packaged form most people buy). A bare Sensirion SCD41 module from a component distributor is cheaper but needs your own cabling and enclosure.
 vendors:
   - name: M5Stack CO2L Unit (SCD41)
     url: https://shop.m5stack.com/products/co2l-unit-with-temperature-and-humidity-sensor-scd41

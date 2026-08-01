@@ -52,6 +52,8 @@ price:
   observed: 85.0
   currency: NZD
   observed_date: "2026-03-01"
+  source: receipt                   # receipt | invoice | listing | estimate
+  # unit: per 200 m roll            # only when one unit is not one item
 vendors:
   - name: Acme Direct
     url: https://example.com/x1
@@ -109,6 +111,18 @@ paid. Every other currency shown on the site and in the README is **derived at
 build time** from [`data/fx.yaml`](data/fx.yaml), which holds the rate, the
 market date it refers to, and its source.
 
+- **Say where the price came from.** `source: receipt` (or `invoice`) means a
+  real transaction - what was actually paid, trade pricing included. `listing`
+  is a vendor's advertised price. `estimate` is a guess. Someone budgeting a
+  build is reading a different number in each case, so be honest about which
+  one you have.
+- **Watch for prices that are not per-unit.** Receipt lines routinely price a
+  roll, a bundle, or a cut length. If one unit is not one item, set `unit:`
+  (`per 200 m roll`, `per 5.8 m length`, `per metre`). A bundle price published
+  as a unit price overstates the part several times over.
+- **Never publish a line total, a quantity purchased, or anything identifying
+  the buyer.** Unit price and supplier product code only. No invoice or order
+  numbers, no account numbers, no delivery details, no contact names.
 - **Record what you paid.** Paid in EUR? Put `observed: 72.0, currency: EUR`.
   Do not convert it to NZD or USD first, and never write two currencies into a
   part file - a hand-written conversion is a number nobody will ever update.

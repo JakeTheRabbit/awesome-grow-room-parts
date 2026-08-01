@@ -1,0 +1,50 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: submersible-transfer-pump
+name: Submersible clean/dirty water transfer pump (750 W)
+manufacturer: generic (Ryobi-class 750 W submersible)
+part_numbers:
+- RSCD750
+category: Water & fertigation
+subcategory: Submersible pump for tank transfer and sump duty
+bus:
+- Mains
+voltage:
+  nominal: 240.0
+  note: 240 VAC. Must be on an RCD - it is a mains appliance sitting in water.
+price:
+  band: $$
+vendors:
+- name: Any hardware retailer - generic 750 W submersible
+  url: https://www.ryobi.com.au/products/water-pumps
+  part_number: RSCD750
+ip_rating: IP68
+calibration_required: none
+quality_tier: works
+deployment_count: 1
+deployment_evidence:
+- espoe-main-pump.yaml
+evidence: One in service for tank transfer and sump duty. The receipt line carried no unit price, so this
+  entry is band-only rather than carrying an invented figure.
+failure_modes:
+- Run dry and the seal goes in minutes - pair it with a float switch, which is the entire reason float-switch
+  is in this catalogue.
+- Clean/dirty models pass solids but the impeller still jams on fibrous root material.
+- Not designed for continuous duty; thermal cutouts on repeated short cycles.
+- A mains appliance in water. RCD protection is not optional, and neither is checking the lead.
+notes: Transfer and sump duty only - it is not a fertigation pump and it is not rated for continuous circulation.
+  Interlock it with a float switch so it cannot run dry, and put the same auto-shutoff pattern on it that
+  SAFETY.md describes for valves.
+platforms:
+- Home Assistant
+- Standalone
+works_with:
+- float-switch
+- ssr-25da
+- ultrasonic-tank-sensor
+image: assets/parts/submersible-transfer-pump.svg
+tags:
+- pump
+- submersible
+- tank
+- sump

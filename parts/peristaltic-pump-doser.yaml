@@ -19,10 +19,12 @@ voltage:
   note: 12V for small dosers, 24V for the faster heads. Drive through a relay or a MOSFET, never directly from a GPIO.
 price:
   band: $$
-  observed: 65.0
+  observed: 51.32
+  source: receipt
   currency: NZD
   observed_date: "2026-03-01"
-  note: Per head. A four-part nutrient program needs four.
+  note: >-
+    Receipt price for a 24V 600 mL/min stepper-driven head bought direct from the manufacturer. Branded lab pumps of the same spec run several times this.
 vendors:
   - name: Kamoer
     url: https://www.kamoer.com/products/peristaltic-pumps

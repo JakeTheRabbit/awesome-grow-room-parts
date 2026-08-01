@@ -123,6 +123,13 @@ code,.mono{font-family:var(--mono);font-size:11.5px}
 /* Derived (converted) money is visually demoted so it never reads as a price
    anyone actually quoted. The ~ is part of the rendered text, not decoration. */
 .derived{color:var(--quiet);font-style:italic;cursor:help}
+/* Price provenance. A receipt figure is what someone actually paid; an
+   estimate is a guess. Anyone budgeting a build needs to tell them apart. */
+.psrc{font-size:9.5px;padding:0 4px;border-radius:8px;margin-left:4px;
+  border:1px solid var(--line);color:var(--quiet);cursor:help;vertical-align:1px}
+.psrc.receipt,.psrc.invoice{background:rgba(63,164,106,.16);border-color:rgba(63,164,106,.5);color:var(--t-proven)}
+.psrc.listing{background:rgba(63,143,164,.14);border-color:rgba(63,143,164,.45);color:var(--t-works)}
+.psrc.estimate{background:transparent}
 #fxnote{color:var(--quiet)}
 #fxnote code{color:var(--dim)}
 
@@ -350,8 +357,19 @@ function priceHTML(p){
   } else if(shown !== own){
     html = '<span class="derived" title="'+esc(fxTip())+'">~'+esc(money(primary, shown))+'</span>';
   }
+  const src=p.price.source;
+  if(src && src!=='unknown')
+    html += '<span class="psrc '+esc(src)+'" title="'+esc(SRC_TIP[src]||src)+'">'+esc(src)+'</span>';
+  if(p.price.unit)
+    html += '<span class="psrc" title="This price is '+esc(p.price.unit)+'">'+esc(p.price.unit)+'</span>';
   return html;
 }
+const SRC_TIP = {
+  receipt:'From a purchase receipt - what was actually paid, including any trade pricing.',
+  invoice:'From a supplier invoice - what was actually paid.',
+  listing:'A vendor advertised price. Not necessarily what anyone paid.',
+  estimate:'A best guess. The weakest of the price signals in this catalogue.'
+};
 function fxNoteHTML(){
   const pairs=Object.keys(FX_RATES).map(c=>'1 '+FX_BASE+' = '+FX_RATES[c]+' '+c).join(', ');
   return '· converted at <code>'+esc(pairs)+'</code> ('+esc(FX.rate_date||'undated')+
@@ -397,6 +415,8 @@ const COLS = [
    cell:p=>((p.i2c&&p.i2c.alternates)||[]).map(a=>'<code>'+esc(a)+'</code>').join(' ')||EMPTY},
   {id:'i2c_also', label:'Also occupies', sort:p=>((p.i2c&&p.i2c.also_occupies)||[]).join(','),
    cell:p=>((p.i2c&&p.i2c.also_occupies)||[]).map(a=>'<code>'+esc(a)+'</code>').join(' ')||EMPTY},
+  {id:'price_source', label:'Price source', sort:p=>(p.price&&p.price.source)||null,
+   cell:p=>(p.price&&p.price.source)?'<span class="psrc '+esc(p.price.source)+'">'+esc(p.price.source)+'</span>':EMPTY},
   {id:'ip_rating', label:'IP rating', sort:p=>p.ip_rating||'',
    cell:p=>esc(p.ip_rating||'')||EMPTY},
   {id:'calibration', label:'Calibration', sort:p=>p.calibration_required||'',
@@ -431,6 +451,7 @@ const FACETS = [
     return [n<=3.3?'3.3 V':n<=5?'5 V':n<=12?'12 V':n<=24?'24 V':'> 24 V'];}],
   ['vendor','Vendor',p=>{const s=new Set((p.vendors||[]).map(v=>v.name.split(/[-–(]/)[0].trim()));
     return Array.from(s);}],
+  ['psrc','Price source',p=>(p.price&&p.price.source)?[p.price.source]:[]],
   ['ip','IP rating',p=>p.ip_rating?[p.ip_rating]:[]],
   ['cal','Calibration',p=>p.calibration_required?[p.calibration_required]:[]]
 ];

@@ -26,6 +26,7 @@ voltage:
 price:
   band: $$$
   observed: 230.0
+  source: estimate
   currency: NZD
   observed_date: "2026-03-01"
   note: Circuit plus lab-grade probe. The probe is the consumable and the expensive half.

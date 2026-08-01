@@ -23,6 +23,7 @@ voltage:
 price:
   band: $
   observed: 6.0
+  source: estimate
   currency: NZD
   observed_date: '2026-03-01'
   note: Built into most M5Stack Core and AirQ units at no extra cost.

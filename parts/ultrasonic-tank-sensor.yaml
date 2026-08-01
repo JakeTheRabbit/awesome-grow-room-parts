@@ -24,6 +24,7 @@ voltage:
 price:
   band: $
   observed: 25.0
+  source: estimate
   currency: NZD
   observed_date: "2026-03-01"
   note: Buy the waterproof-transducer version. The bare HC-SR04 does not survive a tank headspace.

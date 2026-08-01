@@ -1,0 +1,73 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: m5stack-2ch-relay
+name: M5Stack 2-channel SPST relay unit
+manufacturer: M5Stack
+part_numbers:
+- U131
+- 2-Channel SPST Relay Unit
+category: Actuation & relays
+subcategory: 2-channel I2C relay module, Grove
+bus:
+- I2C
+- Grove
+i2c:
+  address: '0x25'
+  alternates:
+  - '0x26'
+  - '0x27'
+  configurable: true
+  how_to_change: Solder jumpers select the address. Note 0x26 is the 4-Relay default, so check the collision
+    map before pairing the two on one bus.
+voltage:
+  min: 3.3
+  max: 5.0
+  nominal: 5.0
+  note: Contacts rated 250 VAC / 10 A nominal - derate hard for inductive loads.
+price:
+  band: $
+  observed: 24.75
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: listing
+vendors:
+- name: M5Stack
+  url: https://shop.m5stack.com/products/2-channel-spst-relay-unit
+  part_number: U131
+ip_rating: none
+calibration_required: none
+quality_tier: works
+deployment_count: 0
+deployment_evidence: []
+evidence: Not currently deployed - this fleet standardised on the 4-channel unit. Catalogued because two
+  channels is often the honest requirement, and a smaller module means a smaller blast radius when it
+  fails.
+failure_modes:
+- Same welded-contact risk as any relay driving an inductive load - fit a snubber or drive a contactor.
+- Default 0x25 is one address away from the 4-Relay's 0x26; mixing them without checking is an easy collision.
+- Restores its previous state on boot unless told otherwise - force restore_mode ALWAYS_OFF on anything
+  that moves water or gas.
+notes: 'Everything in SAFETY.md applies here exactly as it does to the 4-channel unit. Fewer channels
+  is a feature for anything critical: one failed module takes out two loads rather than four.'
+drivers:
+- name: ESPHome i2c switch components
+  url: https://esphome.io/components/switch/
+  kind: esphome-core
+platforms:
+- ESPHome
+- Home Assistant
+- Arduino
+- M5Stack
+works_with:
+- m5stack-poesp32
+- hunter-pgv-solenoid
+- transformer-24vac
+alternatives:
+- m5stack-4relay
+- ssr-25da
+image: assets/parts/m5stack-2ch-relay.svg
+tags:
+- relay
+- i2c
+- m5stack
+- safety

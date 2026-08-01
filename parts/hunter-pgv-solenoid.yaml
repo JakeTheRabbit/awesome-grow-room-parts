@@ -1,0 +1,80 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: hunter-pgv-solenoid
+name: Hunter PGV 24 VAC irrigation solenoid valve
+manufacturer: Hunter Industries
+part_numbers:
+- PGV-101
+- PGV-101G
+- PGV-100G
+category: Irrigation hardware
+subcategory: 24 VAC in-line solenoid zone valve
+bus:
+- Mains
+protocol_settings: 24 VAC coil, ~0.3 A inrush / ~0.2 A hold. Switch with a relay or triac, never a DC
+  output.
+voltage:
+  min: 22.0
+  max: 28.0
+  nominal: 24.0
+  note: 24 VAC ONLY. A 24 VDC supply will buzz the coil and eventually cook it.
+price:
+  band: $$
+  observed: 47.06
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: receipt
+vendors:
+- name: Hunter Industries (manufacturer)
+  url: https://www.hunterindustries.com/irrigation-product/valves/pgv
+  part_number: PGV-101
+- name: Irrigation Express
+  url: https://www.irrigationexpress.com.au/hunter-pgv-solenoid-valve
+  part_number: PGV101
+ip_rating: IP68
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 6
+deployment_evidence:
+- room-1-irrigation-relays.yaml
+- espoe-multiplexer-irrigation-relays.yaml
+- room-3-solenoid-relays.yaml
+- ssr-relay-irrigation.yaml
+- poe-room-1-r1.yaml
+- poe-room-1-r2.yaml
+evidence: The zone valve behind the relay nodes in this fleet - six configs drive 24 VAC valves through
+  relay boards. Bought repeatedly at the same trade price across separate purchase lines, which is a fair
+  sign it is the settled choice rather than a trial.
+failure_modes:
+- Grit under the diaphragm holds the valve part-open and it weeps continuously - fit a screen filter upstream,
+  which is cheaper than the callout.
+- The solenoid can be unscrewed under pressure by accident during manual bleeding, which dumps the line.
+- 24 VAC coils hum audibly; in a quiet room that reads as a fault when it is normal.
+- Fails OPEN if the diaphragm perforates - the software safety pattern cannot save you here, so put a
+  master valve or a normally-closed contactor upstream.
+notes: Pair with a 24 VAC transformer sized for simultaneous zones (see transformer-24vac). Inrush is
+  roughly 3x hold current, so a transformer that runs three valves steady-state may still brown out when
+  they all pull in together - stagger the switch-on. Everything driving one of these must carry the flood-safety
+  pattern in SAFETY.md.
+drivers:
+- name: Hunter PGV installation guide
+  url: https://www.hunterindustries.com/irrigation-product/valves/pgv
+  kind: manual
+platforms:
+- ESPHome
+- Home Assistant
+- Standalone
+works_with:
+- m5stack-4relay
+- ssr-25da
+- transformer-24vac
+- amiad-screen-filter
+alternatives:
+- solenoid-valve-24vac
+image: assets/parts/hunter-pgv-solenoid.svg
+tags:
+- solenoid
+- valve
+- irrigation
+- 24vac
+- zone

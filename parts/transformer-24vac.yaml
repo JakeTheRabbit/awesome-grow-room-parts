@@ -1,0 +1,63 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: transformer-24vac
+name: 240 V to 24 VAC 150 VA transformer
+manufacturer: generic (toroidal / EI lighting transformer)
+part_numbers:
+- MP3045
+- 24VAC-150VA
+category: Irrigation hardware
+subcategory: Mains-to-24 VAC supply for solenoid valves
+bus:
+- Mains
+voltage:
+  min: 220.0
+  max: 250.0
+  nominal: 240.0
+  note: 240 VAC in, 24 VAC out. 150 VA is roughly six PGV-class valves held open, or three with headroom
+    for inrush.
+price:
+  band: $$
+  observed: 95.9
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: receipt
+vendors:
+- name: Generic lighting/irrigation transformer
+  url: https://www.altronics.com.au/p/m3045-240vac-to-24vac-150va-transformer/
+  part_number: MP3045
+ip_rating: none
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 4
+deployment_evidence:
+- room-1-irrigation-relays.yaml
+- espoe-multiplexer-irrigation-relays.yaml
+- room-3-solenoid-relays.yaml
+- ssr-relay-irrigation.yaml
+evidence: Every 24 VAC valve node in this fleet needs one. Counted against the configs that drive 24 VAC
+  solenoids, since the transformer is the part that makes those work - it does not appear in the YAML
+  itself, being upstream of the controller.
+failure_modes:
+- Undersized VA and the valves chatter instead of pulling in - size for INRUSH across every valve that
+  can open together, not steady-state hold.
+- It is a mains part. It belongs in an enclosure, on its own protected circuit, wired by someone qualified
+  to do so.
+- Runs warm continuously; in a sealed control box that heat has to go somewhere.
+- No isolation between output legs on cheap units - do not assume the 24 VAC common is at earth potential.
+notes: 'Keeping valve power at 24 VAC is the single best decision in an irrigation control box: it keeps
+  mains out of the low-voltage enclosure entirely, so a wet fitting near the controller is a nuisance
+  rather than a hazard. Size at roughly 3x the steady-state draw of the valves you can open simultaneously.'
+platforms:
+- Standalone
+works_with:
+- hunter-pgv-solenoid
+- solenoid-valve-24vac
+- m5stack-4relay
+image: assets/parts/transformer-24vac.svg
+tags:
+- transformer
+- 24vac
+- power
+- irrigation
+- mains

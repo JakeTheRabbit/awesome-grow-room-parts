@@ -24,10 +24,12 @@ voltage:
   logic: 3.3
 price:
   band: $$$
-  observed: 120.0
+  observed: 115.5
+  source: listing
   currency: NZD
-  observed_date: '2026-03-01'
-  note: BAA (55 deg FOV) and BAB (110 deg wide FOV) differ in price and coverage.
+  observed_date: "2026-03-01"
+  note: >-
+    Vendor listing price for the packaged M5Stack thermal-camera unit. A bare MLX90640 breakout from a component distributor sits lower; the BAA (55 deg) and BAB (110 deg) variants also differ in price.
 vendors:
 - name: Digi-Key - Melexis MLX90640
   url: https://www.digikey.com/en/products/filter/optical-sensors/thermal-imaging

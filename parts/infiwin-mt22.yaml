@@ -17,6 +17,7 @@ voltage:
 price:
   band: $$
   observed: 85.0
+  source: estimate
   currency: NZD
   observed_date: "2026-03-01"
   note: Roughly a fifth of a TEROS 12. That price gap is the entire reason to bother calibrating it.

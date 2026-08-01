@@ -1,0 +1,49 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: netafim-line-flush-valve
+name: Netafim automatic line flush valve (16 mm)
+manufacturer: Netafim
+part_numbers:
+- 32000-007850
+category: Irrigation hardware
+subcategory: Automatic end-of-line flush valve
+bus:
+- None
+price:
+  band: $
+  observed: 12.38
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: receipt
+vendors:
+- name: Netafim (manufacturer)
+  url: https://www.netafim.com/en/products/accessories/
+  part_number: 32000-007850
+ip_rating: IP68
+calibration_required: none
+quality_tier: works
+deployment_count: 2
+deployment_evidence:
+- espoe-multiplexer-irrigation-relays.yaml
+- room-3-solenoid-relays.yaml
+evidence: Fitted at the end of dripline runs. Opens at low pressure at the start of each irrigation and
+  closes as the line comes up to pressure, so the line self-purges.
+failure_modes:
+- Discharges to wherever you point it - into a tray or drain, not onto the floor or into the electrics.
+- Fails open in grit and then bleeds continuously, which shows up as a zone that never reaches pressure.
+- Adds a small volume to every shot; if you are dosing precisely, account for it.
+notes: 'Solves the problem where sediment collects at the dead end of a lateral and gradually migrates
+  back into the last few emitters. Pairs naturally with the screen filter: the filter stops most of it
+  arriving, this clears whatever still does.'
+platforms:
+- Standalone
+works_with:
+- netafim-lateral-pipe
+- netafim-pcj-dripper
+- amiad-screen-filter
+image: assets/parts/netafim-line-flush-valve.svg
+tags:
+- flush
+- valve
+- irrigation
+- maintenance

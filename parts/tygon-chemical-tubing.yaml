@@ -1,0 +1,61 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: tygon-chemical-tubing
+name: Tygon A-60-G chemical-resistant peristaltic tubing
+manufacturer: Saint-Gobain
+part_numbers:
+- AFL00017
+- Tygon A-60-G
+category: Water & fertigation
+subcategory: Peristaltic pump tubing, chemical dispensing grade
+bus:
+- None
+price:
+  band: $$
+  observed: 14.59
+  unit: per metre
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: receipt
+vendors:
+- name: Saint-Gobain Process Systems
+  url: https://www.processsystems.saint-gobain.com/tygon-tubing
+  part_number: AFL00017
+ip_rating: none
+calibration_required: none
+calibration_notes: Peristaltic dose volume is a function of TUBING condition, not just pump steps. Re-calibrate
+  mL-per-revolution after fitting new tube and again once it has bedded in, or every dose you have ever
+  calibrated is wrong.
+quality_tier: field-proven
+deployment_count: 4
+deployment_evidence:
+- espoe-peristaltic-pumps.yaml
+- espoe-main-pump.yaml
+- espoe-multiplexer-irrigation-relays.yaml
+- atlas-reservoir.yaml
+evidence: The consumable inside every dosing head in this fleet. Specified for chemical dispensing rather
+  than generic silicone, which matters because concentrated nutrient and pH adjusters destroy the wrong
+  polymer.
+failure_modes:
+- THE wear item in any peristaltic doser. It flattens where the rollers run and delivered volume drifts
+  DOWN silently - your EC creeps off target and the pump reports success throughout.
+- Concentrated pH-down (nitric or phosphoric) embrittles cheap silicone in weeks; A-60-G is specified
+  for it, generic tubing is not.
+- Replacing it changes the calibration, so a tube swap without re-calibration is itself a dosing error.
+- Sized bore only - the wrong ID either will not seat in the rollers or slips and pumps nothing.
+notes: Budget this as a scheduled consumable, not a spare part. Put a recurring reminder against it and
+  re-calibrate on replacement. The failure mode that hurts is not a burst tube, which is obvious - it
+  is the slow decline in delivered volume, which looks exactly like your nutrient recipe being wrong.
+platforms:
+- Standalone
+works_with:
+- peristaltic-pump-doser
+- stm32-abd-doser
+- atlas-ezo-ph
+image: assets/parts/tygon-chemical-tubing.svg
+tags:
+- tubing
+- peristaltic
+- dosing
+- consumable
+- fertigation

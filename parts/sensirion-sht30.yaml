@@ -23,6 +23,7 @@ voltage:
 price:
   band: $
   observed: 12.0
+  source: estimate
   currency: NZD
   observed_date: "2026-03-01"
 vendors:

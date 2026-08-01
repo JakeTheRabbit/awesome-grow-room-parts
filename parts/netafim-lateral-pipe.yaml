@@ -1,0 +1,63 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: netafim-lateral-pipe
+name: Netafim white lateral dripline pipe (20 mm, 3 bar)
+manufacturer: Netafim
+part_numbers:
+- 19961-119200
+category: Irrigation hardware
+subcategory: 20 mm LDPE lateral, 200 m roll
+bus:
+- None
+protocol_settings: 20 mm OD, rated 3 bar. Takes barbed and ratchet-clip fittings.
+price:
+  band: $$$
+  observed: 182.0
+  unit: per 200 m roll
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: receipt
+vendors:
+- name: Netafim (manufacturer)
+  url: https://www.netafim.com/en/products/dripperline/
+  part_number: 19961-119200
+- name: Irrigation Express
+  url: https://www.irrigationexpress.com.au/white-lateral-pipe
+  part_number: 19961-119200
+ip_rating: IP68
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 6
+deployment_evidence:
+- room-1-irrigation-relays.yaml
+- room-1-row1-back-sdi12.yaml
+- room-1-row2-back-sdi12.yaml
+- room-1-row3-back-sdi12.yaml
+- espoe-multiplexer-irrigation-relays.yaml
+- room-3-solenoid-relays.yaml
+evidence: The lateral run feeding every dripper zone in this fleet. Priced per 200 m roll on the receipt,
+  which works out around NZ$0.91 per metre.
+failure_modes:
+- White pipe is chosen to keep root-zone water cooler and to make algae visible; black pipe in a lit room
+  heats the first shot noticeably.
+- Kinks at tight radii and the kink never fully recovers - it becomes a permanent flow restriction you
+  will not find without a pressure gauge.
+- Barbs tear out of warm, soft pipe if the line is pressurised before the clips are on.
+- UV degrades LDPE over years; under direct high-intensity LED it ages faster than the datasheet's outdoor
+  figure suggests.
+notes: Priced per roll, not per metre - see `unit`. The commodity fittings that go with it (barbed elbows,
+  tees, ratchet clips, threaded tees, end caps) are all in the NZ$0.30-$4 range and are not catalogued
+  individually; buy them as a kit with the roll. Warm the pipe end in hot water before pushing on a barb
+  in winter.
+platforms:
+- Standalone
+works_with:
+- netafim-pcj-dripper
+- netafim-line-flush-valve
+- hunter-pgv-solenoid
+image: assets/parts/netafim-lateral-pipe.svg
+tags:
+- pipe
+- lateral
+- dripline
+- irrigation

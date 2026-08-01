@@ -1,0 +1,61 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: amiad-screen-filter
+name: Amiad 25 mm compact screen filter (130 micron)
+manufacturer: Amiad Water Systems
+part_numbers:
+- PF25PF-130S
+- Amiad TAGLINE 25mm
+category: Irrigation hardware
+subcategory: In-line screen filter, stainless element
+bus:
+- None
+protocol_settings: 25 mm BSP in/out. 130 micron stainless screen. Flush the element, do not run it to
+  blockage.
+price:
+  band: $$
+  observed: 48.82
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: receipt
+vendors:
+- name: Amiad (manufacturer)
+  url: https://www.amiad.com/filtersProducts.asp
+  part_number: TAGLINE
+- name: Irrigation Express
+  url: https://www.irrigationexpress.com.au/amiad-plastic-compact-screen-filter
+  part_number: PF25PF-130S
+ip_rating: IP68
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 4
+deployment_evidence:
+- room-1-irrigation-relays.yaml
+- espoe-multiplexer-irrigation-relays.yaml
+- room-3-solenoid-relays.yaml
+- espoe-main-pump.yaml
+evidence: Fitted upstream of every dripline zone in this fleet. Counted against the zone-valve nodes it
+  protects; like the transformer it is plumbing rather than a configured device, so it does not appear
+  in any YAML.
+failure_modes:
+- Left unflushed it blocks, pressure drops, and the far end of the dripline silently under-waters - the
+  plants tell you before any sensor does.
+- 130 micron passes fine silt that will still clog PCJ drippers over a season; go to 120 mesh / 100 micron
+  if your source water is dirty.
+- The plastic body will crack if over-tightened onto a rigid PVC riser - use a union.
+- No differential-pressure indicator on the compact models, so blockage is invisible until flow drops.
+notes: The cheapest insurance in the whole irrigation stack. A NZ$49 filter protects a few hundred dollars
+  of drippers and, more importantly, stops the uneven watering that partial blockage causes - which is
+  far harder to diagnose than an outright failure. Fit it upstream of the solenoids, not downstream.
+platforms:
+- Standalone
+works_with:
+- hunter-pgv-solenoid
+- netafim-pcj-dripper
+- pressure-reducing-valve
+image: assets/parts/amiad-screen-filter.svg
+tags:
+- filter
+- irrigation
+- screen
+- maintenance

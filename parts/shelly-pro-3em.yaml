@@ -1,0 +1,71 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: shelly-pro-3em
+name: Shelly Pro 3EM three-phase energy meter
+manufacturer: Allterco / Shelly
+part_numbers:
+- Shelly Pro 3EM
+- Pro EM-50
+category: Energy monitoring
+subcategory: DIN-rail 3-phase meter with CT clamps
+bus:
+- Ethernet
+- WiFi
+- Mains
+protocol_settings: Local HTTP/RPC API plus MQTT. Integrates with Home Assistant natively - no cloud account
+  required.
+voltage:
+  min: 110.0
+  max: 240.0
+  nominal: 240.0
+  note: Mains-connected DIN-rail device. CT clamps go around the phase conductors.
+price:
+  band: $$$
+  observed: 249.99
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: listing
+vendors:
+- name: Shelly (manufacturer)
+  url: https://www.shelly.com/products/shelly-pro-3em-120a
+  part_number: Pro 3EM
+ip_rating: none
+calibration_required: none
+quality_tier: works
+deployment_count: 0
+deployment_evidence: []
+evidence: In service on the main distribution board here, but it is a commercial device with its own firmware
+  rather than an ESPHome node, so it has no device config to count. Tiered on operating experience, not
+  on config-file evidence.
+failure_modes:
+- CT clamps are directional - fitted backwards a phase reads negative, which looks like export rather
+  than an install error.
+- 'Sized clamps: a 120 A CT on a 16 A circuit wastes most of its resolution and small loads disappear
+  into the noise.'
+- It is a DIN-rail mains device. Installation is an electrician's job in most jurisdictions.
+- WiFi in a metal distribution board is usually poor - use the wired variant or an external antenna.
+notes: Per-phase power is the cheapest way to catch a failing compressor, a dehumidifier stuck on, or
+  a lighting contactor that did not drop out - all of which show up in the load curve well before anything
+  else notices. Phase balance also matters on 3-phase supply, and this is the only thing that will tell
+  you about it.
+drivers:
+- name: Home Assistant Shelly integration
+  url: https://www.home-assistant.io/integrations/shelly/
+  kind: other
+- name: Shelly Pro 3EM documentation
+  url: https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen2/ShellyPro3EM
+  kind: manual
+platforms:
+- Home Assistant
+- MQTT
+- Node-RED
+- Standalone
+works_with:
+- ssr-25da
+image: assets/parts/shelly-pro-3em.svg
+tags:
+- energy
+- power
+- 3-phase
+- monitoring
+- din-rail

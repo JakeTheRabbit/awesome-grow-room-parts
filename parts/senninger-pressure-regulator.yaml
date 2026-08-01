@@ -1,0 +1,52 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: senninger-pressure-regulator
+name: Senninger 20 psi fixed pressure regulator
+manufacturer: Senninger Irrigation
+part_numbers:
+- PRV20LF-20
+category: Irrigation hardware
+subcategory: Fixed-outlet low-flow pressure regulator
+bus:
+- None
+protocol_settings: Fixed 20 psi (~1.4 bar) outlet. Low-flow model - it needs a minimum flow to regulate
+  properly.
+price:
+  band: $$
+  observed: 22.32
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: receipt
+vendors:
+- name: Senninger (manufacturer)
+  url: https://www.senninger.com/products/pressure-regulators
+  part_number: PRV20LF
+ip_rating: IP68
+calibration_required: none
+quality_tier: works
+deployment_count: 2
+deployment_evidence:
+- espoe-multiplexer-irrigation-relays.yaml
+- room-3-solenoid-relays.yaml
+evidence: Two on zone feeds, downstream of the main reducer. Fixed-outlet regulators per zone are the
+  cheap way to stop one zone's pressure moving when another opens.
+failure_modes:
+- Below its minimum flow it does not regulate at all and simply passes inlet pressure - a small zone on
+  a big regulator is a silent failure.
+- 'Fixed outlet means no adjustment: buy the right psi for your emitters or buy a different one.'
+- Directional - fitting it backwards does nothing and looks fine.
+notes: Per-zone regulation on top of a single main reducer keeps zones independent, so opening a second
+  zone does not change delivery in the first. Cheap enough to fit per zone and worth it if you irrigate
+  zones simultaneously.
+platforms:
+- Standalone
+works_with:
+- hunter-pgv-solenoid
+- netafim-pcj-dripper
+- pressure-reducing-valve
+image: assets/parts/senninger-pressure-regulator.svg
+tags:
+- pressure
+- regulator
+- irrigation
+- zone

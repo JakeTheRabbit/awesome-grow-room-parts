@@ -1,0 +1,58 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: pvc-pressure-pipe-25
+name: 25 mm PVC pressure pipe (PN12)
+manufacturer: generic (PN12 pressure pipe)
+part_numbers:
+- 800-25-PN125.8ERA
+category: Irrigation hardware
+subcategory: Rigid mains-side distribution pipe
+bus:
+- None
+protocol_settings: 25 mm, PN12 (12 bar). Solvent-weld or threaded fittings.
+price:
+  band: $
+  observed: 15.49
+  unit: per 5.8 m length
+  currency: NZD
+  observed_date: '2026-03-01'
+  source: receipt
+  note: The same receipt also lists a 5-length bundle at NZ$77.45, which is this per-length price times
+    five, not a separate unit price.
+vendors:
+- name: Irrigation Express
+  url: https://www.irrigationexpress.com.au/pvc-pressure-pipe
+  part_number: 800-25-PN125.8ERA
+ip_rating: IP68
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 4
+deployment_evidence:
+- room-1-irrigation-relays.yaml
+- espoe-multiplexer-irrigation-relays.yaml
+- room-3-solenoid-relays.yaml
+- espoe-main-pump.yaml
+evidence: The rigid distribution backbone from pump to zone valves in this fleet. PVC on the pressurised
+  mains side, LDPE lateral downstream of the valves.
+failure_modes:
+- Solvent-weld joints made in the cold or on a damp pipe fail weeks later, not immediately - which is
+  the worst possible timing.
+- PN12 is comfortable for mains but the FITTINGS are usually the weak point; a pipe rated 12 bar on a
+  6 bar fitting is a 6 bar system.
+- Goes brittle under sustained UV / high-intensity LED - sleeve or paint any exposed run.
+- Rigid pipe transmits pump vibration into the building; use a flexible section at the pump.
+notes: Sold in 5.8 m lengths and often bundled - check whether a quoted price is per length or per bundle
+  before budgeting. Commodity PVC fittings (elbows, tees, unions, valve sockets, end caps, clips) run
+  NZ$0.79-$8 each and are not catalogued individually.
+platforms:
+- Standalone
+works_with:
+- hunter-pgv-solenoid
+- amiad-screen-filter
+- pressure-reducing-valve
+image: assets/parts/pvc-pressure-pipe-25.svg
+tags:
+- pipe
+- pvc
+- irrigation
+- mains

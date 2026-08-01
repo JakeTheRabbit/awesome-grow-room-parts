@@ -1,6 +1,73 @@
 {
   "parts": [
     {
+      "id": "amiad-screen-filter",
+      "name": "Amiad 25 mm compact screen filter (130 micron)",
+      "manufacturer": "Amiad Water Systems",
+      "part_numbers": [
+        "PF25PF-130S",
+        "Amiad TAGLINE 25mm"
+      ],
+      "category": "Irrigation hardware",
+      "subcategory": "In-line screen filter, stainless element",
+      "bus": [
+        "None"
+      ],
+      "protocol_settings": "25 mm BSP in/out. 130 micron stainless screen. Flush the element, do not run it to blockage.",
+      "price": {
+        "band": "$$",
+        "observed": 48.82,
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "receipt"
+      },
+      "vendors": [
+        {
+          "name": "Amiad (manufacturer)",
+          "url": "https://www.amiad.com/filtersProducts.asp",
+          "part_number": "TAGLINE"
+        },
+        {
+          "name": "Irrigation Express",
+          "url": "https://www.irrigationexpress.com.au/amiad-plastic-compact-screen-filter",
+          "part_number": "PF25PF-130S"
+        }
+      ],
+      "ip_rating": "IP68",
+      "calibration_required": "none",
+      "quality_tier": "field-proven",
+      "deployment_count": 4,
+      "deployment_evidence": [
+        "room-1-irrigation-relays.yaml",
+        "espoe-multiplexer-irrigation-relays.yaml",
+        "room-3-solenoid-relays.yaml",
+        "espoe-main-pump.yaml"
+      ],
+      "evidence": "Fitted upstream of every dripline zone in this fleet. Counted against the zone-valve nodes it protects; like the transformer it is plumbing rather than a configured device, so it does not appear in any YAML.",
+      "failure_modes": [
+        "Left unflushed it blocks, pressure drops, and the far end of the dripline silently under-waters - the plants tell you before any sensor does.",
+        "130 micron passes fine silt that will still clog PCJ drippers over a season; go to 120 mesh / 100 micron if your source water is dirty.",
+        "The plastic body will crack if over-tightened onto a rigid PVC riser - use a union.",
+        "No differential-pressure indicator on the compact models, so blockage is invisible until flow drops."
+      ],
+      "notes": "The cheapest insurance in the whole irrigation stack. A NZ$49 filter protects a few hundred dollars of drippers and, more importantly, stops the uneven watering that partial blockage causes - which is far harder to diagnose than an outright failure. Fit it upstream of the solenoids, not downstream.",
+      "platforms": [
+        "Standalone"
+      ],
+      "works_with": [
+        "hunter-pgv-solenoid",
+        "netafim-pcj-dripper",
+        "pressure-reducing-valve"
+      ],
+      "image": "assets/parts/amiad-screen-filter.svg",
+      "tags": [
+        "filter",
+        "irrigation",
+        "screen",
+        "maintenance"
+      ]
+    },
+    {
       "id": "as7341",
       "name": "AS7341 11-channel spectral sensor",
       "manufacturer": "ams OSRAM",
@@ -27,6 +94,7 @@
       "price": {
         "band": "$$",
         "observed": 48.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -128,6 +196,7 @@
       "price": {
         "band": "$$$",
         "observed": 245.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -213,6 +282,7 @@
       "price": {
         "band": "$$$",
         "observed": 230.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01",
         "note": "Circuit plus lab-grade probe. The probe is the consumable and the expensive half."
@@ -320,6 +390,7 @@
       "price": {
         "band": "$$$",
         "observed": 140.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -398,6 +469,7 @@
       "price": {
         "band": "$",
         "observed": 7.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -496,6 +568,7 @@
       "price": {
         "band": "$",
         "observed": 9.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -584,6 +657,7 @@
       "price": {
         "band": "$$",
         "observed": 28.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -669,6 +743,7 @@
       "price": {
         "band": "$",
         "observed": 6.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -878,6 +953,7 @@
       "price": {
         "band": "$$",
         "observed": 95.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -1189,6 +1265,7 @@
       "price": {
         "band": "$$",
         "observed": 80.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -1268,6 +1345,7 @@
       "price": {
         "band": "$",
         "observed": 9.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01",
         "note": "Waterproof stainless probe on a 1-3 m lead."
@@ -1354,9 +1432,11 @@
       },
       "price": {
         "band": "$",
-        "observed": 8.0,
+        "observed": 13.65,
+        "source": "receipt",
         "currency": "NZD",
-        "observed_date": "2026-03-01"
+        "observed_date": "2026-03-01",
+        "note": "Receipt price for a small vertical float switch. A heavier-duty variant on the same receipt was NZ$66.43 - if you need a long stem or a higher switching current, budget for that end instead."
       },
       "vendors": [
         {
@@ -1406,6 +1486,64 @@
         "interlock",
         "safety-critical",
         "budget"
+      ]
+    },
+    {
+      "id": "foodgrade-check-valve",
+      "name": "Metric food-grade push-to-connect check valve (10 mm)",
+      "manufacturer": "generic (push-to-connect, food grade)",
+      "part_numbers": [
+        "FFCVM10"
+      ],
+      "category": "Water & fertigation",
+      "subcategory": "One-way valve for dosing lines",
+      "bus": [
+        "None"
+      ],
+      "protocol_settings": "10 mm push-to-connect. Directional - flow arrow must point away from the stock tank.",
+      "price": {
+        "band": "$$",
+        "observed": 31.5,
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "receipt"
+      },
+      "vendors": [
+        {
+          "name": "John Guest / equivalent push-to-connect distributor",
+          "url": "https://www.johnguest.com/products/",
+          "part_number": "FFCVM10"
+        }
+      ],
+      "ip_rating": "IP68",
+      "calibration_required": "none",
+      "quality_tier": "works",
+      "deployment_count": 2,
+      "deployment_evidence": [
+        "espoe-peristaltic-pumps.yaml",
+        "atlas-reservoir.yaml"
+      ],
+      "evidence": "On the dosing lines out of the peristaltic heads. Cheap protection against the failure where a stock concentrate siphons back into a shared line.",
+      "failure_modes": [
+        "Fitted backwards it silently blocks the dose - the pump runs, reports success, and nothing arrives.",
+        "Cracking pressure is not zero; a very low-flow peristaltic head may struggle to open it, so check the head can actually shift it.",
+        "Non-food-grade equivalents leach into nutrient concentrate and perish in acid."
+      ],
+      "notes": "The reason to fit one is not the pump - it is the shared manifold. Without a check valve per dosing line, concentrated pH-down can migrate up another pump's line into a different stock container, which ruins the stock and is genuinely hazardous to handle.",
+      "platforms": [
+        "Standalone"
+      ],
+      "works_with": [
+        "peristaltic-pump-doser",
+        "tygon-chemical-tubing",
+        "stm32-abd-doser"
+      ],
+      "image": "assets/parts/foodgrade-check-valve.svg",
+      "tags": [
+        "check-valve",
+        "dosing",
+        "fertigation",
+        "backflow"
       ]
     },
     {
@@ -1491,6 +1629,96 @@
       ]
     },
     {
+      "id": "hunter-pgv-solenoid",
+      "name": "Hunter PGV 24 VAC irrigation solenoid valve",
+      "manufacturer": "Hunter Industries",
+      "part_numbers": [
+        "PGV-101",
+        "PGV-101G",
+        "PGV-100G"
+      ],
+      "category": "Irrigation hardware",
+      "subcategory": "24 VAC in-line solenoid zone valve",
+      "bus": [
+        "Mains"
+      ],
+      "protocol_settings": "24 VAC coil, ~0.3 A inrush / ~0.2 A hold. Switch with a relay or triac, never a DC output.",
+      "voltage": {
+        "min": 22.0,
+        "max": 28.0,
+        "nominal": 24.0,
+        "note": "24 VAC ONLY. A 24 VDC supply will buzz the coil and eventually cook it."
+      },
+      "price": {
+        "band": "$$",
+        "observed": 47.06,
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "receipt"
+      },
+      "vendors": [
+        {
+          "name": "Hunter Industries (manufacturer)",
+          "url": "https://www.hunterindustries.com/irrigation-product/valves/pgv",
+          "part_number": "PGV-101"
+        },
+        {
+          "name": "Irrigation Express",
+          "url": "https://www.irrigationexpress.com.au/hunter-pgv-solenoid-valve",
+          "part_number": "PGV101"
+        }
+      ],
+      "ip_rating": "IP68",
+      "calibration_required": "none",
+      "quality_tier": "field-proven",
+      "deployment_count": 6,
+      "deployment_evidence": [
+        "room-1-irrigation-relays.yaml",
+        "espoe-multiplexer-irrigation-relays.yaml",
+        "room-3-solenoid-relays.yaml",
+        "ssr-relay-irrigation.yaml",
+        "poe-room-1-r1.yaml",
+        "poe-room-1-r2.yaml"
+      ],
+      "evidence": "The zone valve behind the relay nodes in this fleet - six configs drive 24 VAC valves through relay boards. Bought repeatedly at the same trade price across separate purchase lines, which is a fair sign it is the settled choice rather than a trial.",
+      "failure_modes": [
+        "Grit under the diaphragm holds the valve part-open and it weeps continuously - fit a screen filter upstream, which is cheaper than the callout.",
+        "The solenoid can be unscrewed under pressure by accident during manual bleeding, which dumps the line.",
+        "24 VAC coils hum audibly; in a quiet room that reads as a fault when it is normal.",
+        "Fails OPEN if the diaphragm perforates - the software safety pattern cannot save you here, so put a master valve or a normally-closed contactor upstream."
+      ],
+      "notes": "Pair with a 24 VAC transformer sized for simultaneous zones (see transformer-24vac). Inrush is roughly 3x hold current, so a transformer that runs three valves steady-state may still brown out when they all pull in together - stagger the switch-on. Everything driving one of these must carry the flood-safety pattern in SAFETY.md.",
+      "drivers": [
+        {
+          "name": "Hunter PGV installation guide",
+          "url": "https://www.hunterindustries.com/irrigation-product/valves/pgv",
+          "kind": "manual"
+        }
+      ],
+      "platforms": [
+        "ESPHome",
+        "Home Assistant",
+        "Standalone"
+      ],
+      "works_with": [
+        "m5stack-4relay",
+        "ssr-25da",
+        "transformer-24vac",
+        "amiad-screen-filter"
+      ],
+      "alternatives": [
+        "solenoid-valve-24vac"
+      ],
+      "image": "assets/parts/hunter-pgv-solenoid.svg",
+      "tags": [
+        "solenoid",
+        "valve",
+        "irrigation",
+        "24vac",
+        "zone"
+      ]
+    },
+    {
       "id": "hx711-adc",
       "name": "HX711 24-bit load cell amplifier",
       "manufacturer": "Avia Semiconductor",
@@ -1512,6 +1740,7 @@
       "price": {
         "band": "$",
         "observed": 6.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -1597,6 +1826,7 @@
       "price": {
         "band": "$$",
         "observed": 85.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01",
         "note": "Roughly a fifth of a TEROS 12. That price gap is the entire reason to bother calibrating it."
@@ -1702,6 +1932,7 @@
       "price": {
         "band": "$$$",
         "observed": 210.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -1777,6 +2008,7 @@
       "price": {
         "band": "$",
         "observed": 15.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -1855,6 +2087,7 @@
       "price": {
         "band": "$",
         "observed": 18.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -1932,6 +2165,91 @@
       ]
     },
     {
+      "id": "m5stack-2ch-relay",
+      "name": "M5Stack 2-channel SPST relay unit",
+      "manufacturer": "M5Stack",
+      "part_numbers": [
+        "U131",
+        "2-Channel SPST Relay Unit"
+      ],
+      "category": "Actuation & relays",
+      "subcategory": "2-channel I2C relay module, Grove",
+      "bus": [
+        "I2C",
+        "Grove"
+      ],
+      "i2c": {
+        "address": "0x25",
+        "alternates": [
+          "0x26",
+          "0x27"
+        ],
+        "configurable": true,
+        "how_to_change": "Solder jumpers select the address. Note 0x26 is the 4-Relay default, so check the collision map before pairing the two on one bus."
+      },
+      "voltage": {
+        "min": 3.3,
+        "max": 5.0,
+        "nominal": 5.0,
+        "note": "Contacts rated 250 VAC / 10 A nominal - derate hard for inductive loads."
+      },
+      "price": {
+        "band": "$",
+        "observed": 24.75,
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "listing"
+      },
+      "vendors": [
+        {
+          "name": "M5Stack",
+          "url": "https://shop.m5stack.com/products/2-channel-spst-relay-unit",
+          "part_number": "U131"
+        }
+      ],
+      "ip_rating": "none",
+      "calibration_required": "none",
+      "quality_tier": "works",
+      "deployment_count": 0,
+      "deployment_evidence": [],
+      "evidence": "Not currently deployed - this fleet standardised on the 4-channel unit. Catalogued because two channels is often the honest requirement, and a smaller module means a smaller blast radius when it fails.",
+      "failure_modes": [
+        "Same welded-contact risk as any relay driving an inductive load - fit a snubber or drive a contactor.",
+        "Default 0x25 is one address away from the 4-Relay's 0x26; mixing them without checking is an easy collision.",
+        "Restores its previous state on boot unless told otherwise - force restore_mode ALWAYS_OFF on anything that moves water or gas."
+      ],
+      "notes": "Everything in SAFETY.md applies here exactly as it does to the 4-channel unit. Fewer channels is a feature for anything critical: one failed module takes out two loads rather than four.",
+      "drivers": [
+        {
+          "name": "ESPHome i2c switch components",
+          "url": "https://esphome.io/components/switch/",
+          "kind": "esphome-core"
+        }
+      ],
+      "platforms": [
+        "ESPHome",
+        "Home Assistant",
+        "Arduino",
+        "M5Stack"
+      ],
+      "works_with": [
+        "m5stack-poesp32",
+        "hunter-pgv-solenoid",
+        "transformer-24vac"
+      ],
+      "alternatives": [
+        "m5stack-4relay",
+        "ssr-25da"
+      ],
+      "image": "assets/parts/m5stack-2ch-relay.svg",
+      "tags": [
+        "relay",
+        "i2c",
+        "m5stack",
+        "safety"
+      ]
+    },
+    {
       "id": "m5stack-4relay",
       "name": "M5Stack 4-Relay Unit",
       "manufacturer": "M5Stack",
@@ -1959,9 +2277,11 @@
       },
       "price": {
         "band": "$$",
-        "observed": 38.0,
+        "observed": 22.72,
+        "source": "receipt",
         "currency": "NZD",
-        "observed_date": "2026-03-01"
+        "observed_date": "2026-03-01",
+        "note": "Trade price from a purchase receipt. The M5Stack list price for the same unit is around NZ$33, so this reflects a distributor rate rather than RRP."
       },
       "vendors": [
         {
@@ -2063,6 +2383,7 @@
       "price": {
         "band": "$$$",
         "observed": 145.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -2156,6 +2477,7 @@
       "price": {
         "band": "$",
         "observed": 18.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -2256,6 +2578,7 @@
       "price": {
         "band": "$",
         "observed": 22.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -2353,6 +2676,7 @@
       "price": {
         "band": "$$$",
         "observed": 110.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -2436,6 +2760,7 @@
       "price": {
         "band": "$$",
         "observed": 65.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -2550,6 +2875,7 @@
       "price": {
         "band": "$$$",
         "observed": 430.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01",
         "note": "The reference-grade option. This is why the cheaper SDI-12 clones exist."
@@ -2675,6 +3001,7 @@
       "price": {
         "band": "$",
         "observed": 8.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01",
         "note": "Clone modules are a few dollars; quality varies wildly."
@@ -2757,6 +3084,100 @@
       ]
     },
     {
+      "id": "mlx90614-ncir",
+      "name": "MLX90614 non-contact IR thermometer (M5Stack NCIR)",
+      "manufacturer": "Melexis / M5Stack",
+      "part_numbers": [
+        "MLX90614",
+        "MLX90614ESF-BAA",
+        "U004 NCIR"
+      ],
+      "category": "Thermal & optical",
+      "subcategory": "Single-point infrared surface thermometer",
+      "bus": [
+        "I2C",
+        "Grove"
+      ],
+      "i2c": {
+        "address": "0x5a",
+        "configurable": true,
+        "how_to_change": "Address is stored in on-chip EEPROM and can be rewritten, but few libraries expose it. Treat as fixed at 0x5A; use a mux for several."
+      },
+      "voltage": {
+        "min": 3.0,
+        "max": 5.0,
+        "nominal": 3.3,
+        "logic": 3.3
+      },
+      "price": {
+        "band": "$$",
+        "observed": 33.52,
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "listing"
+      },
+      "vendors": [
+        {
+          "name": "M5Stack NCIR Unit",
+          "url": "https://shop.m5stack.com/products/ncir-sensor-unit",
+          "part_number": "U004"
+        },
+        {
+          "name": "Melexis (manufacturer)",
+          "url": "https://www.melexis.com/en/product/MLX90614/",
+          "part_number": "MLX90614ESF-BAA"
+        }
+      ],
+      "ip_rating": "none",
+      "calibration_required": "factory",
+      "calibration_notes": "Factory-calibrated, but like any IR sensor it reports a temperature that assumes an emissivity. Green foliage is about 0.95, not the 1.0 most libraries default to - leave it at 1.0 and leaf temperature reads low.",
+      "quality_tier": "works",
+      "deployment_count": 0,
+      "deployment_evidence": [],
+      "evidence": "No active config in the current fleet - canopy temperature here is measured with the MLX90640 array instead. Catalogued because it is by far the cheapest route to a leaf-temperature signal, and leaf VPD beats air VPD as a steering input.",
+      "failure_modes": [
+        "Field of view is a CONE, roughly 35 degrees on the BAA. Mount it too far back and you are averaging leaf, pot, floor and lamp into one number.",
+        "Reads the first opaque surface it sees - a leaf that moves out of frame silently changes what you are measuring.",
+        "Emissivity left at 1.0 under-reads foliage by several degrees, which quietly corrupts any leaf-VPD calculation downstream.",
+        "Sensitive to its own ambient temperature; mounting it near a driver or in the lamp's radiant path biases it."
+      ],
+      "notes": "One spot versus the MLX90640's 768 - much cheaper, and adequate if you only need a single representative canopy point. Mount it close enough that the cone sees leaf and nothing else, and set emissivity to 0.95 before believing any number it gives you.",
+      "drivers": [
+        {
+          "name": "ESPHome mlx90614 (external component)",
+          "url": "https://github.com/esphome/esphome/pull/2934",
+          "kind": "esphome-external"
+        },
+        {
+          "name": "Melexis MLX90614 datasheet",
+          "url": "https://www.melexis.com/en/product/MLX90614/",
+          "kind": "datasheet"
+        }
+      ],
+      "platforms": [
+        "ESPHome",
+        "Home Assistant",
+        "Arduino",
+        "MicroPython",
+        "M5Stack"
+      ],
+      "works_with": [
+        "m5stack-atom-lite",
+        "tca9548a-mux"
+      ],
+      "alternatives": [
+        "mlx90640-thermal"
+      ],
+      "image": "assets/parts/mlx90614-ncir.svg",
+      "tags": [
+        "thermal",
+        "leaf-temperature",
+        "i2c",
+        "vpd",
+        "infrared"
+      ]
+    },
+    {
       "id": "mlx90640-thermal",
       "name": "MLX90640 32x24 thermal camera array",
       "manufacturer": "Melexis",
@@ -2784,10 +3205,11 @@
       },
       "price": {
         "band": "$$$",
-        "observed": 120.0,
+        "observed": 115.5,
+        "source": "listing",
         "currency": "NZD",
         "observed_date": "2026-03-01",
-        "note": "BAA (55 deg FOV) and BAB (110 deg wide FOV) differ in price and coverage."
+        "note": "Vendor listing price for the packaged M5Stack thermal-camera unit. A bare MLX90640 breakout from a component distributor sits lower; the BAA (55 deg) and BAB (110 deg) variants also differ in price."
       },
       "vendors": [
         {
@@ -2864,6 +3286,203 @@
       ]
     },
     {
+      "id": "netafim-lateral-pipe",
+      "name": "Netafim white lateral dripline pipe (20 mm, 3 bar)",
+      "manufacturer": "Netafim",
+      "part_numbers": [
+        "19961-119200"
+      ],
+      "category": "Irrigation hardware",
+      "subcategory": "20 mm LDPE lateral, 200 m roll",
+      "bus": [
+        "None"
+      ],
+      "protocol_settings": "20 mm OD, rated 3 bar. Takes barbed and ratchet-clip fittings.",
+      "price": {
+        "band": "$$$",
+        "observed": 182.0,
+        "unit": "per 200 m roll",
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "receipt"
+      },
+      "vendors": [
+        {
+          "name": "Netafim (manufacturer)",
+          "url": "https://www.netafim.com/en/products/dripperline/",
+          "part_number": "19961-119200"
+        },
+        {
+          "name": "Irrigation Express",
+          "url": "https://www.irrigationexpress.com.au/white-lateral-pipe",
+          "part_number": "19961-119200"
+        }
+      ],
+      "ip_rating": "IP68",
+      "calibration_required": "none",
+      "quality_tier": "field-proven",
+      "deployment_count": 6,
+      "deployment_evidence": [
+        "room-1-irrigation-relays.yaml",
+        "room-1-row1-back-sdi12.yaml",
+        "room-1-row2-back-sdi12.yaml",
+        "room-1-row3-back-sdi12.yaml",
+        "espoe-multiplexer-irrigation-relays.yaml",
+        "room-3-solenoid-relays.yaml"
+      ],
+      "evidence": "The lateral run feeding every dripper zone in this fleet. Priced per 200 m roll on the receipt, which works out around NZ$0.91 per metre.",
+      "failure_modes": [
+        "White pipe is chosen to keep root-zone water cooler and to make algae visible; black pipe in a lit room heats the first shot noticeably.",
+        "Kinks at tight radii and the kink never fully recovers - it becomes a permanent flow restriction you will not find without a pressure gauge.",
+        "Barbs tear out of warm, soft pipe if the line is pressurised before the clips are on.",
+        "UV degrades LDPE over years; under direct high-intensity LED it ages faster than the datasheet's outdoor figure suggests."
+      ],
+      "notes": "Priced per roll, not per metre - see `unit`. The commodity fittings that go with it (barbed elbows, tees, ratchet clips, threaded tees, end caps) are all in the NZ$0.30-$4 range and are not catalogued individually; buy them as a kit with the roll. Warm the pipe end in hot water before pushing on a barb in winter.",
+      "platforms": [
+        "Standalone"
+      ],
+      "works_with": [
+        "netafim-pcj-dripper",
+        "netafim-line-flush-valve",
+        "hunter-pgv-solenoid"
+      ],
+      "image": "assets/parts/netafim-lateral-pipe.svg",
+      "tags": [
+        "pipe",
+        "lateral",
+        "dripline",
+        "irrigation"
+      ]
+    },
+    {
+      "id": "netafim-line-flush-valve",
+      "name": "Netafim automatic line flush valve (16 mm)",
+      "manufacturer": "Netafim",
+      "part_numbers": [
+        "32000-007850"
+      ],
+      "category": "Irrigation hardware",
+      "subcategory": "Automatic end-of-line flush valve",
+      "bus": [
+        "None"
+      ],
+      "price": {
+        "band": "$",
+        "observed": 12.38,
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "receipt"
+      },
+      "vendors": [
+        {
+          "name": "Netafim (manufacturer)",
+          "url": "https://www.netafim.com/en/products/accessories/",
+          "part_number": "32000-007850"
+        }
+      ],
+      "ip_rating": "IP68",
+      "calibration_required": "none",
+      "quality_tier": "works",
+      "deployment_count": 2,
+      "deployment_evidence": [
+        "espoe-multiplexer-irrigation-relays.yaml",
+        "room-3-solenoid-relays.yaml"
+      ],
+      "evidence": "Fitted at the end of dripline runs. Opens at low pressure at the start of each irrigation and closes as the line comes up to pressure, so the line self-purges.",
+      "failure_modes": [
+        "Discharges to wherever you point it - into a tray or drain, not onto the floor or into the electrics.",
+        "Fails open in grit and then bleeds continuously, which shows up as a zone that never reaches pressure.",
+        "Adds a small volume to every shot; if you are dosing precisely, account for it."
+      ],
+      "notes": "Solves the problem where sediment collects at the dead end of a lateral and gradually migrates back into the last few emitters. Pairs naturally with the screen filter: the filter stops most of it arriving, this clears whatever still does.",
+      "platforms": [
+        "Standalone"
+      ],
+      "works_with": [
+        "netafim-lateral-pipe",
+        "netafim-pcj-dripper",
+        "amiad-screen-filter"
+      ],
+      "image": "assets/parts/netafim-line-flush-valve.svg",
+      "tags": [
+        "flush",
+        "valve",
+        "irrigation",
+        "maintenance"
+      ]
+    },
+    {
+      "id": "netafim-pcj-dripper",
+      "name": "Netafim PCJ pressure-compensating dripper",
+      "manufacturer": "Netafim",
+      "part_numbers": [
+        "40200-044320",
+        "PCJ-CNL"
+      ],
+      "category": "Irrigation hardware",
+      "subcategory": "Pressure-compensating emitter with spike and tube",
+      "bus": [
+        "None"
+      ],
+      "protocol_settings": "Pressure-compensating from roughly 0.5 to 4 bar. Flow rates 2 / 4 / 8 L/h depending on model.",
+      "price": {
+        "band": "$",
+        "observed": 1.23,
+        "unit": "per dripper, incl. spike and tube",
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "receipt"
+      },
+      "vendors": [
+        {
+          "name": "Netafim (manufacturer)",
+          "url": "https://www.netafim.com/en/products/dripper/pcj/",
+          "part_number": "PCJ"
+        },
+        {
+          "name": "Irrigation Express",
+          "url": "https://www.irrigationexpress.com.au/netafim-pcj-dripper",
+          "part_number": "40200-044320"
+        }
+      ],
+      "ip_rating": "IP68",
+      "calibration_required": "none",
+      "quality_tier": "field-proven",
+      "deployment_count": 6,
+      "deployment_evidence": [
+        "room-1-irrigation-relays.yaml",
+        "room-1-row1-back-sdi12.yaml",
+        "room-1-row2-back-sdi12.yaml",
+        "room-1-row3-back-sdi12.yaml",
+        "espoe-multiplexer-irrigation-relays.yaml",
+        "room-3-solenoid-relays.yaml"
+      ],
+      "evidence": "The emitter behind every substrate-sensing zone in this fleet - the VWC and pore-water EC numbers those probes report are only meaningful because delivery per plant is even, which is exactly what pressure compensation buys.",
+      "failure_modes": [
+        "Non-compensating drippers on a long run deliver more at the near end - the resulting VWC spread reads as sensor disagreement when it is actually a plumbing problem.",
+        "The CNL (anti-drain) variants stop siphoning between shots; without them the line drains after every irrigation and the first part of the next shot is air.",
+        "Root intrusion into the outlet on media that stays saturated.",
+        "Spikes pull out of coir under their own tube weight if the tube is not clipped - the emitter then waters the floor and the block dries out unnoticed."
+      ],
+      "notes": "Pressure compensation is the whole point: without it, per-plant delivery varies along the line and every substrate reading you take is comparing plants that got different amounts of water. If you are steering a crop on VWC, this is not the place to save money. Pair the anti-drain (CNL) version with the line flush valve.",
+      "platforms": [
+        "Standalone"
+      ],
+      "works_with": [
+        "netafim-lateral-pipe",
+        "netafim-line-flush-valve",
+        "amiad-screen-filter",
+        "meter-teros12"
+      ],
+      "image": "assets/parts/netafim-pcj-dripper.svg",
+      "tags": [
+        "dripper",
+        "emitter",
+        "irrigation",
+        "pressure-compensating"
+      ]
+    },
+    {
       "id": "pcf8563-rtc",
       "name": "PCF8563 real-time clock",
       "manufacturer": "NXP",
@@ -2891,6 +3510,7 @@
       "price": {
         "band": "$",
         "observed": 6.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01",
         "note": "Built into most M5Stack Core and AirQ units at no extra cost."
@@ -2993,10 +3613,11 @@
       },
       "price": {
         "band": "$$",
-        "observed": 65.0,
+        "observed": 51.32,
+        "source": "receipt",
         "currency": "NZD",
         "observed_date": "2026-03-01",
-        "note": "Per head. A four-part nutrient program needs four."
+        "note": "Receipt price for a 24V 600 mL/min stepper-driven head bought direct from the manufacturer. Branded lab pumps of the same spec run several times this."
       },
       "vendors": [
         {
@@ -3060,6 +3681,127 @@
       ]
     },
     {
+      "id": "pressure-reducing-valve",
+      "name": "Adjustable pressure reducing valve (15-50 mm)",
+      "manufacturer": "generic (Bermad / Dorot class)",
+      "part_numbers": [
+        "228-MG143-100"
+      ],
+      "category": "Irrigation hardware",
+      "subcategory": "Adjustable mains pressure reducer",
+      "bus": [
+        "None"
+      ],
+      "protocol_settings": "Set downstream pressure with the adjusting screw against a gauge. Typical dripline target 1.0-2.0 bar.",
+      "price": {
+        "band": "$$$",
+        "observed": 152.15,
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "receipt"
+      },
+      "vendors": [
+        {
+          "name": "Irrigation Express",
+          "url": "https://www.irrigationexpress.com.au/pressure-reducing-valve",
+          "part_number": "228-MG143-100"
+        }
+      ],
+      "ip_rating": "IP68",
+      "calibration_required": "one-point",
+      "calibration_notes": "Set it against a real gauge at the far end of the run while a zone is actually flowing. Static pressure with everything closed tells you nothing useful - the number that matters is dynamic.",
+      "quality_tier": "works",
+      "deployment_count": 1,
+      "deployment_evidence": [
+        "espoe-main-pump.yaml"
+      ],
+      "evidence": "One on the main feed. Only needed once per system rather than per zone, which is why the count is low - it is not a reflection of how well it works.",
+      "failure_modes": [
+        "Set too high and pressure-compensating drippers still regulate, but every fitting and the filter housing live near their limit - failures show up at the joints, not the emitters.",
+        "Set too low and PCJ drippers drop out of their compensating range, so delivery becomes uneven again and you lose the whole benefit of buying them.",
+        "Diaphragm perishes over years and the valve drifts open, usually unnoticed until something downstream splits."
+      ],
+      "notes": "Mains pressure in most buildings is far above what dripline wants, and PCJ emitters only compensate up to about 4 bar. This is the part that makes the rest of the system's ratings honest. Fit a gauge downstream permanently - a NZ$20 gauge turns an invisible problem into an obvious one.",
+      "platforms": [
+        "Standalone"
+      ],
+      "works_with": [
+        "amiad-screen-filter",
+        "netafim-pcj-dripper",
+        "senninger-pressure-regulator"
+      ],
+      "image": "assets/parts/pressure-reducing-valve.svg",
+      "tags": [
+        "pressure",
+        "regulator",
+        "irrigation",
+        "mains"
+      ]
+    },
+    {
+      "id": "pvc-pressure-pipe-25",
+      "name": "25 mm PVC pressure pipe (PN12)",
+      "manufacturer": "generic (PN12 pressure pipe)",
+      "part_numbers": [
+        "800-25-PN125.8ERA"
+      ],
+      "category": "Irrigation hardware",
+      "subcategory": "Rigid mains-side distribution pipe",
+      "bus": [
+        "None"
+      ],
+      "protocol_settings": "25 mm, PN12 (12 bar). Solvent-weld or threaded fittings.",
+      "price": {
+        "band": "$",
+        "observed": 15.49,
+        "unit": "per 5.8 m length",
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "receipt",
+        "note": "The same receipt also lists a 5-length bundle at NZ$77.45, which is this per-length price times five, not a separate unit price."
+      },
+      "vendors": [
+        {
+          "name": "Irrigation Express",
+          "url": "https://www.irrigationexpress.com.au/pvc-pressure-pipe",
+          "part_number": "800-25-PN125.8ERA"
+        }
+      ],
+      "ip_rating": "IP68",
+      "calibration_required": "none",
+      "quality_tier": "field-proven",
+      "deployment_count": 4,
+      "deployment_evidence": [
+        "room-1-irrigation-relays.yaml",
+        "espoe-multiplexer-irrigation-relays.yaml",
+        "room-3-solenoid-relays.yaml",
+        "espoe-main-pump.yaml"
+      ],
+      "evidence": "The rigid distribution backbone from pump to zone valves in this fleet. PVC on the pressurised mains side, LDPE lateral downstream of the valves.",
+      "failure_modes": [
+        "Solvent-weld joints made in the cold or on a damp pipe fail weeks later, not immediately - which is the worst possible timing.",
+        "PN12 is comfortable for mains but the FITTINGS are usually the weak point; a pipe rated 12 bar on a 6 bar fitting is a 6 bar system.",
+        "Goes brittle under sustained UV / high-intensity LED - sleeve or paint any exposed run.",
+        "Rigid pipe transmits pump vibration into the building; use a flexible section at the pump."
+      ],
+      "notes": "Sold in 5.8 m lengths and often bundled - check whether a quoted price is per length or per bundle before budgeting. Commodity PVC fittings (elbows, tees, unions, valve sockets, end caps, clips) run NZ$0.79-$8 each and are not catalogued individually.",
+      "platforms": [
+        "Standalone"
+      ],
+      "works_with": [
+        "hunter-pgv-solenoid",
+        "amiad-screen-filter",
+        "pressure-reducing-valve"
+      ],
+      "image": "assets/parts/pvc-pressure-pipe-25.svg",
+      "tags": [
+        "pipe",
+        "pvc",
+        "irrigation",
+        "mains"
+      ]
+    },
+    {
       "id": "rs485-ttl-transceiver",
       "name": "MAX485 / SP3485 RS485-to-TTL transceiver",
       "manufacturer": "Maxim / Sipex and clones",
@@ -3085,6 +3827,7 @@
       "price": {
         "band": "$",
         "observed": 8.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -3169,6 +3912,7 @@
       "price": {
         "band": "$$",
         "observed": 40.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -3213,6 +3957,64 @@
       ]
     },
     {
+      "id": "senninger-pressure-regulator",
+      "name": "Senninger 20 psi fixed pressure regulator",
+      "manufacturer": "Senninger Irrigation",
+      "part_numbers": [
+        "PRV20LF-20"
+      ],
+      "category": "Irrigation hardware",
+      "subcategory": "Fixed-outlet low-flow pressure regulator",
+      "bus": [
+        "None"
+      ],
+      "protocol_settings": "Fixed 20 psi (~1.4 bar) outlet. Low-flow model - it needs a minimum flow to regulate properly.",
+      "price": {
+        "band": "$$",
+        "observed": 22.32,
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "receipt"
+      },
+      "vendors": [
+        {
+          "name": "Senninger (manufacturer)",
+          "url": "https://www.senninger.com/products/pressure-regulators",
+          "part_number": "PRV20LF"
+        }
+      ],
+      "ip_rating": "IP68",
+      "calibration_required": "none",
+      "quality_tier": "works",
+      "deployment_count": 2,
+      "deployment_evidence": [
+        "espoe-multiplexer-irrigation-relays.yaml",
+        "room-3-solenoid-relays.yaml"
+      ],
+      "evidence": "Two on zone feeds, downstream of the main reducer. Fixed-outlet regulators per zone are the cheap way to stop one zone's pressure moving when another opens.",
+      "failure_modes": [
+        "Below its minimum flow it does not regulate at all and simply passes inlet pressure - a small zone on a big regulator is a silent failure.",
+        "Fixed outlet means no adjustment: buy the right psi for your emitters or buy a different one.",
+        "Directional - fitting it backwards does nothing and looks fine."
+      ],
+      "notes": "Per-zone regulation on top of a single main reducer keeps zones independent, so opening a second zone does not change delivery in the first. Cheap enough to fit per zone and worth it if you irrigate zones simultaneously.",
+      "platforms": [
+        "Standalone"
+      ],
+      "works_with": [
+        "hunter-pgv-solenoid",
+        "netafim-pcj-dripper",
+        "pressure-reducing-valve"
+      ],
+      "image": "assets/parts/senninger-pressure-regulator.svg",
+      "tags": [
+        "pressure",
+        "regulator",
+        "irrigation",
+        "zone"
+      ]
+    },
+    {
       "id": "sensirion-scd30",
       "name": "Sensirion SCD30 NDIR CO2 sensor",
       "manufacturer": "Sensirion",
@@ -3238,6 +4040,7 @@
       "price": {
         "band": "$$$",
         "observed": 105.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -3324,6 +4127,7 @@
       "price": {
         "band": "$$",
         "observed": 40.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -3405,10 +4209,11 @@
       },
       "price": {
         "band": "$$",
-        "observed": 52.0,
+        "observed": 77.11,
+        "source": "listing",
         "currency": "NZD",
         "observed_date": "2026-03-01",
-        "note": "M5Stack CO2L Grove unit. Bare SCD41 modules are cheaper but need your own cabling."
+        "note": "Vendor listing price for the M5Stack CO2L Grove unit (the packaged form most people buy). A bare Sensirion SCD41 module from a component distributor is cheaper but needs your own cabling and enclosure."
       },
       "vendors": [
         {
@@ -3534,6 +4339,7 @@
       "price": {
         "band": "$$$",
         "observed": 125.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -3647,6 +4453,7 @@
       "price": {
         "band": "$",
         "observed": 12.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -3741,6 +4548,7 @@
       "price": {
         "band": "$",
         "observed": 14.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -3792,6 +4600,85 @@
       ]
     },
     {
+      "id": "shelly-pro-3em",
+      "name": "Shelly Pro 3EM three-phase energy meter",
+      "manufacturer": "Allterco / Shelly",
+      "part_numbers": [
+        "Shelly Pro 3EM",
+        "Pro EM-50"
+      ],
+      "category": "Energy monitoring",
+      "subcategory": "DIN-rail 3-phase meter with CT clamps",
+      "bus": [
+        "Ethernet",
+        "WiFi",
+        "Mains"
+      ],
+      "protocol_settings": "Local HTTP/RPC API plus MQTT. Integrates with Home Assistant natively - no cloud account required.",
+      "voltage": {
+        "min": 110.0,
+        "max": 240.0,
+        "nominal": 240.0,
+        "note": "Mains-connected DIN-rail device. CT clamps go around the phase conductors."
+      },
+      "price": {
+        "band": "$$$",
+        "observed": 249.99,
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "listing"
+      },
+      "vendors": [
+        {
+          "name": "Shelly (manufacturer)",
+          "url": "https://www.shelly.com/products/shelly-pro-3em-120a",
+          "part_number": "Pro 3EM"
+        }
+      ],
+      "ip_rating": "none",
+      "calibration_required": "none",
+      "quality_tier": "works",
+      "deployment_count": 0,
+      "deployment_evidence": [],
+      "evidence": "In service on the main distribution board here, but it is a commercial device with its own firmware rather than an ESPHome node, so it has no device config to count. Tiered on operating experience, not on config-file evidence.",
+      "failure_modes": [
+        "CT clamps are directional - fitted backwards a phase reads negative, which looks like export rather than an install error.",
+        "Sized clamps: a 120 A CT on a 16 A circuit wastes most of its resolution and small loads disappear into the noise.",
+        "It is a DIN-rail mains device. Installation is an electrician's job in most jurisdictions.",
+        "WiFi in a metal distribution board is usually poor - use the wired variant or an external antenna."
+      ],
+      "notes": "Per-phase power is the cheapest way to catch a failing compressor, a dehumidifier stuck on, or a lighting contactor that did not drop out - all of which show up in the load curve well before anything else notices. Phase balance also matters on 3-phase supply, and this is the only thing that will tell you about it.",
+      "drivers": [
+        {
+          "name": "Home Assistant Shelly integration",
+          "url": "https://www.home-assistant.io/integrations/shelly/",
+          "kind": "other"
+        },
+        {
+          "name": "Shelly Pro 3EM documentation",
+          "url": "https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen2/ShellyPro3EM",
+          "kind": "manual"
+        }
+      ],
+      "platforms": [
+        "Home Assistant",
+        "MQTT",
+        "Node-RED",
+        "Standalone"
+      ],
+      "works_with": [
+        "ssr-25da"
+      ],
+      "image": "assets/parts/shelly-pro-3em.svg",
+      "tags": [
+        "energy",
+        "power",
+        "3-phase",
+        "monitoring",
+        "din-rail"
+      ]
+    },
+    {
       "id": "solenoid-valve-24vac",
       "name": "24VAC irrigation solenoid valve",
       "manufacturer": "Hunter / Rain Bird / Netafim",
@@ -3812,9 +4699,11 @@
       },
       "price": {
         "band": "$$",
-        "observed": 42.0,
+        "observed": 47.06,
+        "source": "receipt",
         "currency": "NZD",
-        "observed_date": "2026-03-01"
+        "observed_date": "2026-03-01",
+        "note": "Receipt price for a Hunter PGV 25mm 24VAC valve. The same figure appears on two separate purchase lines, so it is a settled trade price rather than a one-off."
       },
       "vendors": [
         {
@@ -3889,6 +4778,7 @@
       "price": {
         "band": "$",
         "observed": 18.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01",
         "note": "Genuine Fotek costs several times a clone. Clones are commonly over-rated."
@@ -4014,6 +4904,64 @@
       ]
     },
     {
+      "id": "submersible-transfer-pump",
+      "name": "Submersible clean/dirty water transfer pump (750 W)",
+      "manufacturer": "generic (Ryobi-class 750 W submersible)",
+      "part_numbers": [
+        "RSCD750"
+      ],
+      "category": "Water & fertigation",
+      "subcategory": "Submersible pump for tank transfer and sump duty",
+      "bus": [
+        "Mains"
+      ],
+      "voltage": {
+        "nominal": 240.0,
+        "note": "240 VAC. Must be on an RCD - it is a mains appliance sitting in water."
+      },
+      "price": {
+        "band": "$$"
+      },
+      "vendors": [
+        {
+          "name": "Any hardware retailer - generic 750 W submersible",
+          "url": "https://www.ryobi.com.au/products/water-pumps",
+          "part_number": "RSCD750"
+        }
+      ],
+      "ip_rating": "IP68",
+      "calibration_required": "none",
+      "quality_tier": "works",
+      "deployment_count": 1,
+      "deployment_evidence": [
+        "espoe-main-pump.yaml"
+      ],
+      "evidence": "One in service for tank transfer and sump duty. The receipt line carried no unit price, so this entry is band-only rather than carrying an invented figure.",
+      "failure_modes": [
+        "Run dry and the seal goes in minutes - pair it with a float switch, which is the entire reason float-switch is in this catalogue.",
+        "Clean/dirty models pass solids but the impeller still jams on fibrous root material.",
+        "Not designed for continuous duty; thermal cutouts on repeated short cycles.",
+        "A mains appliance in water. RCD protection is not optional, and neither is checking the lead."
+      ],
+      "notes": "Transfer and sump duty only - it is not a fertigation pump and it is not rated for continuous circulation. Interlock it with a float switch so it cannot run dry, and put the same auto-shutoff pattern on it that SAFETY.md describes for valves.",
+      "platforms": [
+        "Home Assistant",
+        "Standalone"
+      ],
+      "works_with": [
+        "float-switch",
+        "ssr-25da",
+        "ultrasonic-tank-sensor"
+      ],
+      "image": "assets/parts/submersible-transfer-pump.svg",
+      "tags": [
+        "pump",
+        "submersible",
+        "tank",
+        "sump"
+      ]
+    },
+    {
       "id": "tca9548a-mux",
       "name": "TCA9548A 8-channel I2C multiplexer",
       "manufacturer": "Texas Instruments",
@@ -4050,6 +4998,7 @@
       "price": {
         "band": "$",
         "observed": 12.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -4155,6 +5104,7 @@
       "price": {
         "band": "$",
         "observed": 45.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -4210,6 +5160,138 @@
       ]
     },
     {
+      "id": "transformer-24vac",
+      "name": "240 V to 24 VAC 150 VA transformer",
+      "manufacturer": "generic (toroidal / EI lighting transformer)",
+      "part_numbers": [
+        "MP3045",
+        "24VAC-150VA"
+      ],
+      "category": "Irrigation hardware",
+      "subcategory": "Mains-to-24 VAC supply for solenoid valves",
+      "bus": [
+        "Mains"
+      ],
+      "voltage": {
+        "min": 220.0,
+        "max": 250.0,
+        "nominal": 240.0,
+        "note": "240 VAC in, 24 VAC out. 150 VA is roughly six PGV-class valves held open, or three with headroom for inrush."
+      },
+      "price": {
+        "band": "$$",
+        "observed": 95.9,
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "receipt"
+      },
+      "vendors": [
+        {
+          "name": "Generic lighting/irrigation transformer",
+          "url": "https://www.altronics.com.au/p/m3045-240vac-to-24vac-150va-transformer/",
+          "part_number": "MP3045"
+        }
+      ],
+      "ip_rating": "none",
+      "calibration_required": "none",
+      "quality_tier": "field-proven",
+      "deployment_count": 4,
+      "deployment_evidence": [
+        "room-1-irrigation-relays.yaml",
+        "espoe-multiplexer-irrigation-relays.yaml",
+        "room-3-solenoid-relays.yaml",
+        "ssr-relay-irrigation.yaml"
+      ],
+      "evidence": "Every 24 VAC valve node in this fleet needs one. Counted against the configs that drive 24 VAC solenoids, since the transformer is the part that makes those work - it does not appear in the YAML itself, being upstream of the controller.",
+      "failure_modes": [
+        "Undersized VA and the valves chatter instead of pulling in - size for INRUSH across every valve that can open together, not steady-state hold.",
+        "It is a mains part. It belongs in an enclosure, on its own protected circuit, wired by someone qualified to do so.",
+        "Runs warm continuously; in a sealed control box that heat has to go somewhere.",
+        "No isolation between output legs on cheap units - do not assume the 24 VAC common is at earth potential."
+      ],
+      "notes": "Keeping valve power at 24 VAC is the single best decision in an irrigation control box: it keeps mains out of the low-voltage enclosure entirely, so a wet fitting near the controller is a nuisance rather than a hazard. Size at roughly 3x the steady-state draw of the valves you can open simultaneously.",
+      "platforms": [
+        "Standalone"
+      ],
+      "works_with": [
+        "hunter-pgv-solenoid",
+        "solenoid-valve-24vac",
+        "m5stack-4relay"
+      ],
+      "image": "assets/parts/transformer-24vac.svg",
+      "tags": [
+        "transformer",
+        "24vac",
+        "power",
+        "irrigation",
+        "mains"
+      ]
+    },
+    {
+      "id": "tygon-chemical-tubing",
+      "name": "Tygon A-60-G chemical-resistant peristaltic tubing",
+      "manufacturer": "Saint-Gobain",
+      "part_numbers": [
+        "AFL00017",
+        "Tygon A-60-G"
+      ],
+      "category": "Water & fertigation",
+      "subcategory": "Peristaltic pump tubing, chemical dispensing grade",
+      "bus": [
+        "None"
+      ],
+      "price": {
+        "band": "$$",
+        "observed": 14.59,
+        "unit": "per metre",
+        "currency": "NZD",
+        "observed_date": "2026-03-01",
+        "source": "receipt"
+      },
+      "vendors": [
+        {
+          "name": "Saint-Gobain Process Systems",
+          "url": "https://www.processsystems.saint-gobain.com/tygon-tubing",
+          "part_number": "AFL00017"
+        }
+      ],
+      "ip_rating": "none",
+      "calibration_required": "none",
+      "calibration_notes": "Peristaltic dose volume is a function of TUBING condition, not just pump steps. Re-calibrate mL-per-revolution after fitting new tube and again once it has bedded in, or every dose you have ever calibrated is wrong.",
+      "quality_tier": "field-proven",
+      "deployment_count": 4,
+      "deployment_evidence": [
+        "espoe-peristaltic-pumps.yaml",
+        "espoe-main-pump.yaml",
+        "espoe-multiplexer-irrigation-relays.yaml",
+        "atlas-reservoir.yaml"
+      ],
+      "evidence": "The consumable inside every dosing head in this fleet. Specified for chemical dispensing rather than generic silicone, which matters because concentrated nutrient and pH adjusters destroy the wrong polymer.",
+      "failure_modes": [
+        "THE wear item in any peristaltic doser. It flattens where the rollers run and delivered volume drifts DOWN silently - your EC creeps off target and the pump reports success throughout.",
+        "Concentrated pH-down (nitric or phosphoric) embrittles cheap silicone in weeks; A-60-G is specified for it, generic tubing is not.",
+        "Replacing it changes the calibration, so a tube swap without re-calibration is itself a dosing error.",
+        "Sized bore only - the wrong ID either will not seat in the rollers or slips and pumps nothing."
+      ],
+      "notes": "Budget this as a scheduled consumable, not a spare part. Put a recurring reminder against it and re-calibrate on replacement. The failure mode that hurts is not a burst tube, which is obvious - it is the slow decline in delivered volume, which looks exactly like your nutrient recipe being wrong.",
+      "platforms": [
+        "Standalone"
+      ],
+      "works_with": [
+        "peristaltic-pump-doser",
+        "stm32-abd-doser",
+        "atlas-ezo-ph"
+      ],
+      "image": "assets/parts/tygon-chemical-tubing.svg",
+      "tags": [
+        "tubing",
+        "peristaltic",
+        "dosing",
+        "consumable",
+        "fertigation"
+      ]
+    },
+    {
       "id": "ultrasonic-tank-sensor",
       "name": "Ultrasonic distance sensor for tank level",
       "manufacturer": "Generic (JSN-SR04T / A02YYUW class)",
@@ -4239,6 +5321,7 @@
       "price": {
         "band": "$",
         "observed": 25.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01",
         "note": "Buy the waterproof-transducer version. The bare HC-SR04 does not survive a tank headspace."
@@ -4322,6 +5405,7 @@
       "price": {
         "band": "$",
         "observed": 12.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -4406,6 +5490,7 @@
       "price": {
         "band": "$",
         "observed": 20.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
@@ -4471,6 +5556,7 @@
       "price": {
         "band": "$$$",
         "observed": 180.0,
+        "source": "estimate",
         "currency": "NZD",
         "observed_date": "2026-03-01"
       },
