@@ -1,0 +1,41 @@
+# Licence
+
+This repository is dual-licensed.
+
+## Catalogue data and documentation — CC BY 4.0
+
+Everything in `parts/`, `recipes/`, `assets/`, and all Markdown documentation is
+licensed under the **Creative Commons Attribution 4.0 International Licence**.
+
+You are free to share and adapt this material for any purpose, including
+commercially, provided you give appropriate credit.
+
+Full text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Attribution suggestion:
+
+> Parts data from *awesome-grow-room-parts*, CC BY 4.0.
+
+## Scripts and site code — MIT
+
+Everything in `scripts/`, `schema/`, and the generated `docs/` site code is
+licensed under the **MIT Licence** — see [LICENSE-CODE](LICENSE-CODE).
+
+## Disclaimer
+
+This catalogue describes hardware that switches mains electricity, moves water,
+and controls CO₂ — all of which can injure people, destroy property, or kill a
+crop when they fail.
+
+The information here is provided **as is, without warranty of any kind**.
+Deployment counts, prices and failure modes reflect one facility's experience at
+a point in time and may not apply to your conditions. Nothing here is
+professional electrical, horticultural or safety advice.
+
+Electrical work must comply with your local regulations and, where required, be
+carried out or certified by a licensed electrician. Read [SAFETY.md](SAFETY.md)
+before connecting any of this to a valve, heater or contactor, and put a
+physical backstop under the software one.
+
+You are responsible for verifying that any part or configuration is suitable and
+safe for your installation.

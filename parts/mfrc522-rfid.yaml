@@ -1,0 +1,123 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: mfrc522-rfid
+name: MFRC522 / RC522 13.56 MHz RFID reader
+manufacturer: NXP (and many clones)
+part_numbers:
+- MFRC522
+- RC522
+- MFRC522-C
+category: Access control & presence
+subcategory: 13.56 MHz MIFARE reader
+bus:
+- I2C
+- SPI
+i2c:
+  address: '0x28'
+  configurable: true
+  how_to_change: I2C address is strapped by the EA/ADR pins on the module. Many cheap breakouts hard-wire
+    SPI only and cannot do I2C at all - check before buying.
+voltage:
+  min: 2.5
+  max: 3.3
+  nominal: 3.3
+  logic: 3.3
+  note: 3V3 ONLY. 5V on the RC522 kills it. Level-shift if your MCU is 5V.
+price:
+  band: $
+  observed: 8.0
+  currency: NZD
+  observed_date: '2026-03-01'
+  note: Clone modules are a few dollars; quality varies wildly.
+vendors:
+- name: M5Stack RFID2 Unit (WS1850S)
+  url: https://shop.m5stack.com/products/rfid-unit-2-ws1850s
+  part_number: U135
+  note: I2C Grove version, more consistent than bare clones
+- name: AliExpress RC522 modules
+  url: https://www.aliexpress.com/w/wholesale-rc522.html
+  note: Listing rot is guaranteed - search the part number, not the link
+ip_rating: none
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 19
+deployment_evidence:
+- poe-room-2-rfid.yaml
+- poe-room-3-rfid.yaml
+- poe-fertigation-rfid.yaml
+- poe-utility-rfid.yaml
+- poe-dry-room-rfid.yaml
+- poe-room-1-dl.yaml
+- espoe-dl-test.yaml
+- esppoe-2.yaml
+- entry-door-rfid.yaml
+- irrigation-byte-button.yaml
+- aquaponics-kit.yaml
+evidence: 19 production configs reference RFID, 13 of them with an active rc522 platform block. Door access
+  across two flower rooms, a veg room, a dry room and two back-of-house doors all run on this reader over PoE nodes, logging tag scans
+  into Home Assistant.
+failure_modes:
+- 5V on VCC destroys the module instantly - it is 3V3 only and the silkscreen often does not say so.
+- Read range is 2-4 cm at best; a thick door plate or a metal backing plate drops it to nothing.
+- Cheap clones have poor antenna tuning and intermittently miss tags - symptom is a fob that works 'sometimes'.
+- MIFARE Classic UIDs are trivially cloneable. This is a convenience credential, not a security boundary
+  - back it with a real lock and cameras.
+notes: Use the I2C variant (rc522_i2c, 0x28) if you want it on the same Grove bus as everything else;
+  use SPI if you need faster polling. Store the tag->person mapping in Home Assistant rather than hard-coding
+  UIDs in the device YAML, so a lost fob is revoked centrally and you are not committing access credentials
+  into a config repo.
+drivers:
+- name: ESPHome rc522 component
+  url: https://esphome.io/components/binary_sensor/rc522.html
+  kind: esphome-core
+- name: MFRC522 datasheet
+  url: https://www.nxp.com/docs/en/data-sheet/MFRC522.pdf
+  kind: datasheet
+platforms:
+- ESPHome
+- Home Assistant
+- Arduino
+- MicroPython
+- M5Stack
+works_with:
+- m5stack-poesp32
+- tca9548a-mux
+image: assets/parts/mfrc522-rfid.svg
+example:
+  lang: yaml
+  title: RC522 over I2C, forwarding scans to Home Assistant
+  source: distilled from poe-room-2-rfid.yaml - real card UIDs removed
+  code: |
+    i2c:
+      sda: GPIO16
+      scl: GPIO17
+      scan: true
+
+    rc522_i2c:
+      address: 0x28
+      update_interval: 200ms
+      on_tag:
+        then:
+          - logger.log:
+              format: "RFID tag detected: %s"
+              args: ['x.c_str()']
+          # Forward every scan to HA and resolve tag -> person THERE, so revoking
+          # a lost fob does not mean reflashing a door node.
+          - homeassistant.service:
+              service: esphome.door_rfid_tag_scanned
+              data:
+                tag_id: !lambda 'return x;'
+
+    binary_sensor:
+      # Optional: a local fast-path for one known tag.
+      # Prefer the HA-side mapping above for anything you may need to revoke.
+      - platform: rc522
+        uid: "00-00-00-00"      # placeholder - put YOUR tag UID here
+        name: "Example fob"
+tags:
+- rfid
+- access-control
+- i2c
+- spi
+- door
+- core

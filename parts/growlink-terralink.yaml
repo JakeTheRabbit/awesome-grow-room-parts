@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: growlink-terralink
+name: Growlink TerraLink substrate probe
+manufacturer: Growlink
+part_numbers:
+  - TerraLink
+category: Substrate sensing
+subcategory: SDI-12 dielectric probe
+bus:
+  - SDI-12
+protocol_settings: SDI-12, 1200 baud 7-E-1 inverted half-duplex. Deployed at sensor address 1.
+voltage:
+  nominal: 12
+  min: 4
+  max: 15
+price:
+  band: $$$
+  currency: NZD
+vendors:
+  - name: Growlink
+    url: https://www.growlink.com/
+    region: Global
+    note: Sold as part of their controller ecosystem; standalone availability varies by region.
+ip_rating: IP68
+calibration_required: media-specific
+calibration_notes: |-
+  Reads about 24% high against a TEROS 12 in the same block on the same substrate. The deployed config applies a provisional one-point scale of 0.806 to align it to TEROS. Do your own regression against a reference probe before trusting the absolute number - the SHAPE of the dryback is right, the absolute value is not.
+quality_tier: field-proven
+deployment_count: 3
+deployment_evidence:
+  - terralink-1.yaml
+  - terralink-2.yaml
+  - terralink-3.yaml
+evidence: |-
+  Three deployed probes. Works reliably on the same SDI-12 stack as everything else, but only after being regressed against a TEROS 12 - the raw numbers are not interchangeable.
+failure_modes:
+  - Reads high vs TEROS 12 on identical substrate. If you mix probe brands across rooms and compare setpoints, you will make bad irrigation decisions.
+  - Same Hilhorst dry-media blow-up as any dielectric probe.
+  - Vendor documentation for the raw SDI-12 interface is thin - most of what is known here came from probing the bus.
+notes: |-
+  The deployed config carries BOTH a raw VWC and an aligned VWC channel, so the correction is visible and auditable rather than baked silently into one number. Worth copying that habit.
+drivers:
+  - name: ssieb sdi12 ESPHome component
+    url: https://github.com/ssieb/esphome_components
+    kind: esphome-external
+platforms:
+  - ESPHome
+  - Home Assistant
+works_with:
+  - m5stack-atom-lite
+  - meter-teros12
+alternatives:
+  - meter-teros12
+  - infiwin-mt22
+  - chill-division-sdi12
+image: assets/parts/growlink-terralink.svg
+tags:
+  - vwc
+  - substrate
+  - ec
+  - sdi12
+  - crop-steering
+example:
+  lang: yaml
+  title: TerraLink with the TEROS-alignment channel kept visible
+  source: distilled from terralink-1.yaml (scrubbed)
+  code: |-
+    sensor:
+      - platform: template
+        name: TL VWC (raw)
+        id: tl_vwc_raw
+        unit_of_measurement: "%"
+        accuracy_decimals: 2
+        update_interval: 30s
+        lambda: |-
+          float e = id(tl_eps_b).state;
+          if (isnan(e) || e <= 0) return NAN;
+          float theta = (5.5728e-6f*e*e*e) + (-6.40228e-4f*e*e)
+                      + (2.98804e-2f*e) + 2.14996e-2f;
+          float pct = theta * 100.0f;
+          if (pct < 0) pct = 0;
+          if (pct > 100) pct = 100;
+          return pct;
+
+      # Keep the correction as its own entity so the raw value stays auditable.
+      # 0.806 is a provisional one-point scale - replace with your own regression.
+      - platform: template
+        name: TL VWC (aligned to TEROS-12)
+        unit_of_measurement: "%"
+        accuracy_decimals: 2
+        update_interval: 30s
+        lambda: |-
+          float x = id(tl_vwc_raw).state;
+          if (isnan(x)) return NAN;
+          return 0.806f * x;

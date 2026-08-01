@@ -1,0 +1,62 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: zphs01b-multigas
+name: ZPHS01B all-in-one air quality module
+manufacturer: Winsen
+part_numbers:
+- ZPHS01B
+category: Air quality & CO2
+subcategory: 'Multi-gas module: CO2, PM2.5, VOC, O3, CO, NO2, T/RH'
+bus:
+- UART
+protocol_settings: UART 9600 8-N-1, Winsen framed protocol with checksum byte.
+voltage:
+  min: 4.5
+  max: 5.5
+  nominal: 5.0
+  logic: 3.3
+price:
+  band: $$$
+  observed: 180.0
+  currency: NZD
+  observed_date: '2026-03-01'
+vendors:
+- name: Winsen ZPHS01B
+  url: https://www.winsen-sensor.com/product/zphs01b.html
+  region: Global
+ip_rating: none
+calibration_required: periodic
+quality_tier: avoid
+deployment_count: 0
+deployment_evidence: []
+evidence: HALL OF SHAME. A 3.8 KB common/sensors/zphs01b.yaml block exists and is referenced from the
+  AirQ sensor library, yet no device config actually instantiates it. Worse, the lambdas in that block
+  return an empty optional `{}` on the paths that matter, so even if you did include it, several channels
+  would publish nothing at all.
+failure_modes:
+- The shipped lambdas return `{}` (no value) rather than a reading - the integration was never finished.
+- Bundling seven sensors behind one UART means one dead channel and you are replacing the whole 180 NZD
+  module.
+- The electrochemical O3/CO/NO2 cells have a 2-3 year service life and drift badly; they are not calibratable
+  in the field.
+- Its CO2 channel is a cheap NDIR that a single SCD41 comfortably beats for a third of the price.
+notes: The all-in-one temptation. In practice a SEN55 for particulates/VOC plus an SCD41 for CO2 costs
+  about the same, is properly supported in ESPHome core, and lets you replace one sensor without binning
+  the other. Buy the two discrete parts.
+drivers:
+- name: Winsen ZPHS01B manual
+  url: https://www.winsen-sensor.com/product/zphs01b.html
+  kind: manual
+platforms:
+- ESPHome
+- Arduino
+alternatives:
+- sensirion-sen55
+- sensirion-scd41
+image: assets/parts/zphs01b-multigas.svg
+tags:
+- air-quality
+- multi-gas
+- hall-of-shame
+- uart
+- unfinished

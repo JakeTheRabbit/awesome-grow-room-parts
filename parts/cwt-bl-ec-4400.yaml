@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: cwt-bl-ec-4400
+name: ComWinTop CWT-BL-EC-4400-S inline EC sensor
+manufacturer: ComWinTop
+part_numbers:
+  - CWT-BL-EC-4400-S
+category: Water & fertigation
+subcategory: Inline conductivity
+bus:
+  - RS485/Modbus
+protocol_settings: |-
+  Modbus RTU, 4800 baud 8-N-1 factory default, slave address 1. EC plus a temperature register; temperature compensation is applied in-sensor on most firmware revisions.
+voltage:
+  nominal: 12
+  min: 4.5
+  max: 30
+price:
+  band: $$
+  currency: NZD
+vendors:
+  - name: ComWinTop (Alibaba)
+    url: https://www.alibaba.com/products/cwt_ec_sensor.html
+    region: Global
+  - name: AliExpress (search CWT-BL-EC-4400)
+    url: https://www.aliexpress.com/w/wholesale-CWT-EC-sensor-RS485.html
+    region: Global
+ip_rating: IP68
+calibration_required: two-point
+calibration_notes: |-
+  Standard EC practice: 1413 uS/cm and 12.88 mS/cm standards, rinsed with distilled water between. The electrode fouls with nutrient salts - expect to reclean and recheck monthly in a fertigation line.
+quality_tier: experimental
+deployment_count: 0
+evidence: |-
+  Not deployed. Part of the ComWinTop rescue - family conventions confirmed, model register map not. The facility runs Atlas EZO and an Aqua Pro controller for EC instead.
+failure_modes:
+  - Electrode fouling is the dominant failure. An unclean cell reads low and drifts slowly enough that you trust it.
+  - Bubbles trapped across the electrodes give wild spikes - mount so flow sweeps them out, never in a dead leg.
+  - If in-sensor temperature compensation is on and you ALSO compensate in software you will double-correct.
+notes: |-
+  ComWinTop (CWT) sell a whole family of cheap industrial RS485 Modbus sensors that are barely documented in English anywhere online - the manuals arrive as PDF email attachments and then vanish. This catalogue records the wiring and register maps so the next person does not have to reverse-engineer them.
+
+  Family conventions that hold across the range:
+  - Brown = V+ (typically 4.5-30V DC), Black = GND.
+  - RS485 A+/B- colours are NOT consistent between models. The LEAF-TH uses YELLOW for A+ and BLUE for B-, which is different from most of the others. Meter the pair before you trust the colour.
+  - Factory default is usually 4800 baud 8-N-1, slave address 1.
+  - Manuals list function code 0x30 in the register table but every worked example frame uses 0x03, so use `register_type: holding`. Fall back to `register_type: read` if you get timeouts.
+  - Calibration offsets live in the sensor's own holding registers and persist across power cycles - expose them as ESPHome `number` entities and you can trim a probe from Home Assistant without reflashing.
+
+  STATUS: register map unverified. PRs welcome.
+drivers:
+  - name: ESPHome modbus_controller
+    url: https://esphome.io/components/sensor/modbus_controller.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Modbus master
+works_with:
+  - rs485-ttl-transceiver
+  - m5stack-poesp32
+alternatives:
+  - atlas-ezo-ec
+image: assets/parts/cwt-bl-ec-4400.svg
+tags:
+  - ec
+  - fertigation
+  - rs485
+  - modbus
+  - needs-verification

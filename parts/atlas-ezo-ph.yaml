@@ -1,0 +1,123 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: atlas-ezo-ph
+name: Atlas Scientific EZO-pH circuit + probe
+manufacturer: Atlas Scientific
+part_numbers:
+  - EZO-pH
+  - ENV-40-pH
+category: Water & fertigation
+subcategory: pH
+bus:
+  - I2C
+  - UART
+i2c:
+  address: "0x63"
+  alternates:
+    - "0x01"
+    - "0x7f"
+  configurable: true
+  how_to_change: Address is set by command over I2C or UART (any value 1-127). The deployed config uses decimal 99 (0x63) for pH, 102 (0x66) for RTD and 100 (0x64) for EC.
+protocol_settings: EZO circuits speak both I2C and UART; switch mode by shorting PGND to TX. I2C default 0x63 for pH.
+voltage:
+  nominal: 3.3
+  min: 3.3
+  max: 5.5
+  logic: 3.3
+price:
+  band: $$$
+  observed: 230.0
+  currency: NZD
+  observed_date: "2026-03-01"
+  note: Circuit plus lab-grade probe. The probe is the consumable and the expensive half.
+vendors:
+  - name: Atlas Scientific EZO-pH
+    url: https://atlas-scientific.com/embedded-solutions/ezo-ph-circuit/
+    part_number: EZO-pH
+    region: Global
+  - name: Atlas Scientific pH probe
+    url: https://atlas-scientific.com/probes/ph-probe/
+    region: Global
+ip_rating: IP68
+calibration_required: two-point
+calibration_notes: |-
+  Three-point (4.00 / 7.00 / 10.00) is the honest minimum for fertigation; two-point at 4 and 7 is acceptable if you never go alkaline. Recalibrate monthly. The probe is a consumable with a 12-24 month life in continuous nutrient service - a probe that will not calibrate is dead, not misbehaving.
+quality_tier: experimental
+deployment_count: 1
+deployment_evidence:
+  - atlas-reservoir.yaml
+evidence: |-
+  ONE device config, and an honest look at it tells the real story: atlas-reservoir.yaml contains three separate EZO configurations, two of them commented out, with only the third live. The facility spec confirms Atlas pH is reading in the irrigation room, so it does work - but three abandoned attempts in one file is a fair signal of how much effort it took. Single deployment plus that history keeps it out of field-proven.
+failure_modes:
+  - Cost. A full pH/EC/RTD EZO stack is more than the entire rest of a monitoring node.
+  - The probe is a consumable. Budget replacement annually in continuous service and do not be surprised by it.
+  - "Ground loops: a pumped nutrient line carries stray voltage that shifts pH readings. Atlas sell an isolator for exactly this and you will probably need it."
+  - I2C address is software-set and stored on the circuit. Swap a circuit in and it arrives at whatever address the last person left it on.
+  - Never let a pH probe dry out. Storage solution or it is scrap.
+notes: |-
+  If you are starting fresh and only need trend data rather than compliance-grade numbers, an industrial RS485 pH transmitter is a fraction of the price. Choose EZO when you need the accuracy and the calibration audit trail.
+drivers:
+  - name: ESPHome ezo
+    url: https://esphome.io/components/sensor/ezo.html
+    kind: esphome-core
+  - name: EZO-pH datasheet
+    url: https://files.atlas-scientific.com/pH_EZO_Datasheet.pdf
+    kind: datasheet
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+  - Raspberry Pi
+works_with:
+  - atlas-ezo-ec
+  - atlas-ezo-rtd
+  - peristaltic-pump-doser
+alternatives:
+  - cwt-bl-ec-4400
+image: assets/parts/atlas-ezo-ph.svg
+tags:
+  - ph
+  - fertigation
+  - i2c
+  - expensive
+  - consumable-probe
+example:
+  lang: yaml
+  title: EZO-pH on I2C with temperature compensation
+  source: distilled from atlas-reservoir.yaml (scrubbed)
+  code: |-
+    i2c:
+      sda: GPIO23
+      scl: GPIO22
+      scan: true
+
+    sensor:
+      - platform: ezo
+        id: ph_probe
+        address: 99            # decimal - EZO addresses are set by command, not straps
+        unit_of_measurement: pH
+        accuracy_decimals: 2
+        update_interval: 10s
+        name: Reservoir pH
+
+      - platform: ezo
+        id: rtd_probe
+        address: 102
+        unit_of_measurement: "\u00b0C"
+        accuracy_decimals: 2
+        update_interval: 10s
+        name: Reservoir Temperature
+        on_value:
+          # pH is temperature dependent - push RTD temperature into the pH circuit
+          - lambda: |-
+              char buf[24];
+              snprintf(buf, sizeof(buf), "T,%.2f", x);
+              id(ph_probe).send_custom(buf);
+
+    # Disable the circuits' onboard LEDs on boot - they are bright and they age.
+    esphome:
+      on_boot:
+        priority: 700
+        then:
+          - lambda: |-
+              id(ph_probe).send_custom("L,0");
+              id(rtd_probe).send_custom("L,0");

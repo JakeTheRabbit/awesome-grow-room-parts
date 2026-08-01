@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: float-switch
+name: Float switch (tank level interlock)
+manufacturer: Generic
+part_numbers:
+  - ZP4510
+  - generic side-mount float switch
+category: Water & fertigation
+subcategory: Level interlock
+bus:
+  - GPIO
+voltage:
+  nominal: 3.3
+  min: 3.3
+  max: 24
+  note: Dry contact - wire to a GPIO with INPUT_PULLUP and let the float pull it to ground.
+price:
+  band: $
+  observed: 8.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: AliExpress (search float switch tank)
+    url: https://www.aliexpress.com/w/wholesale-liquid-float-switch.html
+    region: Global
+ip_rating: IP68
+calibration_required: none
+quality_tier: works
+deployment_count: 1
+deployment_evidence:
+  - room-3-runoff-ultrasonic.yaml
+evidence: |-
+  One deployment as a runoff-tank high-level interlock. Dumb, cheap, and the thing you actually want guarding a pump - an ultrasonic sensor tells you a story, a float switch tells you the truth.
+failure_modes:
+  - Sticks when gunged up with root debris or biofilm. Test it periodically rather than assuming.
+  - Contact bounce - debounce with delayed_on/delayed_off filters or you will get phantom trips.
+  - A single float gives one threshold. Two floats (low and high) is usually what you actually need.
+notes: |-
+  Best practice: use the ultrasonic sensor for the number and the float switch for the interlock. Never let a computed level be the only thing standing between a pump and a dry run.
+drivers:
+  - name: ESPHome gpio binary sensor
+    url: https://esphome.io/components/binary_sensor/gpio.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+works_with:
+  - ultrasonic-tank-sensor
+  - peristaltic-pump-doser
+image: assets/parts/float-switch.svg
+tags:
+  - tank-level
+  - interlock
+  - safety-critical
+  - budget
+example:
+  lang: yaml
+  title: Debounced float switch as a pump interlock
+  source: distilled from room-3-runoff-ultrasonic.yaml (scrubbed)
+  code: |-
+    binary_sensor:
+      - platform: gpio
+        pin:
+          number: GPIO32
+          mode: INPUT_PULLUP
+          inverted: true
+        name: Tank Float
+        id: tank_level
+        filters:
+          - delayed_on: 50ms      # contact bounce is real
+          - delayed_off: 50ms
+        on_press:
+          - switch.turn_off: transfer_pump   # hard interlock, on-device

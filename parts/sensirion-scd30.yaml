@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: sensirion-scd30
+name: Sensirion SCD30 NDIR CO2 sensor
+manufacturer: Sensirion
+part_numbers:
+  - SCD30
+category: Air quality & CO2
+subcategory: CO2 / temperature / humidity
+bus:
+  - I2C
+i2c:
+  address: "0x61"
+  configurable: false
+  how_to_change: "Fixed at 0x61 - which is exactly why it is useful: it does NOT collide with the SCD4x at 0x62."
+voltage:
+  nominal: 3.3
+  min: 3.3
+  max: 5.5
+  logic: 3.3
+price:
+  band: $$$
+  observed: 105.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: DigiKey - Sensirion SCD30
+    url: https://www.digikey.com/en/products/detail/sensirion-ag/SCD30/8445334
+    part_number: SCD30
+    region: Global
+  - name: Adafruit SCD-30
+    url: https://www.adafruit.com/product/4867
+    part_number: "4867"
+    region: US
+  - name: Sparkfun SCD30
+    url: https://www.sparkfun.com/products/15112
+    region: US
+ip_rating: none
+calibration_required: periodic
+quality_tier: works
+deployment_count: 0
+evidence: |-
+  Not currently deployed - a common/sensors/scd30.yaml block exists in the config tree but no device includes it. Listed because its 0x61 address is the standard trick for putting two CO2 sensors on one bus without a mux.
+failure_modes:
+  - Physically large and thirsty (up to 75mA peak) compared with the SCD4x.
+  - Same ASC-in-an-enriched-room trap as the whole Sensirion NDIR family.
+notes: "The bus-planning play: SCD41 at 0x62 plus SCD30 at 0x61 gives you two independent CO2 readings on one bus with no mux. See the I2C collision map."
+drivers:
+  - name: ESPHome scd30
+    url: https://esphome.io/components/sensor/scd30.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+  - Raspberry Pi
+alternatives:
+  - sensirion-scd41
+  - sensirion-scd40
+image: assets/parts/sensirion-scd30.svg
+tags:
+  - co2
+  - ndir
+  - i2c
+  - no-collision

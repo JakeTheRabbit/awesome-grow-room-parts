@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: rs485-ttl-transceiver
+name: MAX485 / SP3485 RS485-to-TTL transceiver
+manufacturer: Maxim / Sipex and clones
+part_numbers:
+  - MAX485
+  - MAX3485
+  - SP3485
+  - M5Stack U004 (RS485 Unit)
+category: Bus infrastructure
+subcategory: RS485 transceiver
+bus:
+  - RS485/Modbus
+  - UART
+voltage:
+  nominal: 5
+  min: 3.3
+  max: 5.5
+  logic: 3.3
+  note: "MAX485 is 5V; MAX3485/SP3485 are 3.3V. Feeding a 5V MAX485's RO pin into an ESP32 is out of spec - use a 3.3V part."
+price:
+  band: $
+  observed: 8.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: M5Stack RS485 Unit
+    url: https://shop.m5stack.com/products/rs485-unit
+    part_number: U004
+    region: Global
+  - name: Mouser - MAX3485
+    url: https://www.mouser.com/c/?q=MAX3485
+    region: Global
+ip_rating: none
+calibration_required: none
+quality_tier: works
+deployment_count: 2
+deployment_evidence:
+  - espoe-leaf-th.yaml
+  - kincony-f16-node.yaml
+evidence: Two deployments carrying the Modbus sensors. Unglamorous but it is the piece everyone forgets to order.
+failure_modes:
+  - 5V MAX485 modules feed 5V into a 3.3V ESP32 RX. It usually survives and then does not. Buy the 3.3V variant.
+  - Auto-direction modules are convenient but some clones switch too slowly at higher baud and clip the first byte of a reply. At 4800 baud you will not notice; at 115200 you will.
+  - Missing 120R termination on a long run gives intermittent CRC errors that look like a dead sensor.
+  - A+/B- swapped is the single most common wiring fault. Symptom is total silence, not garbage.
+drivers:
+  - name: ESPHome modbus
+    url: https://esphome.io/components/modbus.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+  - Modbus master
+works_with:
+  - cwt-leaf-th
+  - cwt-wls-water-level
+  - cwt-bl-ec-4400
+  - cwt-ps-par
+  - cwt-sws-wind
+  - thc-s-rs485
+image: assets/parts/rs485-ttl-transceiver.svg
+tags:
+  - rs485
+  - modbus
+  - transceiver
+  - infrastructure

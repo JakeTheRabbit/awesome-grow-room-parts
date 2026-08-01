@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: load-cell-50kg
+name: Load cell (50kg half-bridge or 200kg bar)
+manufacturer: Generic
+part_numbers:
+  - YZC-133
+  - TAL220
+category: Water & fertigation
+subcategory: Strain gauge load cell
+bus:
+  - Analog
+voltage:
+  nominal: 5
+  note: Excited by the HX711 - no separate supply.
+price:
+  band: $
+  observed: 15.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: Sparkfun load cells
+    url: https://www.sparkfun.com/categories/tags/load-cell
+    region: US
+  - name: AliExpress (search TAL220 load cell)
+    url: https://www.aliexpress.com/w/wholesale-TAL220-load-cell.html
+    region: Global
+ip_rating: IP65
+calibration_required: two-point
+quality_tier: field-proven
+deployment_count: 4
+deployment_evidence:
+  - m5-dial-scales.yaml
+  - m5-dial-scales2.yaml
+  - m5-dial-3.yaml
+  - aquaponics-kit.yaml
+evidence: "Paired with the HX711 on all four scale nodes. Size the cell to the load: a full 25kg CO2 cylinder on a 200kg bar wastes most of your resolution."
+failure_modes:
+  - Overload past the rated capacity permanently deforms the gauge. There is no recovery and no error - it just reads wrong forever.
+  - Half-bridge 50kg cells (the flat bathroom-scale type) need to be used in fours, or with a matching dummy resistor pair. Used singly they are wildly nonlinear.
+  - Moisture ingress at the cable entry drifts the bridge. In a wet room, seal it.
+platforms:
+  - ESPHome
+  - Arduino
+works_with:
+  - hx711-adc
+image: assets/parts/load-cell-50kg.svg
+tags:
+  - load-cell
+  - weight

@@ -1,0 +1,138 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: sensirion-scd41
+name: Sensirion SCD41 true NDIR CO2 sensor
+manufacturer: Sensirion
+part_numbers:
+  - SCD41
+  - SCD41-D-R2
+  - M5Stack U103 (CO2L Unit)
+category: Air quality & CO2
+subcategory: CO2 / temperature / humidity
+bus:
+  - I2C
+  - Grove
+i2c:
+  address: "0x62"
+  configurable: false
+  how_to_change: Not configurable. Two SCD4x on one bus requires a TCA9548A mux - this is the single most common bus collision in a grow room.
+protocol_settings: I2C up to 100kHz. Sensirion recommend 50kHz when the Grove cable is long.
+voltage:
+  nominal: 3.3
+  min: 2.4
+  max: 5.5
+  logic: 3.3
+  note: M5Stack Grove unit accepts 5V and regulates onboard.
+price:
+  band: $$
+  observed: 52.0
+  currency: NZD
+  observed_date: "2026-03-01"
+  note: M5Stack CO2L Grove unit. Bare SCD41 modules are cheaper but need your own cabling.
+vendors:
+  - name: M5Stack CO2L Unit (SCD41)
+    url: https://shop.m5stack.com/products/co2l-unit-with-temperature-and-humidity-sensor-scd41
+    part_number: U103
+    region: Global
+  - name: DigiKey - Sensirion SCD41
+    url: https://www.digikey.com/en/products/detail/sensirion-ag/SCD41-D-R2/13684290
+    part_number: SCD41-D-R2
+    region: Global
+  - name: Mouser - Sensirion SCD4x
+    url: https://www.mouser.com/c/?q=SCD41
+    region: Global
+  - name: Adafruit SCD-41 breakout
+    url: https://www.adafruit.com/product/5190
+    part_number: "5190"
+    region: US
+ip_rating: none
+calibration_required: periodic
+calibration_notes: |-
+  Ships factory-calibrated. In a CO2-enriched room automatic self-calibration (ASC) MUST be off - ASC assumes the sensor sees 400ppm fresh air regularly, which never happens in a sealed flower room, so it will slowly recalibrate your 1500ppm setpoint down to nonsense. Do a forced recalibration in outdoor air roughly annually instead. Set altitude_compensation to your site elevation.
+quality_tier: field-proven
+deployment_count: 29
+deployment_evidence:
+  - room-2-scd41-env3-dlight-poe.yaml
+  - room-3-scd41-top.yaml
+  - dry-room-scd41-enviii.yaml
+  - dry-room-scd41-enviii-atom.yaml
+  - co2-node-2.yaml
+  - echo-1.yaml
+  - air-q-entry.yaml
+  - air-q-dry-room.yaml
+  - airq-aux-1.yaml
+  - airq-annex.yaml
+evidence: |-
+  29 active deployments - the most-used sensor in the catalogue after the PoE board itself. It is the sensor the CO2 injection control loop actually runs on in room 1, room 2, veg and the drying room.
+failure_modes:
+  - Single fixed address 0x62. Two in one room means a TCA9548A mux or two boards - plan for it before you buy the second one.
+  - Leave ASC enabled in a sealed CO2-enriched room and it will drift your control setpoint down over weeks. This is the failure that bites people.
+  - "Self-heats. Every deployment here marks its temperature and humidity channels internal: true and reads climate off a separate SHT30."
+  - Above roughly 2000ppm accuracy degrades; the deployed filter clamps to 300-2500ppm and drops anything outside as a bad read.
+  - Condensation kills it. In a drying room or a room that hits dewpoint, keep it off cold surfaces.
+notes: |-
+  The clamp-and-drop lambda below is used on all 29 deployments. Returning `{}` from an ESPHome filter lambda discards the reading entirely rather than publishing a spike - which is what you want feeding a solenoid that injects CO2.
+drivers:
+  - name: ESPHome scd4x
+    url: https://esphome.io/components/sensor/scd4x.html
+    kind: esphome-core
+  - name: Sensirion SCD4x datasheet
+    url: https://sensirion.com/products/catalog/SCD41
+    kind: datasheet
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+  - M5Stack
+  - Raspberry Pi
+works_with:
+  - m5stack-poesp32
+  - m5stack-atom-lite
+  - tca9548a-mux
+  - m5-env3
+  - sensirion-sen55
+alternatives:
+  - sensirion-scd40
+  - sensirion-scd30
+image: assets/parts/sensirion-scd41.svg
+tags:
+  - co2
+  - ndir
+  - i2c
+  - field-proven
+  - climate
+example:
+  lang: yaml
+  title: SCD41 with the range clamp used on all 29 deployments
+  source: distilled from common/sensors/scd4x.yaml (scrubbed)
+  code: |-
+    i2c:
+      sda: GPIO16
+      scl: GPIO17
+      scan: true
+      frequency: 50kHz          # 50kHz is kinder to long Grove runs than 100kHz
+
+    sensor:
+      - platform: scd4x
+        address: 0x62
+        update_interval: 30s
+        # IMPORTANT in a CO2-enriched room: leave ASC off, or it will slowly
+        # recalibrate your enriched setpoint toward 400ppm and ruin the control loop.
+        automatic_self_calibration: false
+        altitude_compensation: 150m
+        co2:
+          name: CO2
+          id: co2
+          filters:
+            # Drop implausible readings instead of publishing a spike to the
+            # controller that opens the CO2 solenoid.
+            - lambda: |-
+                float MIN_VALUE = 300.0;
+                float MAX_VALUE = 2500.0;
+                if (MIN_VALUE <= x && x <= MAX_VALUE) return x;
+                else return {};
+        temperature:
+          name: CO2 Temperature
+          internal: true          # self-heats: do not use as room temperature
+        humidity:
+          name: CO2 Humidity
+          internal: true

@@ -1,0 +1,133 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: mlx90640-thermal
+name: MLX90640 32x24 thermal camera array
+manufacturer: Melexis
+part_numbers:
+- MLX90640ESF-BAB
+- MLX90640ESF-BAA
+- M5Stack Thermal2 U149
+category: Thermal & optical
+subcategory: 32x24 far-infrared thermopile array
+bus:
+- I2C
+i2c:
+  address: '0x33'
+  configurable: true
+  how_to_change: Address is stored in the sensor's internal EEPROM and can be rewritten, but almost nothing
+    supports doing so. Treat it as fixed at 0x33.
+protocol_settings: I2C at 400 kHz minimum. 100 kHz cannot sustain a 768-pixel frame at any useful rate.
+voltage:
+  min: 3.0
+  max: 3.6
+  nominal: 3.3
+  logic: 3.3
+price:
+  band: $$$
+  observed: 120.0
+  currency: NZD
+  observed_date: '2026-03-01'
+  note: BAA (55 deg FOV) and BAB (110 deg wide FOV) differ in price and coverage.
+vendors:
+- name: Digi-Key - Melexis MLX90640
+  url: https://www.digikey.com/en/products/filter/optical-sensors/thermal-imaging
+  part_number: MLX90640ESF-BAB
+- name: M5Stack Thermal2 Unit
+  url: https://shop.m5stack.com/products/thermal2-unit-mlx90640
+  part_number: U149
+- name: Adafruit MLX90640 breakout
+  url: https://www.adafruit.com/product/4407
+  part_number: '4407'
+ip_rating: none
+calibration_required: factory
+calibration_notes: Factory-calibrated coefficients live in on-chip EEPROM; the driver reads them at boot.
+  What you DO have to set is emissivity and reflected temperature. Green foliage is ~0.95. Leave emissivity
+  at the default 1.0 and leaf temperature reads several degrees low, which will quietly corrupt every
+  leaf-VPD number you calculate from it.
+quality_tier: field-proven
+deployment_count: 4
+deployment_evidence:
+- room-1-mlx90640.yaml
+- room-1-r1-m-thermal-cam.yaml
+- lite-5-mlx90640.yaml
+- room-3-thermal-cam.yaml
+evidence: 4 production configs run an active mlx90640 block - canopy leaf-temperature mapping in room 1 and
+  Veg. Lower count than the CO2 fleet simply because you need one per room, not one per zone; it has been
+  continuously deployed rather than trialled.
+failure_modes:
+- Default emissivity 1.0 under-reads leaf temperature by 2-4 C. Set 0.95 for foliage or every leaf-VPD
+  figure downstream is wrong.
+- At 100 kHz I2C the frame read is too slow and you get torn or dropped frames - 400 kHz is mandatory.
+- The array self-heats; ta_shift exists to correct reflected temperature and the default (8 K, FLIR convention)
+  is not always right for a sealed room.
+- A single hot LED driver in frame drags a whole-frame average badly - use a region of interest over the
+  canopy, not the frame mean.
+- 0x33 is fixed in practice, so two cameras need two buses or a mux.
+notes: Use a region of interest centred on the canopy rather than the frame average - the fleet configs
+  use an 11x11 px ROI out of the 24x32 array and keep per-frame min/max as separate canopy diagnostics.
+  Leaf temperature from this feeds leaf-VPD, which is a far better steering signal than air VPD alone.
+drivers:
+- name: stackdrift esphome-components (mlx90640)
+  url: https://codeberg.org/stackdrift/esphome-components
+  kind: esphome-external
+- name: Melexis MLX90640 datasheet
+  url: https://www.melexis.com/en/product/MLX90640/Far-Infrared-Thermal-Sensor-Array
+  kind: datasheet
+platforms:
+- ESPHome
+- Home Assistant
+- Arduino
+- Raspberry Pi
+works_with:
+- m5stack-poesp32
+- tca9548a-mux
+image: assets/parts/mlx90640-thermal.svg
+example:
+  lang: yaml
+  title: MLX90640 tuned for canopy leaf temperature
+  source: distilled from room-1-r1-m-thermal-cam.yaml
+  code: |
+    external_components:
+      - source:
+          type: git
+          url: https://codeberg.org/stackdrift/esphome-components
+          ref: main
+          path: "."
+        components: [mlx90640]
+
+    i2c:
+      sda: GPIO16
+      scl: GPIO17
+      frequency: 400kHz     # 100kHz cannot sustain a 768-pixel frame
+      scan: true
+
+    # The component DEPENDS on these platforms, so the sections must exist
+    # even when empty, or the build fails.
+    number:
+    select:
+
+    mlx90640:
+      id: thermal_cam
+      address: 0x33
+      refresh_rate: "16Hz"
+      resolution: "18-bit"
+      pattern: "chess"
+      update_interval: 20000          # ms
+
+      # Thermography parameters tuned for plant leaves.
+      emissivity: 0.95                # green foliage ~0.94-0.98. NOT 1.0.
+      ta_shift: 8.0                   # reflected temp = ambient - 8C (FLIR convention)
+
+      # Region of interest: central canopy patch. Averaging the WHOLE frame lets a
+      # hot LED driver in shot drag the number - always use an ROI.
+      roi:
+        enabled: true
+        center_row: 12
+        center_col: 16
+        size: 5                       # size N -> (2N+1) square
+tags:
+- thermal
+- leaf-temperature
+- i2c
+- vpd
+- canopy

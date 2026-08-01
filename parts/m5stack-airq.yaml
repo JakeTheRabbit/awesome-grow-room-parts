@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: m5stack-airq
+name: M5Stack AirQ (SEN55 + SCD40 air quality node)
+manufacturer: M5Stack
+part_numbers:
+  - K138
+  - AirQ
+category: Air quality & CO2
+subcategory: Integrated multi-sensor node
+bus:
+  - I2C
+  - WiFi
+  - BLE
+i2c:
+  address: "0x69"
+  also_occupies:
+    - "0x62"
+    - "0x51"
+  configurable: false
+  how_to_change: |-
+    Fixed. The AirQ carries three chips on one internal bus: SEN55 at 0x69, SCD4x at 0x62 and a
+    PCF8563 RTC at 0x51. None are strappable, so two AirQ boards cannot share one external bus,
+    and it collides with any discrete SEN55, SCD4x or PCF8563 you add alongside it.
+voltage:
+  nominal: 5
+  logic: 3.3
+  note: USB-C or internal LiPo.
+price:
+  band: $$$
+  observed: 145.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: M5Stack
+    url: https://shop.m5stack.com/products/m5stack-airq-air-quality-kit-sen55-scd40
+    part_number: K138
+    region: Global
+ip_rating: none
+calibration_required: periodic
+calibration_notes: |-
+  SCD4x wants forced recalibration in fresh air roughly annually; SEN55 VOC/NOx run a self-learning baseline that needs ~12h of representative air before its index means anything.
+quality_tier: field-proven
+deployment_count: 8
+deployment_evidence:
+  - air-q-entry.yaml
+  - air-q-dry-room.yaml
+  - airq-aux-1.yaml
+  - airq-annex.yaml
+  - m5Stack_AirQ.yaml
+  - m5stack-airq-corridor.yaml
+  - m5stack-airq-loading-bay.yaml
+  - m5stack-airq-room-3.yaml
+evidence: |-
+  Seven of these are permanently installed one per room (two flower rooms, a veg room, a dry room and three back-of-house spaces) and have run continuously as the facility's ambient-air reference. Eight configs total.
+failure_modes:
+  - The SEN55 fan pulls room air across the element - in a grow room it loads up with trichome and dust and PM readings drift high. Budget an annual clean.
+  - "Reported temperature runs warm because the board self-heats. Every deployment marks it internal: true and takes temperature from a separate SCD41 or SHT30."
+  - Three fixed I2C addresses on one board (0x69, 0x62, 0x51) means two AirQ units cannot share an external bus without a mux.
+  - VOC and NOx are unitless indices, not concentrations. They are only meaningful relative to their own learned baseline.
+drivers:
+  - name: ESPHome sen5x
+    url: https://esphome.io/components/sensor/sen5x.html
+    kind: esphome-core
+  - name: M5Stack AirQ docs
+    url: https://docs.m5stack.com/en/core/AirQ
+    kind: manual
+platforms:
+  - ESPHome
+  - Home Assistant
+  - M5Stack
+works_with:
+  - sensirion-sen55
+  - sensirion-scd41
+  - pcf8563-rtc
+image: assets/parts/m5stack-airq.svg
+tags:
+  - air-quality
+  - voc
+  - nox
+  - pm25
+  - co2
+  - field-proven

@@ -1,0 +1,43 @@
+id: poe-room-controller
+name: PoE room controller (irrigation + CO2)
+summary: >-
+  The pattern the the reference facility flower rooms actually run: a wired PoE node that
+  both senses and actuates, with the flood-safety pattern mandatory on every
+  output. This is the build that can move water, so it is the build that has to
+  fail safe.
+skill_level: intermediate
+estimated_build_time: half a day plus wiring
+network: Wired Ethernet (PoE, 802.3af)
+items:
+  - part: m5stack-poesp32
+    qty: 1
+    role: Host + wired network. 48 nodes in production run this exact pin map.
+  - part: m5stack-4relay
+    qty: 1
+    role: Four irrigation zone valves, or three valves plus a CO2 solenoid.
+  - part: sensirion-scd41
+    qty: 1
+    role: CO2 for injection control, plus room T/RH.
+  - part: solenoid-valve-24vac
+    qty: 4
+    role: Zone valves. 24 VAC keeps mains out of the control enclosure.
+  - part: ssr-25da
+    qty: 1
+    role: CO2 solenoid or a contactor coil, driven straight off a GPIO.
+  - part: pcf8563-rtc
+    qty: 1
+    role: Keeps the irrigation schedule honest through a network outage.
+notes: >-
+  I2C map for this build is clean: SCD41 at 0x62, 4Relay at 0x26, RTC at 0x51.
+  No multiplexer needed. If you add an M5Stack ENV.III you introduce a QMP6988
+  at 0x70 - still fine here, but check the collision map before adding a
+  TCA9548A, which also defaults to 0x70.
+  Note the 4Relay channel numbering is REVERSED: `relay4:` is physical relay 1.
+watch_out: >-
+  MANDATORY on every output in this build, no exceptions:
+  (1) restore_mode ALWAYS_OFF so a power cut never resumes a feed,
+  (2) an on_turn_on auto-shutoff delay sized just above your longest real feed,
+  (3) a network killguard script with a grace timer - NOT an instant kill on
+  on_disconnect, because brief Ethernet flaps are normal and an instant kill
+  interrupts live feeds. See SAFETY.md for the full pattern and why each part
+  exists.

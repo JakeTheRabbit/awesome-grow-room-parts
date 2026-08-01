@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: w5500-eth-module
+name: W5500 SPI Ethernet module
+manufacturer: WIZnet
+part_numbers:
+  - W5500
+category: Networking & power
+subcategory: SPI Ethernet MAC+PHY
+bus:
+  - SPI
+  - Ethernet
+voltage:
+  nominal: 3.3
+  logic: 3.3
+price:
+  band: $
+  observed: 12.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: WIZnet
+    url: https://www.wiznet.io/product-item/w5500/
+    region: Global
+  - name: Mouser
+    url: https://www.mouser.com/c/?q=W5500
+    region: Global
+ip_rating: none
+calibration_required: none
+quality_tier: works
+deployment_count: 2
+deployment_evidence:
+  - kincony-f16-node.yaml
+  - room-3-solenoid-relays.yaml
+evidence: |-
+  Two deployments, both on boards where the Ethernet is an SPI add-on rather than a native PHY. Works, but the native-PHY PoE route is the one that scaled to 48 nodes here.
+failure_modes:
+  - Uses 5 GPIO (clk/mosi/miso/cs/int) plus reset. On a crowded board that is most of your free pins.
+  - SPI Ethernet is slower and more CPU-hungry than a native RMII PHY - noticeable if the node also drives a display.
+  - Cheap clones ship with a duplicate or blank MAC; set one explicitly if you run more than one.
+drivers:
+  - name: ESPHome ethernet (W5500)
+    url: https://esphome.io/components/ethernet.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+works_with:
+  - kincony-f16-relay
+alternatives:
+  - m5stack-poesp32
+image: assets/parts/w5500-eth-module.svg
+tags:
+  - ethernet
+  - spi
+example:
+  lang: yaml
+  title: W5500 over SPI
+  source: distilled from room-3-solenoid-relays.yaml (scrubbed)
+  code: |-
+    ethernet:
+      type: W5500
+      clk_pin: GPIO42
+      mosi_pin: GPIO43
+      miso_pin: GPIO44
+      cs_pin: GPIO41
+      interrupt_pin: GPIO2
+      reset_pin: GPIO1

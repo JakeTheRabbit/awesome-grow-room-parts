@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: bosch-bmp280
+name: Bosch BMP280 pressure & temperature sensor
+manufacturer: Bosch Sensortec
+part_numbers:
+  - BMP280
+category: Air quality & CO2
+subcategory: Barometric pressure
+bus:
+  - I2C
+  - SPI
+i2c:
+  address: "0x76"
+  alternates:
+    - "0x77"
+  configurable: true
+  how_to_change: SDO low = 0x76, high = 0x77.
+voltage:
+  nominal: 3.3
+  min: 1.71
+  max: 3.6
+  logic: 3.3
+price:
+  band: $
+  observed: 6.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: Mouser - BMP280
+    url: https://www.mouser.com/c/?q=BMP280
+    region: Global
+ip_rating: none
+calibration_required: factory
+quality_tier: works
+deployment_count: 1
+deployment_evidence:
+  - aux-tvoc-1.yaml
+evidence: One deployment. Pressure only - no humidity. Useful for SCD4x ambient pressure compensation, which is worth a percent or two of CO2 accuracy at altitude.
+failure_modes:
+  - No humidity channel. If you wanted humidity you wanted the BME280.
+drivers:
+  - name: ESPHome bmp280
+    url: https://esphome.io/components/sensor/bmp280.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+works_with:
+  - sensirion-scd41
+alternatives:
+  - bosch-bme280
+  - m5-env3
+image: assets/parts/bosch-bmp280.svg
+tags:
+  - pressure
+  - i2c
+  - budget

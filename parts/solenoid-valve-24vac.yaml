@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: solenoid-valve-24vac
+name: 24VAC irrigation solenoid valve
+manufacturer: Hunter / Rain Bird / Netafim
+part_numbers:
+  - PGV-101
+  - Rain Bird 100-DV
+category: Irrigation hardware
+subcategory: Zone valve
+bus:
+  - Mains
+voltage:
+  nominal: 24
+  min: 22
+  max: 28
+  note: 24VAC is the irrigation industry standard - it is deliberately NOT DC and not mains. Needs a 24VAC transformer and a relay rated for inductive AC loads.
+price:
+  band: $$
+  observed: 42.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: Hunter Industries PGV
+    url: https://www.hunterindustries.com/irrigation-product/valves/pgv
+    part_number: PGV-101
+    region: Global
+  - name: Rain Bird DV series
+    url: https://www.rainbird.com/products/dv-series-valves
+    region: Global
+ip_rating: IP68
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 3
+deployment_evidence:
+  - espoe-multiplexer-irrigation-relays.yaml
+  - room-3-solenoid-relays.yaml
+  - espoe-main-pump.yaml
+evidence: |-
+  Three zones in room 1 plus four in veg, on 1.5 minute shots. Standard irrigation hardware doing standard irrigation work - the interesting part is entirely in how you fail them safe.
+failure_modes:
+  - A valve stuck open is a flooded room. This is the single highest-consequence failure in the whole catalogue - restore_mode ALWAYS_OFF plus an auto-shutoff delay is not optional.
+  - Grit in the diaphragm holds it partly open. Fit a 130 micron filter upstream and clean it.
+  - Inductive kickback from the coil kills cheap relays. Use a properly rated relay module or fit a snubber.
+  - Solenoid coils buzz and get warm in normal operation - that is not a fault, but a coil that gets hot enough to smell is.
+  - Low pressure means the diaphragm may not seat. Most valves need a minimum pressure to close reliably.
+notes: See SAFETY.md. Every valve in this facility carries restore_mode ALWAYS_OFF plus a 5 minute hard auto-shutoff.
+platforms:
+  - ESPHome
+  - Home Assistant
+works_with:
+  - m5stack-4relay
+  - ssr-25da
+  - m5stack-poesp32
+  - float-switch
+image: assets/parts/solenoid-valve-24vac.svg
+tags:
+  - irrigation
+  - valve
+  - safety-critical
+  - field-proven

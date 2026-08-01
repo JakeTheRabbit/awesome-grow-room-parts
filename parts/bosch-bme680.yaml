@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: bosch-bme680
+name: Bosch BME680 gas / T / RH / pressure sensor
+manufacturer: Bosch Sensortec
+part_numbers:
+  - BME680
+  - BME688
+category: Air quality & CO2
+subcategory: Gas resistance + climate
+bus:
+  - I2C
+  - SPI
+i2c:
+  address: "0x76"
+  alternates:
+    - "0x77"
+  configurable: true
+  how_to_change: SDO low = 0x76, high = 0x77.
+voltage:
+  nominal: 3.3
+  min: 1.71
+  max: 3.6
+  logic: 3.3
+price:
+  band: $$
+  observed: 28.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: Bosch Sensortec
+    url: https://www.bosch-sensortec.com/products/environmental-sensors/gas-sensors/bme680/
+    region: Global
+  - name: Adafruit BME680
+    url: https://www.adafruit.com/product/3660
+    region: US
+ip_rating: none
+calibration_required: periodic
+calibration_notes: |-
+  The gas channel is a raw resistance, not a calibrated VOC concentration. It needs a burn-in of 24-48h and only ever means anything relative to its own recent history.
+quality_tier: works
+deployment_count: 1
+deployment_evidence:
+  - dry-room-scd41-enviii-atom.yaml
+evidence: |-
+  One deployment in the drying room, where the gas-resistance trend is a cheap proxy for terpene off-gassing during cure. Treat it as a trend line, not a measurement.
+failure_modes:
+  - The heater plate self-heats hard - its own temperature reading is useless as room temperature.
+  - Gas resistance drifts with humidity as much as with VOC. Without compensation you are largely plotting RH.
+  - Same 0x76/0x77 address space as the BME280 and BMP280 - three parts fighting over two addresses.
+drivers:
+  - name: ESPHome bme680
+    url: https://esphome.io/components/sensor/bme680.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+alternatives:
+  - sensirion-sen55
+  - bosch-bme280
+image: assets/parts/bosch-bme680.svg
+tags:
+  - voc
+  - gas
+  - temperature
+  - humidity
+  - i2c
+  - drying

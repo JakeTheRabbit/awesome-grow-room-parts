@@ -1,0 +1,61 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: seeed-leapmmw-mmwave
+name: Seeed LeapMMW 24 GHz mmWave presence radar
+manufacturer: Seeed Studio
+part_numbers:
+- LeapMMW HS2xx3A
+- MR24HPC1
+- Seeed 24GHz mmWave
+category: Access control & presence
+subcategory: 24 GHz FMCW presence/occupancy radar
+bus:
+- UART
+protocol_settings: UART 115200 8-N-1, proprietary framed binary protocol.
+voltage:
+  min: 3.3
+  max: 5.0
+  nominal: 5.0
+  logic: 3.3
+price:
+  band: $$
+  observed: 40.0
+  currency: NZD
+  observed_date: '2026-03-01'
+vendors:
+- name: Seeed Studio mmWave sensors
+  url: https://www.seeedstudio.com/catalogsearch/result/?q=mmwave
+  region: Global
+ip_rating: none
+calibration_required: none
+quality_tier: avoid
+deployment_count: 0
+deployment_evidence: []
+evidence: HALL OF SHAME. A full custom ESPHome component for this part exists in the fleet (common/sensors/leapmmw_sensor.yaml
+  plus a 4.7 KB leapmmw_sensor.h), and ZERO of the 149 device configs include it. Someone did the integration
+  work and then never deployed it - that is a louder verdict than any spec sheet.
+failure_modes:
+- Written and debugged, then abandoned before a single production deployment - the component is dead code.
+- 24 GHz radar sees through thin walls and plastic, so it detects people in the NEXT room. In a compartmented
+  facility that means constant phantom occupancy.
+- Oscillating fans and swaying plant canopy both register as motion - a grow room is close to the worst-case
+  environment for this sensor.
+- Proprietary binary framing with sparse documentation; the custom component exists precisely because
+  no core ESPHome driver covers it.
+notes: Not a bad chip, but a bad fit for a room full of moving leaves and fans. If you want presence in
+  a grow space, a PIR outside the canopy or door contacts plus RFID will lie to you far less. Listed here
+  so nobody else spends a weekend on the same integration.
+drivers:
+- name: Seeed 24GHz mmWave wiki
+  url: https://wiki.seeedstudio.com/Radar_MR24HPC1/
+  kind: manual
+platforms:
+- ESPHome
+- Arduino
+image: assets/parts/seeed-leapmmw-mmwave.svg
+tags:
+- mmwave
+- presence
+- hall-of-shame
+- uart
+- abandoned

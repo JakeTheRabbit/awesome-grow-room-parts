@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216 260" width="216" height="260" role="img" aria-label="PCF8563 real-time clock">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#232312"/>
+      <stop offset="1" stop-color="#101010"/>
+    </linearGradient>
+  </defs>
+  <rect width="216" height="260" rx="12" fill="url(#g)"/>
+  <rect x="28" y="36" width="160" height="136" rx="10" fill="#000" opacity=".22"/>
+  <path d="M52 84 h112 M52 104 h112 M52 124 h112" stroke="#7a7a4a" stroke-width="4" opacity=".45"/><circle cx="72" cy="84" r="6" fill="#7a7a4a" opacity=".8"/><circle cx="96" cy="104" r="6" fill="#7a7a4a" opacity=".8"/><circle cx="120" cy="124" r="6" fill="#7a7a4a" opacity=".8"/><circle cx="144" cy="84" r="6" fill="#7a7a4a" opacity=".8"/><circle cx="168" cy="104" r="6" fill="#7a7a4a" opacity=".8"/>
+  <rect x="12" y="12" width="52" height="8" rx="4" fill="#3fa46a" opacity=".9"/>
+  <text x="108" y="182" text-anchor="middle" font-size="14" fill="#e8e8e8" font-family="ui-sans-serif,system-ui,sans-serif">PCF8563 real-time clock</text><text x="108" y="205" text-anchor="middle" font-size="11" fill="#9a9a9a" font-family="ui-sans-serif,system-ui,sans-serif">NXP</text>
+</svg>

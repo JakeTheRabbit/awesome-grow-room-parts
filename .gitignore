@@ -1,0 +1,30 @@
+# Never commit secrets. See SECURITY.md.
+secrets.yaml
+*.secret.yaml
+*.secrets.yaml
+.env
+.env.*
+*.key
+*.pem
+id_rsa*
+
+# ESPHome build artefacts, if anyone works on configs in-tree
+.esphome/
+*.bin
+*.elf
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*~

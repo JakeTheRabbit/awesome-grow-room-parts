@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: dfrobot-gravity-orp
+name: DFRobot Gravity analog ORP sensor
+manufacturer: DFRobot
+part_numbers:
+  - SEN0165
+  - "Gravity: Analog ORP Meter"
+category: Water & fertigation
+subcategory: Oxidation-reduction potential
+bus:
+  - Analog
+voltage:
+  nominal: 5
+  min: 3.3
+  max: 5.5
+  logic: 3.3
+  note: Analog output referenced to the supply rail - a noisy 5V rail becomes a noisy ORP reading.
+price:
+  band: $$
+  observed: 80.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: DFRobot SEN0165
+    url: https://www.dfrobot.com/product-1071.html
+    part_number: SEN0165
+    region: Global
+ip_rating: IP68
+calibration_required: one-point
+calibration_notes: Single-point against a 220mV or 470mV ORP standard. The offset drifts, so recheck monthly if the number is doing anything more than trending.
+quality_tier: experimental
+deployment_count: 1
+deployment_evidence:
+  - orp-sensor.yaml
+evidence: |-
+  One pilot node. ORP is genuinely useful for tracking hypochlorous/peroxide sanitiser residual in a recirculating system, but this is an analog probe on an ESP32 ADC - the noise floor limits what you can honestly claim from it.
+failure_modes:
+  - ESP32 ADC is nonlinear and noisy. Without averaging and a decent reference the last 20mV are fiction.
+  - The platinum electrode passivates with organic film - it reads increasingly sluggish rather than obviously wrong.
+  - Shares the pumped-line ground-loop problem; an isolated supply helps a lot.
+  - ORP in a nutrient tank is dominated by whatever sanitiser you dosed last, not by anything about the plants.
+drivers:
+  - name: ESPHome adc
+    url: https://esphome.io/components/sensor/adc.html
+    kind: esphome-core
+  - name: DFRobot ORP wiki
+    url: https://wiki.dfrobot.com/Analog_ORP_Meter_SKU_SEN0165_
+    kind: manual
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+alternatives:
+  - atlas-ezo-ph
+image: assets/parts/dfrobot-gravity-orp.svg
+tags:
+  - orp
+  - fertigation
+  - analog
+  - pilot

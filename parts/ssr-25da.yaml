@@ -1,0 +1,98 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: ssr-25da
+name: SSR-25DA solid state relay
+manufacturer: Fotek and many clones
+part_numbers:
+- SSR-25DA
+- SSR-40DA
+- G3MB-202P
+category: Actuation & relays
+subcategory: DC-controlled AC solid state relay
+bus:
+- GPIO
+voltage:
+  min: 3.0
+  max: 32.0
+  nominal: 3.3
+  logic: 3.3
+  note: 3-32 VDC control input; load side 24-380 VAC. The 3V3 GPIO of an ESP32 drives most units directly,
+    but check yours - some clones need 4V+ to fully turn on.
+price:
+  band: $
+  observed: 18.0
+  currency: NZD
+  observed_date: '2026-03-01'
+  note: Genuine Fotek costs several times a clone. Clones are commonly over-rated.
+vendors:
+- name: AliExpress SSR-25DA
+  url: https://www.aliexpress.com/w/wholesale-ssr-25da.html
+  note: Search the part number - individual listings rot fast
+ip_rating: none
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 8
+deployment_evidence:
+- room-1-co2-ssr.yaml
+- ssr-relay-irrigation.yaml
+- room-1-irrigation-relays.yaml
+- room-3-co2-relay.yaml
+- room-3-door-relay.yaml
+- room-1-ceiling-vents.yaml
+- espoe-main-pump.yaml
+- aux-light-control.yaml
+evidence: Plain GPIO-driven SSRs carry the highest-current loads in the facility - CO2 solenoids, the
+  main pump, lighting contactors and vent actuators. 8 configs switch one directly from a GPIO pin with
+  the standard safety pattern attached.
+failure_modes:
+- 'Clone SSRs are routinely over-rated: a ''25A'' clone will cook at 10A without a substantial heatsink.
+  Derate to about 40 percent of the badge and bolt it to metal.'
+- SSRs fail SHORT (permanently on) far more often than open. On anything that can flood or overheat a
+  room, put a mechanical contactor or an RCD downstream as the real safety layer.
+- Zero-cross types will not dim or chop a phase - do not try to use one for lighting control, use a proper
+  0-10V or PWM driver.
+- Small leakage current when off can keep neon indicators and some LED drivers faintly lit.
+notes: 'The correct pairing is: SSR switches a contactor, contactor switches the load. Driving a large
+  inductive load straight off an SSR is how you get a welded-on output. Every SSR controlling water or
+  CO2 in this fleet carries restore_mode ALWAYS_OFF plus an auto-shutoff delay - see SAFETY.md.'
+drivers:
+- name: ESPHome gpio switch
+  url: https://esphome.io/components/switch/gpio.html
+  kind: esphome-core
+platforms:
+- ESPHome
+- Home Assistant
+- Arduino
+- MicroPython
+- Standalone
+works_with:
+- solenoid-valve-24vac
+- m5stack-poesp32
+alternatives:
+- m5stack-4relay
+image: assets/parts/ssr-25da.svg
+example:
+  lang: yaml
+  title: GPIO SSR driving CO2, with the dead-man timer
+  source: distilled from room-1-co2-ssr.yaml
+  code: |
+    switch:
+      - platform: gpio
+        pin: GPIO26
+        id: co2_solenoid
+        name: "CO2 solenoid"
+        # SAFETY: never resume gas injection by itself after a power cut.
+        restore_mode: ALWAYS_OFF
+        # SAFETY: dead-man timer. If the controller wedges with the valve open,
+        # this still closes it. Set it slightly longer than your longest real
+        # injection, never "just in case" long.
+        on_turn_on:
+          - delay: 900s
+          - switch.turn_off: co2_solenoid
+tags:
+- ssr
+- relay
+- gpio
+- co2
+- safety
+- mains

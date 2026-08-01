@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: atlas-ezo-rtd
+name: Atlas Scientific EZO-RTD temperature circuit + PT-1000 probe
+manufacturer: Atlas Scientific
+part_numbers:
+  - EZO-RTD
+  - ENV-TMP-PT1000
+category: Water & fertigation
+subcategory: Solution temperature
+bus:
+  - I2C
+  - UART
+i2c:
+  address: "0x66"
+  alternates:
+    - "0x01"
+    - "0x7f"
+  configurable: true
+  how_to_change: Set by command. Deployed at decimal 102 (0x66).
+voltage:
+  nominal: 3.3
+  min: 3.3
+  max: 5.5
+  logic: 3.3
+price:
+  band: $$$
+  observed: 140.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: Atlas Scientific EZO-RTD
+    url: https://atlas-scientific.com/embedded-solutions/ezo-rtd-temperature-circuit/
+    part_number: EZO-RTD
+    region: Global
+ip_rating: IP68
+calibration_required: one-point
+quality_tier: experimental
+deployment_count: 1
+deployment_evidence:
+  - atlas-reservoir.yaml
+evidence: |-
+  Deployed alongside the pH and EC circuits. Its real job is feeding temperature compensation into the other two - pH and EC are both strongly temperature dependent and uncompensated readings drift with the day.
+failure_modes:
+  - Massive overkill if all you need is solution temperature - a DS18B20 does that for a twentieth of the price. Buy the RTD only because the EZO stack wants it.
+drivers:
+  - name: ESPHome ezo
+    url: https://esphome.io/components/sensor/ezo.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+works_with:
+  - atlas-ezo-ph
+  - atlas-ezo-ec
+alternatives:
+  - ds18b20
+image: assets/parts/atlas-ezo-rtd.svg
+tags:
+  - temperature
+  - fertigation
+  - i2c

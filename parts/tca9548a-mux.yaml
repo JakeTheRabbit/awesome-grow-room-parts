@@ -1,0 +1,131 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: tca9548a-mux
+name: TCA9548A 8-channel I2C multiplexer
+manufacturer: Texas Instruments
+part_numbers:
+- TCA9548A
+- PCA9548A
+- TCA9548APWR
+category: Bus infrastructure
+subcategory: 1-to-8 I2C switch
+bus:
+- I2C
+i2c:
+  address: '0x70'
+  alternates:
+  - '0x71'
+  - '0x72'
+  - '0x73'
+  - '0x74'
+  - '0x75'
+  - '0x76'
+  - '0x77'
+  configurable: true
+  how_to_change: Three address pins A0/A1/A2 select 0x70-0x77, so eight muxes can share one bus for 64
+    channels. NOTE 0x70 is also the default QMP6988 address and 0x76/0x77 collide with BME280/BMP280 -
+    check the collision map.
+voltage:
+  min: 1.65
+  max: 5.5
+  nominal: 3.3
+  note: Also works as a level translator between a 3V3 master and 5V devices.
+price:
+  band: $
+  observed: 12.0
+  currency: NZD
+  observed_date: '2026-03-01'
+vendors:
+- name: Adafruit TCA9548A
+  url: https://www.adafruit.com/product/2717
+  part_number: '2717'
+- name: Digi-Key TCA9548APWR
+  url: https://www.digikey.com/en/products/detail/texas-instruments/TCA9548APWR/4351574
+  part_number: TCA9548APWR
+- name: M5Stack EXT.IO / Hub units
+  url: https://shop.m5stack.com/collections/m5-unit
+  region: Global
+ip_rating: none
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 9
+deployment_evidence:
+- echo-1.yaml
+- espoe-dl-test.yaml
+- espoe-multiplexer-irrigation-relays.yaml
+- poe-dry-room-rfid.yaml
+- site-b-flower-room.yaml
+- site-b-front-gate.yaml
+- site-b-shed-door.yaml
+- site-b-shed-door-2.yaml
+- room-3-solenoid-relays.yaml
+evidence: '9 production configs run a TCA9548A. It exists in this fleet for exactly one reason: fixed-address
+  parts. Two SCD4x (both 0x62) or an ENV.III QMP6988 next to a mux (both 0x70) cannot share a bus without
+  one.'
+failure_modes:
+- Its own default 0x70 collides with the QMP6988 in the M5Stack ENV.III - the most common self-inflicted
+  collision in this catalogue. Move the mux to 0x71.
+- Forgetting to disable a channel leaves two channels open at once and you get corrupted reads that look
+  like a flaky sensor.
+- Adds a round-trip per channel switch, so polling many sensors fast gets slow.
+- It does not isolate a shorted or latched-up device - one dead sensor pulling SDA low still kills its
+  channel.
+notes: The single fix for an address collision. Before you buy one, check the collision map page - sometimes
+  the cheaper answer is a second I2C bus on spare GPIO pins, which ESP32 supports natively and costs nothing.
+drivers:
+- name: ESPHome tca9548a component
+  url: https://esphome.io/components/tca9548a.html
+  kind: esphome-core
+- name: TI TCA9548A datasheet
+  url: https://www.ti.com/product/TCA9548A
+  kind: datasheet
+platforms:
+- ESPHome
+- Home Assistant
+- Arduino
+- MicroPython
+- Raspberry Pi
+works_with:
+- sensirion-scd41
+- m5-env3
+- mlx90640-thermal
+- mfrc522-rfid
+image: assets/parts/tca9548a-mux.svg
+example:
+  lang: yaml
+  title: Two SCD4x on one bus via a mux (moved off 0x70)
+  source: distilled from espoe-multiplexer-irrigation-relays.yaml
+  code: |
+    i2c:
+      id: bus_a
+      sda: GPIO16
+      scl: GPIO17
+      scan: true
+
+    # Mux moved to 0x71: 0x70 is the QMP6988 default in the M5Stack ENV.III,
+    # and having both on one bus is the classic self-inflicted collision.
+    tca9548a:
+      - address: 0x71
+        i2c_id: bus_a
+        id: multiplex
+        channels:
+          - bus_id: mux_ch0
+          - bus_id: mux_ch1
+
+    sensor:
+      # Both SCD4x are hard-wired to 0x62 - the mux is what makes this legal.
+      - platform: scd4x
+        i2c_id: mux_ch0
+        address: 0x62
+        co2: { name: "CO2 canopy" }
+
+      - platform: scd4x
+        i2c_id: mux_ch1
+        address: 0x62
+        co2: { name: "CO2 floor" }
+tags:
+- i2c
+- mux
+- bus
+- collision
+- infrastructure

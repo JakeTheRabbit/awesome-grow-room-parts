@@ -1,0 +1,131 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: sensirion-sen55
+name: Sensirion SEN55 PM / VOC / NOx / T / RH module
+manufacturer: Sensirion
+part_numbers:
+  - SEN55
+  - SEN55-SDN-T
+category: Air quality & CO2
+subcategory: Particulate + VOC + NOx
+bus:
+  - I2C
+i2c:
+  address: "0x69"
+  configurable: false
+  how_to_change: Fixed. Collides with common IMU breakouts (MPU6050 alt address) - keep IMUs off this bus.
+voltage:
+  nominal: 5
+  min: 4.5
+  max: 5.5
+  logic: 3.3
+  note: 5V supply for the fan, 3.3V logic. Do not feed it 3.3V and expect the fan to run.
+price:
+  band: $$$
+  observed: 125.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: DigiKey - Sensirion SEN55
+    url: https://www.digikey.com/en/products/detail/sensirion-ag/SEN55-SDN-T/16342527
+    part_number: SEN55-SDN-T
+    region: Global
+  - name: Mouser - SEN5x
+    url: https://www.mouser.com/c/?q=SEN55
+    region: Global
+  - name: M5Stack AirQ (SEN55 inside)
+    url: https://shop.m5stack.com/products/m5stack-airq-air-quality-kit-sen55-scd40
+    part_number: K138
+    region: Global
+ip_rating: none
+calibration_required: factory
+calibration_notes: |-
+  PM is factory-calibrated. VOC and NOx are self-learning indices - give them ~12h of representative air before the numbers mean anything, and set store_baseline: true so a reboot does not restart the learning.
+quality_tier: field-proven
+deployment_count: 8
+deployment_evidence:
+  - air-q-entry.yaml
+  - air-q-dry-room.yaml
+  - airq-aux-1.yaml
+  - airq-annex.yaml
+  - m5Stack_AirQ.yaml
+  - m5stack-airq-corridor.yaml
+  - m5stack-airq-loading-bay.yaml
+  - m5stack-airq-room-3.yaml
+evidence: Eight units running continuously as the per-room air-quality reference. The PM channels are the early warning for a carbon filter that has stopped filtering.
+failure_modes:
+  - The fan ingests trichomes and dust. In flower it fouls fast and PM drifts high - clean annually or your baseline lies.
+  - Self-heating makes its temperature read 1-3C above room. Mark it internal and read climate elsewhere.
+  - VOC/NOx are indices around a learned baseline, not ppb. Do not alarm on absolute values.
+  - Needs a genuine 5V rail for the fan. Brown-outs show up as the fan stalling and PM flatlining rather than an error.
+drivers:
+  - name: ESPHome sen5x
+    url: https://esphome.io/components/sensor/sen5x.html
+    kind: esphome-core
+  - name: Sensirion SEN5x datasheet
+    url: https://sensirion.com/products/catalog/SEN55
+    kind: datasheet
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+  - Raspberry Pi
+works_with:
+  - m5stack-airq
+  - sensirion-scd41
+  - m5stack-poesp32
+image: assets/parts/sensirion-sen55.svg
+tags:
+  - pm25
+  - voc
+  - nox
+  - i2c
+  - field-proven
+  - filter-health
+example:
+  lang: yaml
+  title: SEN55 with the deployed VOC/NOx tuning
+  source: distilled from common/sensors/sen55.yaml (scrubbed)
+  code: |-
+    sensor:
+      - platform: sen5x
+        id: sen55
+        address: 0x69
+        update_interval: 30s
+        acceleration_mode: low
+        store_baseline: true        # keep the learned VOC/NOx baseline across reboots
+        pm_1_0:
+          name: PM <1um
+          accuracy_decimals: 2
+        pm_2_5:
+          name: PM <2.5um
+          accuracy_decimals: 2
+        pm_4_0:
+          name: PM <4um
+          accuracy_decimals: 2
+        pm_10_0:
+          name: PM <10um
+          accuracy_decimals: 2
+        temperature:
+          name: SEN55 Temperature
+          internal: true            # self-heats - not your room temperature
+        humidity:
+          name: SEN55 Humidity
+          internal: true
+        voc:
+          name: VOC
+          algorithm_tuning:
+            index_offset: 100
+            learning_time_offset_hours: 12
+            learning_time_gain_hours: 12
+            gating_max_duration_minutes: 180
+            std_initial: 50
+            gain_factor: 230
+        nox:
+          name: NOx
+          algorithm_tuning:
+            index_offset: 100
+            learning_time_offset_hours: 12
+            learning_time_gain_hours: 12
+            gating_max_duration_minutes: 180
+            std_initial: 50
+            gain_factor: 230

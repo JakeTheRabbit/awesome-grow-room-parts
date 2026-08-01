@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: thc-s-rs485
+name: THC-S RS485 soil moisture / EC / temperature probe
+manufacturer: Generic (JXCT-class)
+part_numbers:
+  - THC-S
+  - JXCT-THC-S
+category: Substrate sensing
+subcategory: RS485 Modbus soil probe
+bus:
+  - RS485/Modbus
+protocol_settings: "Modbus RTU, typically 4800 or 9600 baud 8-N-1, default slave address 1. Registers: moisture, temperature, EC."
+voltage:
+  nominal: 12
+  min: 5
+  max: 24
+price:
+  band: $
+  observed: 45.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: AliExpress (search THC-S RS485 soil sensor)
+    url: https://www.aliexpress.com/w/wholesale-THC%252dS-RS485-soil-sensor.html
+    region: Global
+    note: Search the part number - individual listings die constantly.
+ip_rating: IP68
+calibration_required: media-specific
+calibration_notes: |-
+  Factory calibration is mineral soil. A coco-coir-calibrated pore-water EC template set exists in the HAGR repo ('THC-S Home Assistant Template Sensors calibrated for Coco coir') - start there rather than from the vendor numbers.
+quality_tier: works
+deployment_count: 0
+evidence: |-
+  Carried over from the HAGR parts list with an existing coco-calibrated template set. Not currently wired in this facility, which went SDI-12 instead, but it is the cheapest credible substrate probe and the calibration work is already done.
+failure_modes:
+  - RS485 multi-drop needs unique slave addresses set before you put two on a bus - and the address-setting tool is usually a Windows-only vendor exe.
+  - Vendor EC compensation is for soil, not soilless. Uncorrected pwEC in coco will read low.
+  - Quality varies wildly between sellers under the same part number.
+drivers:
+  - name: ESPHome modbus_controller
+    url: https://esphome.io/components/sensor/modbus_controller.html
+    kind: esphome-core
+  - name: HAGR coco-coir THC-S templates
+    url: https://github.com/JakeTheRabbit/HAGR
+    kind: other
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Modbus master
+alternatives:
+  - meter-teros12
+  - infiwin-mt22
+  - chill-division-sdi12
+image: assets/parts/thc-s-rs485.svg
+tags:
+  - vwc
+  - substrate
+  - ec
+  - rs485
+  - modbus
+  - budget

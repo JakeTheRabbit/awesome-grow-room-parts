@@ -1,0 +1,182 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: meter-teros12
+name: METER TEROS 12 substrate VWC / EC / temperature probe
+manufacturer: METER Group
+part_numbers:
+  - TEROS 12
+  - TEROS-12
+category: Substrate sensing
+subcategory: SDI-12 dielectric probe
+bus:
+  - SDI-12
+protocol_settings: SDI-12 v1.4. 1200 baud, 7-E-1, inverted, half-duplex on a single data wire. Default sensor address 0. Returns raw counts, bulk EC (dS/m) and temperature (C).
+voltage:
+  nominal: 12
+  min: 4
+  max: 15
+  logic: 3.3
+  note: Runs from 4-15V. A 3.3V ESP32 rail technically works but readings get noisy - give it a proper supply.
+price:
+  band: $$$
+  observed: 430.0
+  currency: NZD
+  observed_date: "2026-03-01"
+  note: The reference-grade option. This is why the cheaper SDI-12 clones exist.
+vendors:
+  - name: METER Group
+    url: https://metergroup.com/products/teros-12/
+    part_number: TEROS 12
+    region: Global
+  - name: METER Environment (EU)
+    url: https://www.metergroup.com/en/meter-environment/products/teros-12-soil-moisture-sensor
+    region: EU
+ip_rating: IP68
+calibration_required: media-specific
+calibration_notes: |-
+  Factory calibration is for mineral soil (Topp). In coco or rockwool the Topp equation UNDERESTIMATES badly - you need a soilless calibration. The deployed cubic for soilless media is in the example below. For pore-water EC use the Hilhorst model with eps0 = 4.1, and treat the result as invalid below 10% VWC (METER's own guidance) rather than publishing a garbage number.
+quality_tier: field-proven
+deployment_count: 14
+deployment_evidence:
+  - room-3-sdi12.yaml
+  - room-2-r1-vwc.yaml
+  - esphome-web-node.yaml
+  - terralink-1.yaml
+  - terralink-2.yaml
+  - terralink-3.yaml
+  - room-1-row1-back-sdi12.yaml
+  - room-1-row1-front-sdi12.yaml
+  - room-1-row2-back-sdi12.yaml
+  - room-1-row2-front-sdi12.yaml
+  - room-1-row3-back-sdi12.yaml
+  - room-1-row3-front-sdi12.yaml
+  - room-1-r1-b-vwc.yaml
+  - flower-a-sdi12-vwc.yaml
+evidence: |-
+  SDI-12 substrate sensing is the single largest sensor deployment after CO2: 14 nodes, one per probe. TEROS 12 is the reference the cheaper probes in this catalogue are regressed against.
+failure_modes:
+  - Topp calibration in coco/rockwool reads low by 20%+ - you will steer generative when you are actually wet.
+  - Pore-water EC via Hilhorst blows up as VWC approaches zero (the eb - eps0 denominator goes to zero). Clamp the denominator and return NaN below 10% VWC.
+  - Needles must be fully in contact with substrate. An air gap from a badly seated probe reads permanently dry and no amount of recalibration fixes it.
+  - "Half-duplex single-wire UART is fussy: get the inversion or the 7-E-1 framing wrong and you get silence, not an error."
+  - One probe per ESP is the pattern here. Multi-drop SDI-12 works in theory but address collisions on a shared wire are miserable to debug in a live room.
+notes: |-
+  Bus-level gotcha that costs people days: ESPHome's built-in UART cannot do half-duplex on one pin. You need ssieb's `uarthalf` fork AND the `sdi12` component. Both are pinned in the example.
+drivers:
+  - name: ssieb sdi12 ESPHome component
+    url: https://github.com/ssieb/esphome_components
+    kind: esphome-external
+  - name: ssieb half-duplex UART fork
+    url: https://github.com/ssieb/esphome
+    kind: esphome-external
+  - name: TEROS 12 manual
+    url: https://publications.metergroup.com/Manuals/20587_TEROS11-12_Manual_Web.pdf
+    kind: manual
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+works_with:
+  - m5stack-atom-lite
+  - m5stack-poesp32
+alternatives:
+  - growlink-terralink
+  - infiwin-mt22
+  - chill-division-sdi12
+  - thc-s-rs485
+image: assets/parts/meter-teros12.svg
+tags:
+  - vwc
+  - substrate
+  - ec
+  - sdi12
+  - crop-steering
+  - field-proven
+example:
+  lang: yaml
+  title: SDI-12 probe with soilless VWC and Hilhorst pore-water EC
+  source: distilled from terralink-1.yaml (scrubbed)
+  code: |-
+    # SDI-12 is 1200 baud, 7 data bits, EVEN parity, 1 stop bit, INVERTED,
+    # half-duplex on a SINGLE wire. ESPHome core UART cannot do half-duplex,
+    # so both of these external components are required.
+    external_components:
+      - source: github://ssieb/esphome@uarthalf
+        components: [uart]
+        refresh: 1min
+      - source: github://ssieb/esphome_components@sdi12
+        components: [sdi12]
+        refresh: 1min
+
+    uart:
+      - id: sdi12uart
+        tx_pin:
+          number: GPIO26      # single data wire - tx and rx are the same pin
+          inverted: true
+        baud_rate: 1200
+        data_bits: 7
+        parity: even
+        stop_bits: 1
+        half_duplex: true
+
+    sdi12:
+      - id: sdibus
+        uart_id: sdi12uart
+
+    sensor:
+      - platform: sdi12
+        address: 1                 # probe's SDI-12 address
+        update_interval: 30s
+        sensors:
+          - index: 1
+            name: Apparent Permittivity
+            id: eps_b
+            accuracy_decimals: 2
+          - index: 2
+            name: Bulk EC
+            id: bulk_ec
+            unit_of_measurement: dS/m
+            accuracy_decimals: 2
+          - index: 3
+            name: Substrate Temperature
+            id: sub_temp
+            unit_of_measurement: "\u00b0C"
+            accuracy_decimals: 1
+
+      # Soilless (coco/rockwool) cubic. The factory Topp equation is for mineral
+      # soil and reads badly low in soilless media.
+      - platform: template
+        name: Substrate VWC
+        id: vwc
+        unit_of_measurement: "%"
+        accuracy_decimals: 2
+        update_interval: 30s
+        lambda: |-
+          float e = id(eps_b).state;
+          if (isnan(e) || e <= 0) return NAN;
+          float theta = (5.5728e-6f*e*e*e) + (-6.40228e-4f*e*e)
+                      + (2.98804e-2f*e) + 2.14996e-2f;
+          float pct = theta * 100.0f;
+          if (pct < 0) pct = 0;
+          if (pct > 100) pct = 100;
+          return pct;
+
+      # Hilhorst pore-water EC, with METER's recommended eps0 and their validity guard.
+      - platform: template
+        name: Pore Water EC
+        unit_of_measurement: dS/m
+        accuracy_decimals: 2
+        update_interval: 30s
+        lambda: |-
+          float sb  = id(bulk_ec).state;
+          float T   = id(sub_temp).state;
+          float eb  = id(eps_b).state;
+          float wpc = id(vwc).state;
+          if (isnan(sb) || isnan(T) || isnan(eb) || isnan(wpc)) return NAN;
+          if (wpc < 10.0f) return NAN;        // METER: unreliable below 0.10 VWC
+
+          float sb_25 = sb / (1.0f + 0.019f * (T - 25.0f));   // normalise to 25C
+          float ep    = 80.3f - 0.37f * (T - 20.0f);          // pore water dielectric
+          const float eps0 = 4.1f;
+          float denom = eb - eps0;
+          if (denom < 0.5f) denom = 0.5f;     // stop the blow-up in dry media
+          return (ep * sb_25) / denom;

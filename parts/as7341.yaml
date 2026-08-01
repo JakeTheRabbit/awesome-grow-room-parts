@@ -1,0 +1,100 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: as7341
+name: AS7341 11-channel spectral sensor
+manufacturer: ams OSRAM
+part_numbers:
+- AS7341
+- AS7341L
+category: Light measurement
+subcategory: 11-channel visible + NIR spectral sensor
+bus:
+- I2C
+i2c:
+  address: '0x39'
+  configurable: false
+  how_to_change: Fixed at 0x39. Two on one bus needs a mux.
+voltage:
+  min: 1.8
+  max: 3.6
+  nominal: 3.3
+  logic: 3.3
+price:
+  band: $$
+  observed: 48.0
+  currency: NZD
+  observed_date: '2026-03-01'
+vendors:
+- name: Adafruit AS7341
+  url: https://www.adafruit.com/product/4698
+  part_number: '4698'
+- name: DFRobot AS7341
+  url: https://www.dfrobot.com/product-2132.html
+  region: Global
+ip_rating: none
+calibration_required: one-point
+calibration_notes: Gives you eight visible bands plus NIR and clear, but raw counts are gain- and integration-time
+  dependent. To compare two rooms you must fix gain/ATIME/ASTEP and normalise against a reference measurement
+  - otherwise the numbers only mean something relative to themselves.
+quality_tier: works
+deployment_count: 0
+deployment_evidence: []
+evidence: Listed in the facility spec as the second flower room light instrument (PPFD/DLI) alongside BH1750, but no current
+  ESPHome device config carries an active AS7341 block - so it is documented as 'works', not field-proven,
+  on this evidence.
+failure_modes:
+- Raw channel counts are meaningless without pinning gain and integration time first - change either and
+  every number shifts.
+- Saturates fast directly under a modern LED bar; drop the gain or diffuse the window.
+- The NIR and clear channels pick up far-red supplemental strips, which can look like a spectrum shift
+  that is not there.
+- Fixed 0x39 address, so multi-point spectral logging needs a mux.
+notes: The interesting use in a grow room is spectrum drift over a fixture's life and verifying far-red
+  / UV supplement timing, not absolute PPFD. Pair with a real quantum sensor for absolute numbers.
+drivers:
+- name: ESPHome as7341
+  url: https://esphome.io/components/sensor/as7341.html
+  kind: esphome-core
+- name: ams AS7341 datasheet
+  url: https://ams-osram.com/products/sensor-solutions/ambient-light-color-spectral-proximity-sensors/ams-as7341-11-channel-multi-spectral-sensor-front-end
+  kind: datasheet
+platforms:
+- ESPHome
+- Home Assistant
+- Arduino
+- Raspberry Pi
+works_with:
+- tca9548a-mux
+- m5stack-poesp32
+alternatives:
+- bh1750
+- cwt-ps-par
+image: assets/parts/as7341.svg
+example:
+  lang: yaml
+  title: AS7341 with gain and integration pinned
+  source: reference config - not currently deployed in this fleet
+  code: |
+    i2c:
+      sda: GPIO16
+      scl: GPIO17
+
+    sensor:
+      - platform: as7341
+        address: 0x39
+        update_interval: 60s
+        # Pin gain/ATIME/ASTEP and NEVER change them if you want the channel
+        # counts to stay comparable between rooms or across a fixture's life.
+        gain: X8
+        atime: 100
+        astep: 999
+        f1: { name: "415nm violet" }
+        f4: { name: "515nm green" }
+        f6: { name: "630nm red" }
+        f8: { name: "680nm deep red" }
+        nir: { name: "NIR" }
+tags:
+- light
+- spectrum
+- i2c
+- par

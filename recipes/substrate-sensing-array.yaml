@@ -1,0 +1,37 @@
+id: substrate-sensing-array
+name: Multi-zone substrate sensing array
+summary: >-
+  Per-zone VWC, pore-water EC and root-zone temperature over SDI-12 - the data
+  crop steering actually runs on. One node per row, several probes per bus.
+skill_level: intermediate
+estimated_build_time: 2-3 hours per node plus probe placement
+network: WiFi or PoE per node
+items:
+  - part: m5stack-atom-lite
+    qty: 1
+    role: Host per row. The whole SDI-12 fleet runs this board.
+  - part: meter-teros12
+    qty: 2
+    role: Reference-grade substrate probe. The one to trust when they disagree.
+  - part: infiwin-mt22
+    qty: 2
+    role: Cheap SDI-12 probe. Needs a media-specific VWC curve to be usable.
+  - part: growlink-terralink
+    qty: 1
+    role: Commercial SDI-12 probe, three deployed on this fleet.
+notes: >-
+  SDI-12 is the whole point: it is 1200 baud 7-E-1 half-duplex on a single data
+  line, so several probes share one wire, each on its own SDI-12 address
+  (0, 1, 2 ...). Set addresses ONE AT A TIME with a single probe on the bus, or
+  you will address the wrong device and spend an afternoon confused.
+  ESPHome needs two external components for this - ssieb's half-duplex uart
+  fork and his sdi12 component - because neither is in core.
+watch_out: >-
+  Raw VWC counts are NOT volumetric water content. The fleet configs apply a
+  cubic calibration polynomial to convert raw to theta, and that polynomial is
+  specific to the medium - the coco-coir curve is wrong for rockwool and very
+  wrong for peat. Calibrate against gravimetric samples from YOUR substrate
+  before you steer anything on these numbers.
+  Probe placement matters more than probe brand: same depth, same distance from
+  an emitter, same position in the block, every zone. Inconsistent placement
+  produces zone-to-zone differences that are pure artefact.

@@ -1,0 +1,102 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: bh1750
+name: BH1750 ambient light sensor
+manufacturer: ROHM
+part_numbers:
+- BH1750FVI
+- GY-302
+category: Light measurement
+subcategory: Broadband lux sensor
+bus:
+- I2C
+i2c:
+  address: '0x23'
+  alternates:
+  - '0x5c'
+  configurable: true
+  how_to_change: ADDR pin low = 0x23, high = 0x5C. Two per bus, no more.
+voltage:
+  min: 2.4
+  max: 3.6
+  nominal: 3.3
+  logic: 3.3
+price:
+  band: $
+  observed: 7.0
+  currency: NZD
+  observed_date: '2026-03-01'
+vendors:
+- name: M5Stack Light Unit
+  url: https://shop.m5stack.com/products/light-sensor-unit
+  region: Global
+- name: Adafruit BH1750
+  url: https://www.adafruit.com/product/4681
+  part_number: '4681'
+ip_rating: none
+calibration_required: none
+calibration_notes: Reports lux, which is weighted to HUMAN photopic vision, not plant photosynthesis.
+  Converting lux to PPFD needs a fixed multiplier per light spectrum, and that multiplier is different
+  for HPS, white LED and blurple. It is a relative trend sensor unless you calibrate it against a real
+  quantum sensor under your own fixtures.
+quality_tier: works
+deployment_count: 2
+deployment_evidence:
+- room-1-mlx90640.yaml
+- room-2-scd41-env3-dlight-poe.yaml
+evidence: 2 configs run an active bh1750 block. Used here as a cheap 'are the lights actually on and at
+  what relative level' check, not as a PPFD instrument - a commercial GrowSensor covers real PPFD/DLI
+  in room 1.
+failure_modes:
+- Lux is not PPFD. Quoting a lux-derived PPFD number across different fixture spectra is meaningless.
+- Saturates around 65535 lx - directly under a modern LED bar it will peg and read flat.
+- Any dust or condensation on the window reads as a light-level drop, which looks exactly like a failing
+  driver.
+- Only two addresses available, so three sensors on one bus needs a mux.
+notes: Excellent value for photoperiod verification and detecting a failed driver. For anything you intend
+  to steer a crop on, buy a real quantum sensor - see cwt-ps-par or a commercial unit. Use this to answer
+  'did the lights come on', not 'what is my DLI'.
+drivers:
+- name: ESPHome bh1750
+  url: https://esphome.io/components/sensor/bh1750.html
+  kind: esphome-core
+platforms:
+- ESPHome
+- Home Assistant
+- Arduino
+- MicroPython
+- M5Stack
+works_with:
+- m5stack-poesp32
+- tca9548a-mux
+alternatives:
+- as7341
+- cwt-ps-par
+image: assets/parts/bh1750.svg
+example:
+  lang: yaml
+  title: BH1750 as a photoperiod / driver-failure check
+  source: distilled from room-2-scd41-env3-dlight-poe.yaml
+  code: |
+    i2c:
+      id: bus_a
+      sda: GPIO16
+      scl: GPIO17
+
+    sensor:
+      - platform: bh1750
+        name: "Canopy light level"
+        address: 0x23
+        i2c_id: bus_a
+        update_interval: 60s
+        # Reported in lux. Do NOT publish a lux->PPFD conversion unless you have
+        # calibrated the multiplier against a quantum sensor under YOUR fixtures.
+        filters:
+          - median:
+              window_size: 5
+              send_every: 5
+tags:
+- light
+- lux
+- i2c
+- photoperiod

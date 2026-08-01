@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: chill-division-sdi12
+name: Chill Division SDI-12 substrate sensor
+manufacturer: Chill Division
+part_numbers:
+  - chill-division-sdi12-substrate-sensor
+category: Substrate sensing
+subcategory: Pre-calibrated SDI-12 node
+bus:
+  - SDI-12
+  - WiFi
+protocol_settings: SDI-12 probe with an integrated ESP node; auto-discovers over MQTT.
+voltage:
+  nominal: 5
+  note: USB-powered node plus probe supply.
+price:
+  band: $$
+  currency: NZD
+vendors:
+  - name: Chill Division (GitHub)
+    url: https://github.com/Chill-Division/sdi12-substrate-sensor
+    region: Global
+    note: Open hardware/firmware - build it or buy it depending on availability.
+ip_rating: IP68
+calibration_required: factory
+calibration_notes: "The point of this one: it ships calibrated for soilless media, so you skip the regression exercise that every other probe in this category demands."
+quality_tier: works
+deployment_count: 0
+evidence: |-
+  Not deployed in this facility - the SDI-12 fleet was already built on bare probes before this existed. Carried over from the HAGR parts list as the recommendation for new builds precisely because it removes the calibration step that trips people up.
+failure_modes:
+  - MQTT auto-discovery means you inherit whatever topic layout it chooses - fine with HA, more work if you are not using it.
+  - "Less transparent than a bare probe: if you disagree with its calibration you are editing firmware, not a lambda."
+drivers:
+  - name: Chill Division sdi12-substrate-sensor
+    url: https://github.com/Chill-Division/sdi12-substrate-sensor
+    kind: other
+platforms:
+  - Home Assistant
+  - MQTT
+  - ESPHome
+alternatives:
+  - meter-teros12
+  - infiwin-mt22
+  - growlink-terralink
+image: assets/parts/chill-division-sdi12.svg
+tags:
+  - vwc
+  - substrate
+  - sdi12
+  - mqtt
+  - precalibrated

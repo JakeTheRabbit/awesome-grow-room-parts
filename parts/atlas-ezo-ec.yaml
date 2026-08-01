@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: atlas-ezo-ec
+name: Atlas Scientific EZO-EC conductivity circuit + probe
+manufacturer: Atlas Scientific
+part_numbers:
+  - EZO-EC
+  - ENV-40-EC-K1.0
+category: Water & fertigation
+subcategory: Electrical conductivity
+bus:
+  - I2C
+  - UART
+i2c:
+  address: "0x64"
+  alternates:
+    - "0x01"
+    - "0x7f"
+  configurable: true
+  how_to_change: Set by command. Deployed here at decimal 100 (0x64).
+voltage:
+  nominal: 3.3
+  min: 3.3
+  max: 5.5
+  logic: 3.3
+price:
+  band: $$$
+  observed: 245.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: Atlas Scientific EZO-EC
+    url: https://atlas-scientific.com/embedded-solutions/ezo-conductivity-circuit/
+    part_number: EZO-EC
+    region: Global
+ip_rating: IP68
+calibration_required: two-point
+calibration_notes: |-
+  Dry calibration first, then two points bracketing your working range (typically 1413 uS/cm and 12.88 mS/cm). Set the probe's K value to match the physical probe or every reading is scaled wrong.
+quality_tier: experimental
+deployment_count: 1
+deployment_evidence:
+  - atlas-reservoir.yaml
+evidence: Same single config as the EZO-pH, same history of abandoned attempts. Works; expensive; fiddly.
+failure_modes:
+  - Wrong K value in the circuit silently scales every reading - it looks plausible and is wrong.
+  - Salt build-up on the electrodes reads low over weeks.
+  - Shares the ground-loop sensitivity of the whole EZO family in a pumped line.
+drivers:
+  - name: ESPHome ezo
+    url: https://esphome.io/components/sensor/ezo.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+works_with:
+  - atlas-ezo-ph
+  - atlas-ezo-rtd
+alternatives:
+  - cwt-bl-ec-4400
+image: assets/parts/atlas-ezo-ec.svg
+tags:
+  - ec
+  - fertigation
+  - i2c
+  - expensive

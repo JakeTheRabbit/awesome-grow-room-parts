@@ -1,0 +1,126 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: m5stack-4relay
+name: M5Stack 4-Relay Unit
+manufacturer: M5Stack
+part_numbers:
+- U097
+- 4RELAY
+- M5Stack 4-Relay Unit
+category: Actuation & relays
+subcategory: 4-channel I2C relay module, Grove
+bus:
+- I2C
+- Grove
+i2c:
+  address: '0x26'
+  configurable: true
+  how_to_change: Solder jumpers on the back select 0x26-0x2F, so up to 10 modules (40 relays) can share
+    one bus.
+voltage:
+  min: 3.3
+  max: 5.0
+  nominal: 5.0
+  note: Contacts rated 250VAC/10A or 30VDC/10A, but derate hard for inductive loads.
+price:
+  band: $$
+  observed: 38.0
+  currency: NZD
+  observed_date: '2026-03-01'
+vendors:
+- name: M5Stack
+  url: https://shop.m5stack.com/products/4-relay-unit
+  part_number: U097
+ip_rating: none
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 18
+deployment_evidence:
+- room-1-irrigation-relays.yaml
+- room-1-ceiling-vents.yaml
+- room-1-dehum-back.yaml
+- room-1-dehum-entrance.yaml
+- espoe-multiplexer-irrigation-relays.yaml
+- poe-dry-room-relay.yaml
+- poe-room-1-gesture.yaml
+- esppoe-3.yaml
+- co2-node-2.yaml
+- room-3-solenoid-relays.yaml
+evidence: 18 production configs drive an active m5stack4relay block - irrigation solenoids, ceiling vents,
+  dehumidifiers, CO2 and dry-room relays. This is the workhorse output device of the facility and it is the
+  part most tightly bound to the SAFETY pattern.
+failure_modes:
+- Relay channel numbering is REVERSED relative to the silkscreen in the ESPHome external component - relay4
+  is physical relay 1. Get this wrong and you open the wrong valve.
+- Default restore_mode restores the last state on boot; after a power cut that can silently re-open an
+  irrigation valve. Always force ALWAYS_OFF.
+- Contacts weld closed under repeated inductive switching (solenoids, contactors) - fit a snubber or drive
+  a proper contactor instead of the load directly.
+- Needs an external component - it is not in ESPHome core.
+notes: 'Anything on this module that can move water or gas MUST carry the three-part safety pattern: restore_mode
+  ALWAYS_OFF, an on_turn_on auto-shutoff delay, and a network killguard. See SAFETY.md - that pattern
+  is the single highest-value thing in this repo.'
+drivers:
+- name: KoenBreeman ESPHome_custom_components (m5stack4relay)
+  url: https://github.com/KoenBreeman/ESPHome_custom_components/
+  kind: esphome-external
+platforms:
+- ESPHome
+- Home Assistant
+- Arduino
+- M5Stack
+works_with:
+- m5stack-poesp32
+- solenoid-valve-24vac
+- tca9548a-mux
+alternatives:
+- ssr-25da
+image: assets/parts/m5stack-4relay.svg
+example:
+  lang: yaml
+  title: 4-Relay with the full flood-safety pattern
+  source: distilled from room-1-irrigation-relays.yaml (channel order verified against that config)
+  code: |
+    external_components:
+      - source:
+          type: git
+          url: https://github.com/KoenBreeman/ESPHome_custom_components/
+          ref: main
+        components: [m5stack4relay]
+
+    i2c:
+      id: main_i2c
+      sda: GPIO16
+      scl: GPIO17
+      scan: true
+
+    # Flood safety: kill outputs only on a SUSTAINED network loss, so brief
+    # Ethernet flaps do not interrupt a live feed. mode: restart re-arms the window.
+    script:
+      - id: disconnect_killguard
+        mode: restart
+        then:
+          - delay: 90s
+          - logger.log: "Sustained network loss >90s - flood safety: all valves off"
+          - switch.turn_off: relay_1
+
+    switch:
+      - platform: m5stack4relay
+        sync_mode: true
+        id: four_relays
+        i2c_id: main_i2c
+        # NOTE: relay4: here is PHYSICAL relay 1. The mapping is reversed.
+        relay4:
+          id: relay_1
+          name: "Zone 1 valve"
+          restore_mode: ALWAYS_OFF        # never resume a valve after a power cut
+          on_turn_on:                     # dead-man timer: max feed length
+            - delay: 1200s
+            - switch.turn_off: relay_1
+tags:
+- relay
+- i2c
+- m5stack
+- irrigation
+- safety
+- core

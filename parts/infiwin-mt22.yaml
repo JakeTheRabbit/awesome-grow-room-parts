@@ -1,0 +1,126 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: infiwin-mt22
+name: Infiwin MT22 SDI-12 substrate probe
+manufacturer: Infiwin
+part_numbers:
+  - MT22
+  - MT-22
+category: Substrate sensing
+subcategory: SDI-12 dielectric probe (budget)
+bus:
+  - SDI-12
+protocol_settings: SDI-12, 1200 baud 7-E-1 inverted half-duplex. Deployed at sensor address 0. Returns a RAW count on index 1 (not VWC), temperature on 2, bulk EC in uS/cm on 3.
+voltage:
+  nominal: 12
+  min: 4
+  max: 15
+price:
+  band: $$
+  observed: 85.0
+  currency: NZD
+  observed_date: "2026-03-01"
+  note: Roughly a fifth of a TEROS 12. That price gap is the entire reason to bother calibrating it.
+vendors:
+  - name: AliExpress (search Infiwin MT22 SDI-12)
+    url: https://www.aliexpress.com/w/wholesale-SDI-12-soil-moisture-MT22.html
+    region: Global
+    note: Listing rot is severe here. Search the part number, not a saved link.
+ip_rating: IP68
+calibration_required: media-specific
+calibration_notes: |-
+  Index 1 is a raw dielectric count, NOT a percentage - publishing it as VWC is the classic mistake. The deployed cubic converting raw counts to volumetric water content in coco is in the example. Bulk EC comes back in uS/cm, so divide by 1000 before feeding anything that expects dS/m.
+quality_tier: field-proven
+deployment_count: 6
+deployment_evidence:
+  - room-1-row1-back-sdi12.yaml
+  - room-1-row1-front-sdi12.yaml
+  - room-1-row2-back-sdi12.yaml
+  - room-1-row2-front-sdi12.yaml
+  - room-1-row3-back-sdi12.yaml
+  - room-1-row3-front-sdi12.yaml
+evidence: |-
+  Six probes carrying the whole of room 1's crop-steering substrate data - two per row across three rows. The cheap probe that actually earned its place, once calibrated.
+failure_modes:
+  - Raw counts on index 1 look plausible as a percentage and are not. Publish that unconverted and your dryback targets are meaningless.
+  - EC units differ from the TEROS family (uS/cm vs dS/m) - a 1000x error waiting to happen in a shared dashboard.
+  - "Build quality is what you pay for: cable entry is the failure point. Keep the gland out of standing water."
+  - "No published calibration from the vendor. Every number below is somebody's regression, including this one."
+drivers:
+  - name: ssieb sdi12 ESPHome component
+    url: https://github.com/ssieb/esphome_components
+    kind: esphome-external
+platforms:
+  - ESPHome
+  - Home Assistant
+works_with:
+  - m5stack-atom-lite
+  - meter-teros12
+alternatives:
+  - meter-teros12
+  - growlink-terralink
+  - chill-division-sdi12
+  - thc-s-rs485
+image: assets/parts/infiwin-mt22.svg
+tags:
+  - vwc
+  - substrate
+  - ec
+  - sdi12
+  - budget
+  - crop-steering
+  - field-proven
+example:
+  lang: yaml
+  title: MT22 raw-count to VWC, plus the uS/cm to dS/m fix
+  source: distilled from room-1-row1-back-sdi12.yaml (scrubbed)
+  code: |-
+    sensor:
+      - platform: sdi12
+        address: 0
+        update_interval: 30s
+        sensors:
+          - index: 1
+            name: RAW VWC
+            id: mt22_raw
+            accuracy_decimals: 0
+            internal: true        # raw counts - never publish this as a percentage
+          - index: 2
+            name: Substrate Temperature
+            id: mt22_temp
+            unit_of_measurement: "\u00b0C"
+            device_class: temperature
+            state_class: measurement
+            accuracy_decimals: 1
+          - index: 3
+            name: Bulk EC
+            id: mt22_bulk_ec_uS
+            unit_of_measurement: "\u00b5S/cm"
+            state_class: measurement
+            accuracy_decimals: 0
+
+      - platform: template
+        name: VWC
+        id: mt22_vwc
+        unit_of_measurement: "%"
+        accuracy_decimals: 2
+        state_class: measurement
+        update_interval: 30s
+        lambda: |-
+          float R = id(mt22_raw).state;
+          if (isnan(R) || R <= 0) return NAN;
+          float theta = 6.771e-10f*R*R*R - 5.105e-6f*R*R + 1.302e-2f*R - 10.848f;
+          float pct = theta * 100.0f;
+          if (pct < 0) pct = 0;
+          if (pct > 100) pct = 100;
+          return pct;
+
+      # Normalise to dS/m so it can be compared with TEROS-family probes.
+      - platform: template
+        name: Bulk EC (dS/m)
+        unit_of_measurement: dS/m
+        accuracy_decimals: 2
+        update_interval: 30s
+        lambda: |-
+          float e = id(mt22_bulk_ec_uS).state;
+          if (isnan(e)) return NAN;
+          return e / 1000.0f;

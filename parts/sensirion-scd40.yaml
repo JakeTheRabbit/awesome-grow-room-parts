@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: sensirion-scd40
+name: Sensirion SCD40 NDIR CO2 sensor
+manufacturer: Sensirion
+part_numbers:
+  - SCD40
+  - SCD40-D-R2
+  - M5Stack U102 (CO2 Unit)
+category: Air quality & CO2
+subcategory: CO2 / temperature / humidity
+bus:
+  - I2C
+  - Grove
+i2c:
+  address: "0x62"
+  configurable: false
+  how_to_change: Not configurable - same fixed address as the SCD41, so they collide with each other too.
+voltage:
+  nominal: 3.3
+  min: 2.4
+  max: 5.5
+  logic: 3.3
+price:
+  band: $$
+  observed: 40.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: M5Stack CO2 Unit (SCD40)
+    url: https://shop.m5stack.com/products/co2-unit-with-temperature-and-humidity-sensor-scd40
+    part_number: U102
+    region: Global
+  - name: DigiKey - Sensirion SCD40
+    url: https://www.digikey.com/en/products/detail/sensirion-ag/SCD40-D-R2/13684289
+    part_number: SCD40-D-R2
+    region: Global
+ip_rating: none
+calibration_required: periodic
+calibration_notes: Same ASC caveat as the SCD41 - turn it off in an enriched room.
+quality_tier: works
+deployment_count: 0
+evidence: |-
+  Same silicon family and identical ESPHome config as the SCD41, one accuracy grade lower (+/-50ppm +5% vs +/-40ppm +5%). Not separately deployed here because the SCD41 was only a few dollars more.
+failure_modes:
+  - Everything in the SCD41 entry applies unchanged - identical address, identical ASC trap.
+drivers:
+  - name: ESPHome scd4x
+    url: https://esphome.io/components/sensor/scd4x.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+  - M5Stack
+alternatives:
+  - sensirion-scd41
+  - sensirion-scd30
+image: assets/parts/sensirion-scd40.svg
+tags:
+  - co2
+  - ndir
+  - i2c
+  - budget

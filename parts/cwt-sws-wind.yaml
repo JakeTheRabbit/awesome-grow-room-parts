@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: cwt-sws-wind
+name: ComWinTop CWT-SWS-C wind speed sensor
+manufacturer: ComWinTop
+part_numbers:
+  - CWT-SWS-C
+category: Air quality & CO2
+subcategory: Air speed / airflow
+bus:
+  - RS485/Modbus
+protocol_settings: Modbus RTU, 4800 baud 8-N-1 factory default, slave address 1. Wind speed in 0.1 m/s per count on most CWT anemometers - verify against your unit.
+voltage:
+  nominal: 12
+  min: 4.5
+  max: 30
+price:
+  band: $$
+  currency: NZD
+vendors:
+  - name: ComWinTop (Alibaba)
+    url: https://www.alibaba.com/products/cwt_wind_speed_sensor.html
+    region: Global
+  - name: AliExpress (search CWT-SWS wind sensor RS485)
+    url: https://www.aliexpress.com/w/wholesale-wind-speed-sensor-RS485.html
+    region: Global
+ip_rating: IP65
+calibration_required: factory
+quality_tier: experimental
+deployment_count: 0
+evidence: |-
+  Not deployed. Included in the ComWinTop rescue because in-canopy air speed is a genuinely useful and almost never instrumented variable - it is what actually drives boundary-layer transpiration, and 'the fans are on' is not the same measurement.
+failure_modes:
+  - Cup anemometers have a stall speed around 0.2-0.5 m/s. In-canopy airflow is often below that, so it reads zero when it is not.
+  - Designed for outdoor met stations - the body is big enough to disturb the flow it is measuring inside a canopy.
+  - Bearings gum up in a humid, resinous room faster than in outdoor use.
+notes: |-
+  ComWinTop (CWT) sell a whole family of cheap industrial RS485 Modbus sensors that are barely documented in English anywhere online - the manuals arrive as PDF email attachments and then vanish. This catalogue records the wiring and register maps so the next person does not have to reverse-engineer them.
+
+  Family conventions that hold across the range:
+  - Brown = V+ (typically 4.5-30V DC), Black = GND.
+  - RS485 A+/B- colours are NOT consistent between models. The LEAF-TH uses YELLOW for A+ and BLUE for B-, which is different from most of the others. Meter the pair before you trust the colour.
+  - Factory default is usually 4800 baud 8-N-1, slave address 1.
+  - Manuals list function code 0x30 in the register table but every worked example frame uses 0x03, so use `register_type: holding`. Fall back to `register_type: read` if you get timeouts.
+  - Calibration offsets live in the sensor's own holding registers and persist across power cycles - expose them as ESPHome `number` entities and you can trim a probe from Home Assistant without reflashing.
+
+  STATUS: register map unverified. A hot-wire anemometer is the better instrument for in-canopy speeds, but nothing cheap exists on Modbus - if you find one, contribute it.
+drivers:
+  - name: ESPHome modbus_controller
+    url: https://esphome.io/components/sensor/modbus_controller.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Modbus master
+works_with:
+  - rs485-ttl-transceiver
+  - m5stack-poesp32
+image: assets/parts/cwt-sws-wind.svg
+tags:
+  - airflow
+  - wind
+  - rs485
+  - modbus
+  - needs-verification

@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: ultrasonic-tank-sensor
+name: Ultrasonic distance sensor for tank level
+manufacturer: Generic (JSN-SR04T / A02YYUW class)
+part_numbers:
+  - JSN-SR04T
+  - A02YYUW
+  - AJ-SR04M
+category: Water & fertigation
+subcategory: Non-contact tank level
+bus:
+  - GPIO
+  - UART
+  - I2C
+i2c:
+  address: "0x57"
+  configurable: false
+  how_to_change: Only applies to I2C variants (the sonic_i2c external component). The common JSN-SR04T is trigger/echo GPIO, not I2C.
+voltage:
+  nominal: 5
+  min: 3.3
+  max: 5.5
+  logic: 3.3
+price:
+  band: $
+  observed: 25.0
+  currency: NZD
+  observed_date: "2026-03-01"
+  note: Buy the waterproof-transducer version. The bare HC-SR04 does not survive a tank headspace.
+vendors:
+  - name: DFRobot A02YYUW (waterproof, UART)
+    url: https://www.dfrobot.com/product-1935.html
+    part_number: SEN0311
+    region: Global
+  - name: AliExpress (search JSN-SR04T)
+    url: https://www.aliexpress.com/w/wholesale-JSN%252dSR04T.html
+    region: Global
+ip_rating: IP67
+calibration_required: two-point
+calibration_notes: |-
+  Measure the sensor-face-to-empty-floor distance and the sensor-face-to-full distance, then map linearly. Do it with the actual tank - nominal tank volumes are optimistic.
+quality_tier: works
+deployment_count: 3
+deployment_evidence:
+  - room-1-mlx90640.yaml
+  - lites3-1.yaml
+  - sdi-12-m5dial.yaml
+evidence: Three deployments reading the 200L batch tank. Non-contact is the right call for a nutrient tank - nothing to foul, nothing to clean.
+failure_modes:
+  - Condensation on the transducer face in a sealed tank headspace gives wild readings. Angle it or fit a shield.
+  - Foam on the surface of an aerated nutrient tank absorbs the ping - it reads empty when it is full. This is the failure that matters.
+  - Narrow tanks produce sidewall echoes. Mount central, keep the cone clear.
+  - Speed of sound is temperature dependent - about 0.17% per C. In a tank room that swings 10C, that is real.
+  - Minimum range is typically 20-25cm. Mount too low and a full tank reads as garbage.
+drivers:
+  - name: ESPHome ultrasonic
+    url: https://esphome.io/components/sensor/ultrasonic.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+works_with:
+  - m5stack-dial
+  - float-switch
+alternatives:
+  - float-switch
+  - cwt-wls-water-level
+  - hx711-adc
+image: assets/parts/ultrasonic-tank-sensor.svg
+tags:
+  - tank-level
+  - ultrasonic
+  - irrigation

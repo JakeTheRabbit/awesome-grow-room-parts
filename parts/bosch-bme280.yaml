@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: bosch-bme280
+name: Bosch BME280 temperature / humidity / pressure sensor
+manufacturer: Bosch Sensortec
+part_numbers:
+  - BME280
+category: Air quality & CO2
+subcategory: Temperature / humidity / pressure
+bus:
+  - I2C
+  - SPI
+i2c:
+  address: "0x76"
+  alternates:
+    - "0x77"
+  configurable: true
+  how_to_change: SDO pin low = 0x76, high = 0x77. Most breakouts expose this as a solder jumper.
+voltage:
+  nominal: 3.3
+  min: 1.71
+  max: 3.6
+  logic: 3.3
+price:
+  band: $
+  observed: 9.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: Bosch Sensortec
+    url: https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/
+    region: Global
+  - name: Adafruit BME280
+    url: https://www.adafruit.com/product/2652
+    region: US
+  - name: Mouser - BME280
+    url: https://www.mouser.com/c/?q=BME280
+    region: Global
+ip_rating: none
+calibration_required: factory
+quality_tier: works
+deployment_count: 0
+evidence: |-
+  Config blocks for it exist in the shared library (common/sensors/bme280.yaml and a 0x77 variant) but no current device includes them - the fleet standardised on SHT30 for humidity accuracy.
+failure_modes:
+  - "Humidity accuracy is +/-3% vs the SHT30's +/-2%. Small on paper, meaningful when it feeds a VPD setpoint."
+  - Notorious for counterfeit BMP280 dies sold as BME280 - if humidity always reads 0, you bought a BMP280.
+  - Self-heats noticeably if you poll it fast. Keep update_interval at 30s or slower.
+drivers:
+  - name: ESPHome bme280_i2c
+    url: https://esphome.io/components/sensor/bme280.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+  - Raspberry Pi
+alternatives:
+  - sensirion-sht30
+  - bosch-bmp280
+  - m5-env3
+image: assets/parts/bosch-bme280.svg
+tags:
+  - temperature
+  - humidity
+  - pressure
+  - i2c
+  - budget

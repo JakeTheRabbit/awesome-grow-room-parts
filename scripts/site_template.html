@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Awesome Grow Room Parts</title>
+<meta name="description" content="A field-evidenced parts catalogue for automated grow rooms. Quality tiers earned from real deployment counts, not opinion.">
+<style>
+:root{
+  --bg:#0d0f0e; --panel:#141817; --panel-2:#1b201e; --line:#2a312e;
+  --ink:#e6ebe8; --ink-dim:#98a49e; --ink-faint:#6b7772;
+  --accent:#4ea87a; --accent-ink:#0d0f0e;
+  --t-proven:#3fa46a; --t-works:#3f8fa4; --t-exp:#b08a30; --t-avoid:#b04a4a;
+  --radius:10px; --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+:root[data-theme="light"]{
+  --bg:#f6f8f7; --panel:#fff; --panel-2:#eef2f0; --line:#dde4e0;
+  --ink:#16201c; --ink-dim:#5a6862; --ink-faint:#8a968f; --accent-ink:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1280px;margin:0 auto;padding:0 20px}
+
+/* ---------- header ---------- */
+header{border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--bg));
+  position:sticky;top:0;z-index:50;backdrop-filter:blur(8px)}
+.hbar{display:flex;align-items:center;gap:16px;padding:12px 0;flex-wrap:wrap}
+.brand{font-weight:700;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
+.brand span{color:var(--accent)}
+#q{flex:1;min-width:200px;background:var(--panel-2);border:1px solid var(--line);color:var(--ink);
+  padding:9px 12px;border-radius:var(--radius);font-size:14px;font-family:var(--sans)}
+#q:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.tabs{display:flex;gap:4px}
+.tab{background:none;border:1px solid transparent;color:var(--ink-dim);padding:7px 12px;
+  border-radius:var(--radius);cursor:pointer;font-size:13px;font-family:var(--sans)}
+.tab:hover{color:var(--ink);background:var(--panel-2)}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.iconbtn{background:var(--panel-2);border:1px solid var(--line);color:var(--ink-dim);
+  width:34px;height:34px;border-radius:var(--radius);cursor:pointer;font-size:15px}
+.iconbtn:hover{color:var(--ink)}
+
+/* ---------- layout ---------- */
+.cols{display:grid;grid-template-columns:220px 1fr;gap:24px;padding:20px 0 60px}
+@media(max-width:860px){.cols{grid-template-columns:1fr}
+  aside{position:static!important;max-height:none!important;border-bottom:1px solid var(--line);padding-bottom:12px}}
+aside{position:sticky;top:66px;align-self:start;max-height:calc(100vh - 86px);overflow-y:auto;
+  scrollbar-width:thin}
+.fgroup{margin-bottom:16px}
+.fgroup h4{margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--ink-faint);font-weight:700}
+.fopt{display:flex;align-items:center;gap:7px;padding:2px 0;font-size:13px;color:var(--ink-dim);cursor:pointer}
+.fopt:hover{color:var(--ink)}
+.fopt input{accent-color:var(--accent);margin:0;cursor:pointer}
+.fopt .n{margin-left:auto;font-size:11px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+#clear{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--ink-dim);
+  padding:7px;border-radius:var(--radius);cursor:pointer;font-size:12px;margin-bottom:14px}
+#clear:hover{color:var(--ink)}
+
+/* ---------- grid ---------- */
+.meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;
+  font-size:13px;color:var(--ink-dim);gap:12px;flex-wrap:wrap}
+select{background:var(--panel-2);border:1px solid var(--line);color:var(--ink);padding:6px 9px;
+  border-radius:8px;font-size:13px;font-family:var(--sans)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;cursor:pointer;display:flex;flex-direction:column;
+  transition:border-color .12s,transform .12s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card img{width:100%;aspect-ratio:216/260;object-fit:cover;background:var(--panel-2);display:block}
+.cbody{padding:10px 11px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+.cname{font-size:13.5px;font-weight:600;line-height:1.3}
+.cmaker{font-size:11.5px;color:var(--ink-faint)}
+.crow{display:flex;gap:5px;flex-wrap:wrap;margin-top:auto;padding-top:4px;align-items:center}
+.pill{font-size:10.5px;padding:2px 6px;border-radius:20px;background:var(--panel-2);
+  color:var(--ink-dim);border:1px solid var(--line);white-space:nowrap}
+.tier{font-size:10.5px;padding:2px 7px;border-radius:20px;font-weight:600;color:#fff;white-space:nowrap}
+.tier.field-proven{background:var(--t-proven)} .tier.works{background:var(--t-works)}
+.tier.experimental{background:var(--t-exp)} .tier.avoid{background:var(--t-avoid)}
+.dep{font-size:10.5px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.empty{padding:60px 20px;text-align:center;color:var(--ink-faint)}
+
+/* ---------- detail dialog ---------- */
+dialog{border:none;padding:0;background:transparent;max-width:100%;max-height:100%}
+dialog::backdrop{background:rgba(0,0,0,.72)}
+.sheet{background:var(--panel);border:1px solid var(--line);border-radius:14px;width:min(880px,94vw);
+  max-height:90vh;overflow-y:auto;color:var(--ink)}
+.shead{display:flex;gap:16px;padding:20px;border-bottom:1px solid var(--line);
+  position:sticky;top:0;background:var(--panel);z-index:2}
+.shead img{width:104px;height:125px;object-fit:cover;border-radius:8px;flex-shrink:0;background:var(--panel-2)}
+.shead h2{margin:0 0 4px;font-size:19px;line-height:1.25}
+.sclose{margin-left:auto;background:var(--panel-2);border:1px solid var(--line);color:var(--ink-dim);
+  width:30px;height:30px;border-radius:8px;cursor:pointer;flex-shrink:0;font-size:15px}
+.sbody{padding:20px}
+.sec{margin-bottom:22px}
+.sec h3{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint)}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;font-size:13.5px}
+.kv dt{color:var(--ink-faint)}
+.kv dd{margin:0}
+.sec ul{margin:0;padding-left:18px;font-size:13.5px}
+.sec li{margin-bottom:5px}
+.vend{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;background:var(--panel-2);
+  border:1px solid var(--line);border-radius:8px;margin-bottom:6px;font-size:13px;flex-wrap:wrap}
+.vend code{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint)}
+pre{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:12px;
+  overflow-x:auto;margin:0;font-family:var(--mono);font-size:12px;line-height:1.55}
+.codehead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.copy{background:var(--accent);color:var(--accent-ink);border:none;padding:5px 11px;border-radius:7px;
+  cursor:pointer;font-size:12px;font-weight:600;font-family:var(--sans)}
+.warnbox{background:rgba(176,74,74,.12);border:1px solid rgba(176,74,74,.45);border-radius:8px;
+  padding:11px 13px;font-size:13.5px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:12px;padding:3px 9px;border-radius:20px;background:var(--panel-2);
+  border:1px solid var(--line);cursor:pointer;color:var(--ink-dim)}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+
+/* ---------- pages ---------- */
+.page{padding:8px 0 60px}
+.page h2{font-size:22px;margin:0 0 6px}
+.lede{color:var(--ink-dim);font-size:14px;max-width:70ch;margin:0 0 22px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius)}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:560px}
+th,td{padding:8px 11px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--panel-2);font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--ink-faint);position:sticky;top:0}
+tbody tr:hover{background:var(--panel-2)}
+td code,th code{font-family:var(--mono);font-size:12px}
+.addr{font-family:var(--mono);font-weight:700}
+tr.collide td{background:rgba(176,74,74,.13)}
+tr.collide:hover td{background:rgba(176,74,74,.2)}
+.badge-collide{background:var(--t-avoid);color:#fff;font-size:10px;padding:2px 6px;border-radius:20px;font-weight:700}
+.badge-ok{color:var(--ink-faint);font-size:11px}
+.rec{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;margin-bottom:18px}
+.rec h3{margin:0 0 4px;font-size:17px}
+.rec .sum{color:var(--ink-dim);font-size:13.5px;margin-bottom:12px;max-width:75ch}
+.tot{font-size:15px;font-weight:700;color:var(--accent);white-space:nowrap}
+.note{font-size:13px;color:var(--ink-dim);margin-top:10px;max-width:78ch}
+.note b{color:var(--ink)}
+footer{border-top:1px solid var(--line);padding:22px 0;color:var(--ink-faint);font-size:12.5px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hbar">
+    <div class="brand">awesome<span>-grow-room-</span>parts</div>
+    <input id="q" type="search" placeholder="Search parts, part numbers, buses, failure modes…" autocomplete="off" aria-label="Search parts">
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" data-page="catalogue" aria-selected="true">Catalogue</button>
+      <button class="tab" role="tab" data-page="i2c" aria-selected="false">I²C map</button>
+      <button class="tab" role="tab" data-page="recipes" aria-selected="false">Builds</button>
+    </nav>
+    <button class="iconbtn" id="theme" title="Toggle light/dark" aria-label="Toggle theme">◐</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- CATALOGUE -->
+  <div id="page-catalogue">
+    <div class="cols">
+      <aside>
+        <button id="clear">Clear all filters</button>
+        <div id="facets"></div>
+      </aside>
+      <section>
+        <div class="meta">
+          <span id="count"></span>
+          <label>Sort
+            <select id="sort">
+              <option value="deployment">Most deployed</option>
+              <option value="tier">Quality tier</option>
+              <option value="name">Name A–Z</option>
+              <option value="price-asc">Price low→high</option>
+              <option value="price-desc">Price high→low</option>
+            </select>
+          </label>
+        </div>
+        <div class="grid" id="grid"></div>
+        <div class="empty hidden" id="empty">No parts match. Try clearing a filter.</div>
+      </section>
+    </div>
+  </div>
+
+  <!-- I2C MAP -->
+  <div id="page-i2c" class="page hidden">
+    <h2>I²C address collision map</h2>
+    <p class="lede">Every I²C part in the catalogue, by address. Two parts at the same address
+      cannot share a bus — you need a TCA9548A multiplexer, a second I²C bus on spare GPIOs, or a
+      part whose address is strappable. Plan the bus here <em>before</em> you order.</p>
+    <div class="tablewrap"><table id="i2ctable"></table></div>
+    <p class="note" id="i2cnote"></p>
+  </div>
+
+  <!-- RECIPES -->
+  <div id="page-recipes" class="page hidden">
+    <h2>Build recipes</h2>
+    <p class="lede">Complete bills of materials that reference catalogue parts by id. Totals are
+      computed from each part's observed price at build time, so they cannot drift out of sync
+      with the catalogue.</p>
+    <div id="recipes"></div>
+  </div>
+</main>
+
+<dialog id="detail"><div class="sheet" id="sheet"></div></dialog>
+
+<footer class="wrap">
+  <div>Quality tiers are earned from deployment evidence in production ESPHome configs, not vendor
+  claims. <b>field-proven</b> means the part is named in the stated number of live device files.</div>
+  <div style="margin-top:6px">Generated from <code>parts/*.yaml</code> — edit the YAML, not this page.
+  Prices are indicative and were observed on the stated date.</div>
+</footer>
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+const DB = JSON.parse(document.getElementById('data').textContent);
+const PARTS = DB.parts, RECIPES = DB.recipes;
+const byId = Object.fromEntries(PARTS.map(p => [p.id, p]));
+const TIER_ORDER = {'field-proven':0, 'works':1, 'experimental':2, 'avoid':3};
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* Build a lowercase haystack per part once, so search stays instant. */
+PARTS.forEach(p => {
+  p._hay = [p.name, p.manufacturer, p.id, p.subcategory, p.category, p.notes, p.evidence,
+    (p.part_numbers||[]).join(' '), (p.bus||[]).join(' '), (p.tags||[]).join(' '),
+    (p.failure_modes||[]).join(' '), (p.vendors||[]).map(v=>v.name).join(' '),
+    (p.i2c||{}).address || '', (p.platforms||[]).join(' ')
+  ].join(' ').toLowerCase();
+});
+
+const FACETS = [
+  ['category',   'Category',   p => [p.category]],
+  ['quality_tier','Quality tier', p => [p.quality_tier]],
+  ['bus',        'Bus / protocol', p => p.bus || []],
+  ['platforms',  'Works with', p => p.platforms || []],
+  ['price',      'Price band', p => p.price ? [p.price.band] : []],
+  ['voltage',    'Operating voltage', p => {
+      const v = p.voltage || {}; const n = v.nominal ?? v.max ?? v.min;
+      if (n == null) return [];
+      if (n <= 3.3) return ['3.3 V'];
+      if (n <= 5) return ['5 V'];
+      if (n <= 12) return ['12 V'];
+      if (n <= 24) return ['24 V'];
+      return ['> 24 V'];
+  }],
+  ['vendor',     'Vendor', p => [...new Set((p.vendors||[]).map(v => v.name.split(/[-–(]/)[0].trim()))]],
+];
+const active = {};  // facet key -> Set of selected values
+
+function renderFacets(){
+  const host = document.getElementById('facets');
+  host.innerHTML = FACETS.map(([key, label, get]) => {
+    const counts = {};
+    // Count against parts filtered by every OTHER facet, so counts stay useful.
+    matching(key).forEach(p => get(p).forEach(v => { if(v) counts[v] = (counts[v]||0)+1; }));
+    const vals = Object.keys(counts).sort((a,b) =>
+      key === 'quality_tier' ? (TIER_ORDER[a]-TIER_ORDER[b]) : (counts[b]-counts[a] || a.localeCompare(b)));
+    if(!vals.length) return '';
+    return `<div class="fgroup"><h4>${esc(label)}</h4>` + vals.map(v => {
+      const on = active[key]?.has(v);
+      return `<label class="fopt"><input type="checkbox" data-k="${esc(key)}" value="${esc(v)}"
+        ${on?'checked':''}><span>${esc(v)}</span><span class="n">${counts[v]}</span></label>`;
+    }).join('') + '</div>';
+  }).join('');
+}
+
+/* Parts passing search + all facets, optionally ignoring one facet (for counts). */
+function matching(ignoreKey){
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  const terms = q ? q.split(/\s+/) : [];
+  return PARTS.filter(p => {
+    if(terms.length && !terms.every(t => p._hay.includes(t))) return false;
+    for(const [key,,get] of FACETS){
+      if(key === ignoreKey) continue;
+      const sel = active[key];
+      if(sel && sel.size){
+        const vals = get(p);
+        if(!vals.some(v => sel.has(v))) return false;
+      }
+    }
+    return true;
+  });
+}
+
+function sortParts(list){
+  const mode = document.getElementById('sort').value;
+  const price = p => p.price?.observed ?? Infinity;
+  return [...list].sort((a,b) => {
+    switch(mode){
+      case 'name': return a.name.localeCompare(b.name);
+      case 'tier': return (TIER_ORDER[a.quality_tier]-TIER_ORDER[b.quality_tier])
+                       || ((b.deployment_count||0)-(a.deployment_count||0));
+      case 'price-asc': return price(a)-price(b);
+      case 'price-desc': return (price(b)===Infinity?-1:price(b))-(price(a)===Infinity?-1:price(a));
+      default: return ((b.deployment_count||0)-(a.deployment_count||0))
+                   || (TIER_ORDER[a.quality_tier]-TIER_ORDER[b.quality_tier]);
+    }
+  });
+}
+
+function render(){
+  const list = sortParts(matching(null));
+  document.getElementById('grid').innerHTML = list.map(p => {
+    const addr = p.i2c?.address ? `<span class="pill">I²C ${esc(p.i2c.address)}</span>` : '';
+    const dep = p.deployment_count ? `<span class="dep">${p.deployment_count} live</span>` : '';
+    const price = p.price?.observed
+      ? `<span class="pill">${p.price.currency||''} ${p.price.observed}</span>`
+      : (p.price?.band ? `<span class="pill">${esc(p.price.band)}</span>` : '');
+    return `<article class="card" data-id="${esc(p.id)}" tabindex="0" role="button">
+      <img src="${esc(p.image)}" alt="" loading="lazy">
+      <div class="cbody">
+        <div class="cname">${esc(p.name)}</div>
+        <div class="cmaker">${esc(p.manufacturer||'')}</div>
+        <div class="crow">
+          <span class="tier ${esc(p.quality_tier)}">${esc(p.quality_tier)}</span>
+          ${addr}${price}${dep}
+        </div>
+      </div></article>`;
+  }).join('');
+  document.getElementById('count').textContent =
+    `${list.length} of ${PARTS.length} parts`;
+  document.getElementById('empty').classList.toggle('hidden', list.length > 0);
+  renderFacets();
+}
+
+/* ---------- detail ---------- */
+function openPart(id){
+  const p = byId[id]; if(!p) return;
+  const row = (k,v) => v ? `<dt>${esc(k)}</dt><dd>${v}</dd>` : '';
+  const v = p.voltage || {};
+  const volts = v.nominal!=null || v.min!=null
+    ? esc([v.min!=null?v.min+'V':null, v.max!=null?v.max+'V':null].filter(Boolean).join(' – ')
+        + (v.nominal!=null?` (nominal ${v.nominal}V)`:''))
+    : '';
+  const i2c = p.i2c?.address
+    ? `<span class="addr">${esc(p.i2c.address)}</span>` +
+      (p.i2c.alternates?.length ? ` — alternates ${p.i2c.alternates.map(esc).join(', ')}` : '') +
+      (p.i2c.how_to_change ? `<div style="color:var(--ink-dim);font-size:12.5px;margin-top:3px">${esc(p.i2c.how_to_change)}</div>` : '')
+    : '';
+  const price = p.price ? esc(
+      (p.price.observed!=null ? `${p.price.currency||''} ${p.price.observed}` : p.price.band) +
+      (p.price.observed_date ? ` (observed ${p.price.observed_date})` : '')) +
+      (p.price.note ? `<div style="color:var(--ink-dim);font-size:12.5px;margin-top:3px">${esc(p.price.note)}</div>`:'')
+    : '';
+
+  const sec = (title, html) => html ? `<div class="sec"><h3>${title}</h3>${html}</div>` : '';
+  const list = arr => arr?.length ? `<ul>${arr.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : '';
+  const refs = (arr,label) => arr?.length ? `<div class="sec"><h3>${label}</h3><div class="chips">${
+      arr.filter(r=>byId[r]).map(r=>`<span class="chip" data-goto="${esc(r)}">${esc(byId[r].name)}</span>`).join('')
+    }</div></div>` : '';
+
+  document.getElementById('sheet').innerHTML = `
+    <div class="shead">
+      <img src="${esc(p.image)}" alt="">
+      <div>
+        <h2>${esc(p.name)}</h2>
+        <div style="color:var(--ink-dim);font-size:13.5px">${esc(p.manufacturer||'')}${p.subcategory?' · '+esc(p.subcategory):''}</div>
+        <div class="crow" style="margin-top:8px">
+          <span class="tier ${esc(p.quality_tier)}">${esc(p.quality_tier)}</span>
+          ${p.deployment_count?`<span class="pill">${p.deployment_count} live configs</span>`:''}
+          ${(p.bus||[]).map(b=>`<span class="pill">${esc(b)}</span>`).join('')}
+        </div>
+      </div>
+      <button class="sclose" aria-label="Close">✕</button>
+    </div>
+    <div class="sbody">
+      ${sec('Why this tier', `<div>${esc(p.evidence||'')}</div>` +
+        (p.deployment_evidence?.length
+          ? `<details style="margin-top:8px"><summary style="cursor:pointer;color:var(--ink-dim);font-size:13px">
+             ${p.deployment_evidence.length} evidence files</summary>
+             <div style="font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);margin-top:6px;line-height:1.7">
+             ${p.deployment_evidence.map(esc).join('<br>')}</div></details>` : ''))}
+
+      <div class="sec"><h3>Specifications</h3><dl class="kv">
+        ${row('Category', esc(p.category))}
+        ${row('Part numbers', (p.part_numbers||[]).map(n=>`<code>${esc(n)}</code>`).join(', '))}
+        ${row('I²C address', i2c)}
+        ${row('Protocol', esc(p.protocol_settings||''))}
+        ${row('Voltage', volts)}
+        ${row('Price', price)}
+        ${row('IP rating', esc(p.ip_rating||''))}
+        ${row('Calibration', esc(p.calibration_required||''))}
+        ${row('Works with', (p.platforms||[]).map(esc).join(', '))}
+      </dl></div>
+
+      ${sec('Calibration notes', p.calibration_notes?`<div style="font-size:13.5px">${esc(p.calibration_notes)}</div>`:'')}
+      ${sec('Notes', p.notes?`<div style="font-size:13.5px">${esc(p.notes)}</div>`:'')}
+      ${p.failure_modes?.length ? `<div class="sec"><h3>Failure modes</h3>
+        <div class="warnbox">${list(p.failure_modes)}</div></div>`:''}
+
+      ${p.vendors?.length ? `<div class="sec"><h3>Where to buy</h3>${p.vendors.map(vn=>
+        `<div class="vend"><a href="${esc(vn.url)}" target="_blank" rel="noopener noreferrer">${esc(vn.name)}</a>
+        <span>${vn.part_number?`<code>${esc(vn.part_number)}</code>`:''}${vn.region?` · ${esc(vn.region)}`:''}</span></div>`
+      ).join('') + `<div class="note">If a link is dead, search the manufacturer part number above —
+        that is why it is recorded.</div>`}</div>`:''}
+
+      ${p.example ? `<div class="sec"><h3>Copy-paste example</h3>
+        <div class="codehead">
+          <span style="font-size:13px;color:var(--ink-dim)">${esc(p.example.title||'')}</span>
+          <button class="copy" data-copy="${esc(p.id)}">Copy</button>
+        </div>
+        <pre><code id="code-${esc(p.id)}">${esc(p.example.code)}</code></pre>
+        ${p.example.source?`<div class="note">Distilled from ${esc(p.example.source)}. Credentials scrubbed — add your own <code>!secret</code> values.</div>`:''}
+      </div>`:''}
+
+      ${p.drivers?.length ? `<div class="sec"><h3>Drivers &amp; docs</h3>${p.drivers.map(d=>
+        `<div class="vend"><a href="${esc(d.url)}" target="_blank" rel="noopener noreferrer">${esc(d.name)}</a>
+         <span class="pill">${esc(d.kind||'link')}</span></div>`).join('')}</div>`:''}
+
+      ${refs(p.works_with,'Pairs with')}
+      ${refs(p.alternatives,'Alternatives')}
+    </div>`;
+  document.getElementById('detail').showModal();
+}
+
+/* ---------- I2C collision map ---------- */
+function renderI2C(){
+  const rows = [];
+  PARTS.forEach(p => {
+    if(!p.i2c?.address) return;
+    const alt = p.i2c.alternates || [], cfg = !!p.i2c.configurable;
+    rows.push({addr:p.i2c.address.toLowerCase(), p, alt, cfg, extra:false});
+    // Composite modules hold several addresses at once. Each one occupies the
+    // bus and can collide, so every one has to appear on the map.
+    (p.i2c.also_occupies || []).forEach(a =>
+      rows.push({addr:a.toLowerCase(), p, alt, cfg, extra:true}));
+  });
+  const groups = {};
+  rows.forEach(r => (groups[r.addr] ||= []).push(r));
+  const addrs = Object.keys(groups).sort();
+  const collisions = addrs.filter(a => groups[a].length > 1);
+
+  document.getElementById('i2ctable').innerHTML =
+    `<thead><tr><th>Address</th><th>Part</th><th>Status</th><th>Can move to</th></tr></thead><tbody>` +
+    addrs.map(a => groups[a].map((r,i) => {
+      const clash = groups[a].length > 1;
+      return `<tr class="${clash?'collide':''}">
+        ${i===0?`<td class="addr" rowspan="${groups[a].length}">${esc(a)}</td>`:''}
+        <td><a href="#" data-goto="${esc(r.p.id)}">${esc(r.p.name)}</a>
+            ${r.extra?`<span class="pill" title="This module also holds its primary address">
+              secondary chip · primary ${esc(r.p.i2c.address)}</span>`:''}</td>
+        <td>${clash?`<span class="badge-collide">collision ×${groups[a].length}</span>`
+                   :`<span class="badge-ok">exclusive</span>`}</td>
+        <td>${r.alt.length?r.alt.map(x=>`<code>${esc(x)}</code>`).join(' '):
+             (r.cfg?'<span class="badge-ok">strappable</span>':'<span class="badge-ok">fixed</span>')}</td>
+      </tr>`;
+    }).join('')).join('') + `</tbody>`;
+
+  document.getElementById('i2cnote').innerHTML = collisions.length
+    ? `<b>${collisions.length} address${collisions.length>1?'es':''} with a collision:</b> ` +
+      collisions.map(a=>`<code>${esc(a)}</code>`).join(', ') +
+      `. A collision only bites if you put both parts on the <em>same</em> bus. Fixes, cheapest first:
+       give one part a strappable alternate address; add a second I²C bus on spare GPIO pins (free on ESP32);
+       or add a TCA9548A multiplexer — but note the mux itself defaults to <code>0x70</code>, which
+       collides with the QMP6988 in the M5Stack ENV.III, so move it to <code>0x71</code>.`
+    : 'No collisions in the current catalogue.';
+}
+
+/* ---------- recipes ---------- */
+function renderRecipes(){
+  document.getElementById('recipes').innerHTML = RECIPES.map(r => {
+    let total = 0, cur = '', partial = false;
+    const rows = (r.items||[]).map(it => {
+      const p = byId[it.part];
+      if(!p) return `<tr><td colspan="4">Unknown part <code>${esc(it.part)}</code></td></tr>`;
+      const unit = p.price?.observed;
+      if(unit != null){ total += unit * (it.qty||1); cur = p.price.currency || cur; }
+      else partial = true;
+      return `<tr>
+        <td><a href="#" data-goto="${esc(p.id)}">${esc(p.name)}</a>
+            <div style="color:var(--ink-faint);font-size:12px">${esc(it.role||'')}</div></td>
+        <td style="text-align:right">${it.qty||1}</td>
+        <td style="text-align:right">${unit!=null?esc(unit.toFixed(2)):'—'}</td>
+        <td style="text-align:right">${unit!=null?esc((unit*(it.qty||1)).toFixed(2)):'—'}</td>
+      </tr>`;
+    }).join('');
+    return `<div class="rec">
+      <h3>${esc(r.name)}</h3>
+      <div class="sum">${esc(r.summary||'')}</div>
+      <div class="crow" style="margin-bottom:12px">
+        ${r.skill_level?`<span class="pill">${esc(r.skill_level)}</span>`:''}
+        ${r.network?`<span class="pill">${esc(r.network)}</span>`:''}
+        ${r.estimated_build_time?`<span class="pill">${esc(r.estimated_build_time)}</span>`:''}
+      </div>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Part</th><th style="text-align:right">Qty</th>
+        <th style="text-align:right">Unit</th><th style="text-align:right">Line</th></tr></thead>
+        <tbody>${rows}</tbody>
+        <tfoot><tr><td colspan="3" style="text-align:right"><b>Total${partial?' (priced items only)':''}</b></td>
+        <td style="text-align:right"><span class="tot">${esc(cur)} ${total.toFixed(2)}</span></td></tr></tfoot>
+      </table></div>
+      ${r.notes?`<div class="note"><b>Notes.</b> ${esc(r.notes)}</div>`:''}
+      ${r.watch_out?`<div class="note" style="margin-top:8px"><div class="warnbox"><b>Watch out.</b> ${esc(r.watch_out)}</div></div>`:''}
+    </div>`;
+  }).join('');
+}
+
+/* ---------- wiring ---------- */
+document.getElementById('q').addEventListener('input', render);
+document.getElementById('sort').addEventListener('change', render);
+document.getElementById('facets').addEventListener('change', e => {
+  const k = e.target.dataset.k; if(!k) return;
+  (active[k] ||= new Set());
+  e.target.checked ? active[k].add(e.target.value) : active[k].delete(e.target.value);
+  render();
+});
+document.getElementById('clear').addEventListener('click', () => {
+  Object.keys(active).forEach(k => active[k].clear());
+  document.getElementById('q').value = '';
+  render();
+});
+document.getElementById('grid').addEventListener('click', e => {
+  const c = e.target.closest('.card'); if(c) openPart(c.dataset.id);
+});
+document.getElementById('grid').addEventListener('keydown', e => {
+  if(e.key==='Enter'||e.key===' '){ const c=e.target.closest('.card');
+    if(c){ e.preventDefault(); openPart(c.dataset.id);} }
+});
+document.addEventListener('click', e => {
+  if(e.target.classList.contains('sclose')) document.getElementById('detail').close();
+  const goto = e.target.dataset?.goto;
+  if(goto){ e.preventDefault(); document.getElementById('detail').close(); openPart(goto); }
+  const cp = e.target.dataset?.copy;
+  if(cp){
+    const code = document.getElementById('code-'+cp)?.textContent || '';
+    navigator.clipboard.writeText(code).then(() => {
+      e.target.textContent = 'Copied'; setTimeout(()=>e.target.textContent='Copy', 1400);
+    });
+  }
+});
+document.getElementById('detail').addEventListener('click', e => {
+  if(e.target.id === 'detail') e.target.close();  // click backdrop
+});
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', String(x===t)));
+  const page = t.dataset.page;
+  document.getElementById('page-catalogue').classList.toggle('hidden', page!=='catalogue');
+  document.getElementById('page-i2c').classList.toggle('hidden', page!=='i2c');
+  document.getElementById('page-recipes').classList.toggle('hidden', page!=='recipes');
+}));
+document.getElementById('theme').addEventListener('click', () => {
+  const el = document.documentElement;
+  el.dataset.theme = el.dataset.theme === 'dark' ? 'light' : 'dark';
+});
+
+render(); renderI2C(); renderRecipes();
+</script>
+</body>
+</html>

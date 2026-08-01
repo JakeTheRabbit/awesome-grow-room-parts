@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: hx711-adc
+name: HX711 24-bit load cell amplifier
+manufacturer: Avia Semiconductor
+part_numbers:
+  - HX711
+category: Water & fertigation
+subcategory: Load cell front end
+bus:
+  - GPIO
+voltage:
+  nominal: 5
+  min: 2.6
+  max: 5.5
+  logic: 3.3
+  note: Runs happily at 3.3V but resolution improves at 5V. Its two-wire interface is bit-banged, not real I2C or SPI.
+price:
+  band: $
+  observed: 6.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: Sparkfun HX711 breakout
+    url: https://www.sparkfun.com/products/13879
+    region: US
+  - name: AliExpress (search HX711 module)
+    url: https://www.aliexpress.com/w/wholesale-HX711-module.html
+    region: Global
+ip_rating: none
+calibration_required: two-point
+calibration_notes: Tare empty, then apply a known mass and record the scale factor. Both values belong in persistent globals so a reboot does not lose the calibration.
+quality_tier: field-proven
+deployment_count: 4
+deployment_evidence:
+  - m5-dial-scales.yaml
+  - m5-dial-scales2.yaml
+  - m5-dial-3.yaml
+  - aquaponics-kit.yaml
+evidence: |-
+  Four deployments weighing CO2 cylinders. Cylinder mass is the only honest way to know how much CO2 you have left - regulator pressure tells you almost nothing until the liquid is gone.
+failure_modes:
+  - "Temperature drift. The HX711 and the load cell both drift; a cylinder that 'loses' 200g overnight in a room that cooled 8C has not leaked."
+  - The bit-banged interface is timing sensitive. WiFi interrupts on a busy ESP cause dropped reads - the 10SPS rate is more stable than 80SPS.
+  - Cheap load cells creep under sustained load. A cylinder sat on one for months reads progressively low.
+  - Mechanical mounting dominates accuracy. A cell that is loaded off-axis or bridging on its cable is unfixable in software.
+drivers:
+  - name: ESPHome hx711
+    url: https://esphome.io/components/sensor/hx711.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+works_with:
+  - load-cell-50kg
+  - m5stack-dial
+image: assets/parts/hx711-adc.svg
+tags:
+  - load-cell
+  - co2-cylinder
+  - weight
+  - field-proven
+example:
+  lang: yaml
+  title: HX711 CO2 cylinder scale
+  source: distilled from m5-dial-scales.yaml (scrubbed)
+  code: |-
+    sensor:
+      - platform: hx711
+        name: CO2 Cylinder Mass
+        dout_pin: GPIO13
+        clk_pin: GPIO14
+        gain: 128
+        update_interval: 5s
+        unit_of_measurement: kg
+        accuracy_decimals: 2
+        filters:
+          # scale factor from your two-point calibration
+          - calibrate_linear:
+              - 0 -> 0.0
+              - 438500 -> 25.0
+          # load cells are noisy - a median over a window beats a single read
+          - median:
+              window_size: 9
+              send_every: 3

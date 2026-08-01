@@ -1,0 +1,115 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: m5-env3
+name: M5Stack ENV III Unit (SHT30 + QMP6988)
+manufacturer: M5Stack
+part_numbers:
+  - U001-C
+  - ENV III
+category: Air quality & CO2
+subcategory: Temperature / humidity / pressure
+bus:
+  - I2C
+  - Grove
+i2c:
+  address: "0x44"
+  alternates:
+    - "0x45"
+  also_occupies:
+    - "0x70"
+  configurable: true
+  how_to_change: |-
+    Two chips, two addresses. The SHT30 half moves 0x44 -> 0x45 by pulling ADDR high. The QMP6988
+    half sits at 0x70 and can move to 0x56. 0x70 is also the TCA9548A default, so adding a
+    multiplexer later collides with this module unless you move one of them first.
+voltage:
+  nominal: 5
+  min: 3.3
+  max: 5
+  logic: 3.3
+price:
+  band: $
+  observed: 18.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: M5Stack ENV III Unit
+    url: https://shop.m5stack.com/products/env-iii-unit-with-temperature-humidity-air-pressure-sensor-sht30-qmp6988
+    part_number: U001-C
+    region: Global
+ip_rating: none
+calibration_required: factory
+quality_tier: field-proven
+deployment_count: 4
+deployment_evidence:
+  - dry-room-scd41-enviii-atom.yaml
+  - espoe-multiplexer-irrigation-relays.yaml
+  - room-2-scd41-env3-dlight-poe.yaml
+  - room-3-scd41-top.yaml
+evidence: |-
+  The standard climate pairing here: an SCD41 for CO2 plus an ENV III for the temperature and humidity that actually drive VPD, because the SCD41's own T/RH self-heats. Four deployments.
+failure_modes:
+  - QMP6988 defaults to 0x70, the same address as the TCA9548A mux. Add a mux to an existing ENV III node and the bus goes strange - move one of them.
+  - "The Grove cable is the weak point: >1m runs at 100kHz get flaky. Drop to 50kHz."
+  - Not condensing-rated. In a drying room at high RH the SHT30 will read 100% and stay there until it dries out.
+drivers:
+  - name: ESPHome sht3xd
+    url: https://esphome.io/components/sensor/sht3xd.html
+    kind: esphome-core
+  - name: ESPHome qmp6988
+    url: https://esphome.io/components/sensor/qmp6988.html
+    kind: esphome-core
+  - name: M5Stack ENV III docs
+    url: https://docs.m5stack.com/en/unit/envIII
+    kind: manual
+platforms:
+  - ESPHome
+  - Home Assistant
+  - M5Stack
+  - Arduino
+works_with:
+  - sensirion-scd41
+  - m5stack-poesp32
+  - m5stack-atom-lite
+  - tca9548a-mux
+alternatives:
+  - sensirion-sht30
+  - bosch-bme280
+image: assets/parts/m5-env3.svg
+tags:
+  - temperature
+  - humidity
+  - pressure
+  - vpd
+  - i2c
+  - field-proven
+example:
+  lang: yaml
+  title: ENV III - SHT30 + QMP6988 on one Grove port
+  source: distilled from common/sensors/sht3x.yaml (scrubbed)
+  code: |-
+    sensor:
+      - platform: sht3xd
+        address: 0x44
+        update_interval: 30s
+        heater_enabled: false
+        temperature:
+          name: Room Temperature
+          filters:
+            - lambda: |-
+                if (-40.0 <= x && x <= 100.0) return x;
+                else return {};
+        humidity:
+          name: Room Humidity
+          filters:
+            - lambda: |-
+                if (0.0 <= x && x <= 100.0) return x;
+                else return {};
+
+      - platform: qmp6988
+        address: 0x70          # NOTE: same default as a TCA9548A mux - move one if you use both
+        update_interval: 30s
+        temperature:
+          name: ENV III Temperature
+          internal: true
+        pressure:
+          name: Barometric Pressure

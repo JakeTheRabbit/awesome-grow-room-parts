@@ -1,0 +1,110 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: peristaltic-pump-doser
+name: Peristaltic dosing pump (12/24V, relay or PWM driven)
+manufacturer: Kamoer / generic
+part_numbers:
+  - NKP-DC-S10B
+  - KAS-B
+  - generic 12V peristaltic
+category: Water & fertigation
+subcategory: Nutrient dosing pump
+bus:
+  - GPIO
+  - PWM
+  - UART
+voltage:
+  nominal: 12
+  min: 12
+  max: 24
+  note: 12V for small dosers, 24V for the faster heads. Drive through a relay or a MOSFET, never directly from a GPIO.
+price:
+  band: $$
+  observed: 65.0
+  currency: NZD
+  observed_date: "2026-03-01"
+  note: Per head. A four-part nutrient program needs four.
+vendors:
+  - name: Kamoer
+    url: https://www.kamoer.com/products/peristaltic-pumps
+    region: Global
+  - name: AliExpress (search 12V peristaltic dosing pump)
+    url: https://www.aliexpress.com/w/wholesale-12V-peristaltic-dosing-pump.html
+    region: Global
+ip_rating: none
+calibration_required: periodic
+calibration_notes: |-
+  Calibrate by running the pump for a fixed time into a measuring cylinder and storing mL/s as a persistent global. Recalibrate when you change tubing - the tube IS the pump, and it work-hardens and loses volume per revolution as it ages. The deployed config stores a per-pump flow_rate global with restore_value: yes and exposes a calibration routine as a button.
+quality_tier: field-proven
+deployment_count: 4
+deployment_evidence:
+  - espoe-peristaltic-pumps.yaml
+evidence: |-
+  Four heads dosing a 200L batch tank from 50L stock tanks, in continuous production service. This is also the node the whole SAFETY pattern was hardened around - a doser that keeps running after the network drops is how you dump 50L of Core into a batch tank.
+failure_modes:
+  - Tubing is a consumable. It thins, output drops silently, and your EC target quietly stops being met. Replace on a schedule, not on failure.
+  - A stuck-on doser is the worst failure in the room. restore_mode ALWAYS_OFF plus a hard auto-shutoff delay plus ethernet on_disconnect are all mandatory - see SAFETY.md.
+  - Dry running wrecks the head. Interlock against tank level if you can.
+  - Back-siphoning from the batch tank into a stock tank if the head is mounted below liquid level. Mount above, or fit a check valve.
+  - Cross-contamination between concentrated A and B parts causes precipitation in shared lines. Separate lines, always.
+notes: See SAFETY.md - this part is the reason that document exists.
+drivers:
+  - name: ESPHome switch/gpio
+    url: https://esphome.io/components/switch/gpio.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+works_with:
+  - m5stack-poesp32
+  - m5stack-4relay
+  - atlas-ezo-ph
+  - stm32-abd-doser
+image: assets/parts/peristaltic-pump-doser.svg
+tags:
+  - dosing
+  - fertigation
+  - pump
+  - safety-critical
+  - field-proven
+example:
+  lang: yaml
+  title: Dosing pump with the full three-layer safety interlock
+  source: distilled from espoe-peristaltic-pumps.yaml (scrubbed)
+  code: |-
+    # Three independent layers. Any one of them alone is not enough.
+    api:
+      encryption:
+        key: !secret api_encryption_key
+      reboot_timeout: 5min      # LAYER 1: reboot if HA is unreachable
+
+    ethernet:
+      type: IP101
+      mdc_pin: GPIO23
+      mdio_pin: GPIO18
+      clk_mode: GPIO0_IN
+      phy_addr: 1
+      power_pin: GPIO5
+      # LAYER 2: link drops -> everything stops, immediately, on-device
+      on_disconnect:
+        - switch.turn_off: motor_core_power
+        - switch.turn_off: motor_bloom_power
+        - script.stop: core_dose_script
+        - script.stop: bloom_dose_script
+
+    globals:
+      - id: core_flow_rate       # mL/s, measured by calibration run
+        type: float
+        restore_value: yes       # survives reboot
+        initial_value: '0.0'
+
+    switch:
+      - platform: gpio
+        pin: GPIO26
+        id: motor_core_power
+        name: Core Pump
+        restore_mode: ALWAYS_OFF   # LAYER 3a: never resume dosing after a power cut
+        on_turn_on:
+          # LAYER 3b: hardware failsafe - it cannot run longer than this,
+          # no matter what the controlling automation believes.
+          - delay: 600s
+          - switch.turn_off: motor_core_power

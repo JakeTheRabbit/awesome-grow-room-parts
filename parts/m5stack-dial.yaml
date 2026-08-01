@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: m5stack-dial
+name: M5Stack Dial (round display + rotary encoder + RFID)
+manufacturer: M5Stack
+part_numbers:
+  - K136
+  - M5Dial
+category: Displays & HMI
+subcategory: Round touch display node
+bus:
+  - I2C
+  - SPI
+  - WiFi
+  - Grove
+  - GPIO
+i2c:
+  address: "0x28"
+  also_occupies:
+    - "0x38"
+    - "0x51"
+  configurable: false
+  how_to_change: |-
+    Fixed internal bus on GPIO11/GPIO12: RC522 NFC at 0x28, FT5x06 touch controller at 0x38 and an
+    RTC at 0x51. Adding a discrete RC522 to the same bus collides at 0x28.
+voltage:
+  nominal: 5
+  logic: 3.3
+price:
+  band: $$$
+  observed: 110.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: M5Stack
+    url: https://shop.m5stack.com/products/m5stack-dial-esp32-s3-smart-rotary-knob-w-1-28-round-touch-screen
+    part_number: K136
+    region: Global
+ip_rating: none
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 5
+deployment_evidence:
+  - m5-dial-scales.yaml
+  - m5-dial-scales2.yaml
+  - sdi-12-m5dial.yaml
+  - m5-dial-3.yaml
+  - aquaponics-kit.yaml
+evidence: |-
+  Used as the at-the-tank readout: CO2 cylinder scales, batch tank level and a bench SDI-12 probe tester. Being able to read a number without opening a laptop is worth more in a wet room than it sounds.
+failure_modes:
+  - Its internal I2C is GPIO11/GPIO12 and already carries three devices. Hanging external sensors off the same bus causes address clashes with anything at 0x28, 0x38 or 0x51.
+  - The screen is the power hog - on battery it is hours, not days. Treat it as a mains device.
+  - Rotary encoder detents are read in software; a busy display refresh can drop steps.
+drivers:
+  - name: M5Stack Dial docs
+    url: https://docs.m5stack.com/en/core/M5Dial
+    kind: manual
+platforms:
+  - ESPHome
+  - Home Assistant
+  - M5Stack
+  - Arduino
+works_with:
+  - hx711-adc
+  - load-cell-50kg
+  - mfrc522-rfid
+  - meter-teros12
+image: assets/parts/m5stack-dial.svg
+tags:
+  - display
+  - hmi
+  - rotary
+  - nfc

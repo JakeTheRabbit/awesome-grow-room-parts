@@ -1,0 +1,45 @@
+name: link-rot
+
+# Vendor listings die constantly - that is why every part records canonical
+# part_numbers. This job reports dead links so they can be replaced. It only
+# fails when a part has NO reachable vendor AND no part number to search on,
+# i.e. when the entry has genuinely become unusable.
+
+on:
+  schedule:
+    - cron: "17 4 * * 1"   # Mondays, 04:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install pyyaml
+
+      - name: Check vendor and driver links
+        id: links
+        run: |
+          set +e
+          python scripts/check_links.py --timeout 20 | tee link-report.txt
+          echo "status=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: link-report
+          path: link-report.txt
+
+      - name: Fail if any part became unbuyable and unsearchable
+        if: steps.links.outputs.status != '0'
+        run: |
+          echo "::error::A part has no reachable vendor and no part_numbers fallback."
+          exit 1

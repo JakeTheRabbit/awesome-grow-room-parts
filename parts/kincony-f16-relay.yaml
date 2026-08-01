@@ -1,0 +1,101 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: kincony-f16-relay
+name: KinCony F16 16-channel relay controller
+manufacturer: KinCony
+part_numbers:
+- KC868-F16
+- KinCony F16
+category: Actuation & relays
+subcategory: 16-channel DIN-rail relay board, W5500 Ethernet
+bus:
+- Ethernet
+- RS485/Modbus
+- I2C
+i2c:
+  address: '0x24'
+  alternates:
+  - '0x25'
+  - '0x26'
+  - '0x27'
+  configurable: true
+  how_to_change: On-board PCF8574 expanders; address set by solder jumpers.
+protocol_settings: RS485 Modbus RTU, slave address discovered by scan. W5500 SPI Ethernet.
+voltage:
+  min: 9.0
+  max: 24.0
+  nominal: 12.0
+  note: DIN-rail unit, relay contacts rated 10A.
+price:
+  band: $$$
+  observed: 210.0
+  currency: NZD
+  observed_date: '2026-03-01'
+vendors:
+- name: KinCony KC868-F16
+  url: https://www.kincony.com/
+  region: Global
+ip_rating: none
+calibration_required: none
+quality_tier: experimental
+deployment_count: 1
+deployment_evidence:
+- kincony-f16-node.yaml
+evidence: HALL OF SHAME (with an asterisk). Exactly one config, and that config STILL CONTAINS a brute-force
+  Modbus address scanner - it walks slave addresses looking for the board because the address was never
+  pinned down. A config that is still probing for its own device is not a config you should copy.
+failure_modes:
+- The live config carries a leftover brute-force address scanner - the Modbus slave address was never
+  determined and committed.
+- 'Sixteen channels on one node is a large blast radius: one failed board takes out sixteen loads at once.'
+- Documentation is thin and largely machine-translated; pinouts differ between hardware revisions sold
+  under the same name.
+- Its W5500 Ethernet needs a different ESPHome config from the IP101 PHY used everywhere else in this
+  fleet - an easy way to lose an afternoon.
+notes: Attractive on price-per-channel and it is genuinely DIN-rail mountable, which the M5Stack units
+  are not. But concentrate irrigation on one 16-channel board and a single failure floods everything.
+  This fleet deliberately uses several 4-channel nodes instead. If you do deploy it, pin the Modbus address
+  and delete the scanner.
+drivers:
+- name: KinCony ESPHome docs
+  url: https://www.kincony.com/esphome-support.html
+  kind: manual
+platforms:
+- ESPHome
+- Home Assistant
+- Modbus master
+alternatives:
+- m5stack-4relay
+image: assets/parts/kincony-f16-relay.svg
+example:
+  lang: yaml
+  title: What NOT to ship - the address scanner still in the live config
+  source: pattern observed in kincony-f16-node.yaml
+  code: |
+    # ANTI-PATTERN - do not copy this into production.
+    # This is a brute-force Modbus slave-address scanner that is still present in
+    # the one live F16 config. It exists because the board's address was never
+    # pinned down. Symptoms of shipping it: bus noise, slow startup, and a device
+    # whose identity changes if anything else joins the RS485 segment.
+    #
+    #   interval:
+    #     - interval: 2s
+    #       then:
+    #         - lambda: |-
+    #             static uint8_t addr = 1;
+    #             ESP_LOGW("scan", "trying modbus address %d", addr);
+    #             addr++;                       # walks 1..247 forever
+    #
+    # Do this instead: find the address ONCE with a Modbus scanning tool, then
+    # hard-code it and delete the scanner.
+    modbus_controller:
+      - id: f16
+        address: 0x01        # pinned, not discovered
+        modbus_id: modbus_hub
+        update_interval: 5s
+tags:
+- relay
+- din-rail
+- modbus
+- hall-of-shame
+- anti-pattern

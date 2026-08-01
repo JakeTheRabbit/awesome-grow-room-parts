@@ -1,0 +1,127 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: m5stack-poesp32
+name: M5Stack PoESP32 / ESP32 Ethernet unit (IP101G PHY)
+manufacturer: M5Stack
+part_numbers:
+- PoESP32
+- U117
+- IP101GRI
+- M5Stack Ethernet Unit
+category: Networking & power
+subcategory: PoE ESP32 node with wired Ethernet PHY
+bus:
+- Ethernet
+- PoE
+- Grove
+- I2C
+- UART
+voltage:
+  min: 5.0
+  max: 57.0
+  nominal: 48.0
+  note: 802.3af PoE in, regulated 5V/3V3 out to the ESP32. Also runnable off plain 5V.
+price:
+  band: $$
+  observed: 65.0
+  currency: NZD
+  observed_date: '2026-03-01'
+vendors:
+- name: M5Stack PoESP32
+  url: https://shop.m5stack.com/products/poe-esp32-unit-with-w5500
+  part_number: U117
+- name: M5Stack LAN base
+  url: https://shop.m5stack.com/products/lan-module-w5500-with-poe
+  region: Global
+ip_rating: none
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 48
+deployment_evidence:
+- poe-room-1-r1.yaml
+- poe-room-1-r2.yaml
+- poe-room-1-r3.yaml
+- espoe-main-pump.yaml
+- espoe-peristaltic-pumps.yaml
+- espoe-multiplexer-irrigation-relays.yaml
+- poe-dry-room-relay.yaml
+- poe-dry-room-rfid.yaml
+- poe-room-2-rfid.yaml
+- room-1-irrigation-relays.yaml
+- room-1-mlx90640.yaml
+- room-1-r1-m-thermal-cam.yaml
+- room-1-ac-door.yaml
+- room-1-ac-wall.yaml
+- room-2-ac-door.yaml
+- room-2-ac-wall.yaml
+- led-room-2-r1.yaml
+- led-room-2-r2.yaml
+- led-room-2-r3.yaml
+- room-3-co2-relay.yaml
+- ssr-relay-irrigation.yaml
+- entry-door-rfid.yaml
+evidence: '48 of 149 production configs declare `ethernet: type: IP101` with the M5Stack pin map (mdc
+  GPIO23, mdio GPIO18, clk GPIO0_IN, power GPIO5). Every load-bearing actuator in the facility - irrigation
+  valves, CO2, dehumidifiers, lighting contactors - runs wired rather than WiFi, and that is a deliberate
+  reliability decision.'
+failure_modes:
+- Short Ethernet flaps are common on cheap unmanaged switches; if you kill outputs instantly on on_disconnect
+  you WILL interrupt live feeds. Use a grace timer - see the SAFETY.md killguard pattern.
+- power_pin GPIO5 must be driven or the PHY never comes up - symptom is a device that boots and reboots
+  with no link.
+- PoE injectors that are not 802.3af-compliant (passive 24V) will not power it and can damage the unit.
+- GPIO0 is the PHY clock input, so it is unavailable for anything else and affects boot strapping.
+notes: This is the backbone of the facility. Wired Ethernet removes the entire class of 'WiFi dropped
+  and the valve stayed open' failures. The IP101G pin map below is identical in all 48 configs - copy
+  it verbatim. Note the newer M5Stack PoE modules ship a W5500 SPI MAC instead of the IP101 RMII PHY;
+  the ESPHome config is different (see w5500-ethernet).
+drivers:
+- name: ESPHome ethernet component
+  url: https://esphome.io/components/ethernet.html
+  kind: esphome-core
+platforms:
+- ESPHome
+- Home Assistant
+- Arduino
+- M5Stack
+works_with:
+- m5stack-4relay
+- sensirion-scd41
+- mfrc522-rfid
+- mlx90640-thermal
+alternatives:
+- w5500-eth-module
+- m5stack-atom-lite
+image: assets/parts/m5stack-poesp32.svg
+example:
+  lang: yaml
+  title: IP101 Ethernet - the exact pin map used on all 48 nodes
+  source: distilled from room-1-irrigation-relays.yaml
+  code: |
+    ethernet:
+      type: IP101
+      mdc_pin: GPIO23
+      mdio_pin: GPIO18
+      clk_mode: GPIO0_IN
+      phy_addr: 1
+      power_pin: GPIO5
+      # Do NOT de-energise outputs directly here - brief flaps are normal.
+      # Start a grace timer instead, and cancel it if the link comes back.
+      on_connect:
+        - script.stop: disconnect_killguard
+      on_disconnect:
+        - script.execute: disconnect_killguard
+
+    text_sensor:
+      - platform: ethernet_info
+        ip_address:
+          name: IP
+        mac_address:
+          name: MAC
+tags:
+- poe
+- ethernet
+- esp32
+- m5stack
+- core
+- reliability

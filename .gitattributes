@@ -1,0 +1,8 @@
+# Generated files are diffed in CI (see .github/workflows/validate.yml).
+# Without normalisation, CRLF on Windows vs LF on the Linux runner makes the
+# staleness check fail even when the content is identical.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary

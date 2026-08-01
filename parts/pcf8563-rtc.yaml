@@ -1,0 +1,116 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: pcf8563-rtc
+name: PCF8563 real-time clock
+manufacturer: NXP
+part_numbers:
+- PCF8563
+- PCF8563T
+- BM8563
+category: Bus infrastructure
+subcategory: I2C real-time clock with battery backup
+bus:
+- I2C
+i2c:
+  address: '0x51'
+  configurable: false
+  how_to_change: Fixed at 0x51. Rarely a problem - little else uses that address.
+voltage:
+  min: 1.0
+  max: 5.5
+  nominal: 3.3
+  note: Runs down to 1.0V on backup current, so a coin cell holds time for years.
+price:
+  band: $
+  observed: 6.0
+  currency: NZD
+  observed_date: '2026-03-01'
+  note: Built into most M5Stack Core and AirQ units at no extra cost.
+vendors:
+- name: M5Stack (integrated in Core/AirQ)
+  url: https://shop.m5stack.com/collections/m5-core
+  region: Global
+- name: Digi-Key PCF8563T
+  url: https://www.digikey.com/en/products/detail/nxp-usa-inc/PCF8563T-5-118/1163777
+  part_number: PCF8563T
+ip_rating: none
+calibration_required: none
+quality_tier: field-proven
+deployment_count: 13
+deployment_evidence:
+- air-q-entry.yaml
+- air-q-dry-room.yaml
+- airq-aux-1.yaml
+- airq-annex.yaml
+- aquaponics-kit.yaml
+- m5-dial-scales.yaml
+- m5-dial-scales2.yaml
+- m5Stack_AirQ.yaml
+- m5stack-airq-room-3.yaml
+- m5stack-airq-corridor.yaml
+- m5stack-airq-loading-bay.yaml
+evidence: '13 configs declare an active `time: - platform: pcf8563` at 0x51, mostly the AirQ and M5 Dial
+  units where it comes on the board. It matters because a node that loses network still needs correct
+  local time to run a lighting or irrigation schedule.'
+failure_modes:
+- Dead or missing backup cell and it silently resets to 2000-01-01 on every power cut - schedules then
+  fire at the wrong time rather than not at all, which is worse.
+- Cheap modules ship with the backup-charging resistor fitted for a rechargeable LIR2032; put a non-rechargeable
+  CR2032 in one of those and it will leak or vent.
+- Drifts a few seconds a day without periodic sync - pair it with SNTP and let the network correct it
+  when available.
+notes: Cheap insurance for any node that runs a schedule. Configure SNTP as the primary time source and
+  the PCF8563 as the fallback, so the node keeps sane time through a network outage and re-syncs when
+  the network returns.
+drivers:
+- name: ESPHome pcf8563 time
+  url: https://esphome.io/components/time/pcf8563.html
+  kind: esphome-core
+- name: NXP PCF8563 datasheet
+  url: https://www.nxp.com/products/PCF8563
+  kind: datasheet
+platforms:
+- ESPHome
+- Home Assistant
+- Arduino
+- MicroPython
+- M5Stack
+works_with:
+- m5stack-airq
+- m5stack-dial
+image: assets/parts/pcf8563-rtc.svg
+example:
+  lang: yaml
+  title: RTC as fallback, SNTP as primary
+  source: distilled from air-q-entry.yaml
+  code: |
+    i2c:
+      id: bus_a
+      sda: GPIO16
+      scl: GPIO17
+
+    time:
+      # Primary: network time whenever the node can reach it.
+      - platform: sntp
+        id: sntp_time
+        servers:
+          - 0.pool.ntp.org
+          - 1.pool.ntp.org
+        on_time_sync:
+          then:
+            # Push the good time back into the RTC so the coin cell holds it.
+            - pcf8563.write_time:
+                id: rtc_time
+
+      # Fallback: keeps schedules honest through a network outage.
+      - platform: pcf8563
+        id: rtc_time
+        i2c_id: bus_a
+        address: 0x51
+        update_interval: never
+tags:
+- rtc
+- i2c
+- time
+- schedule
+- resilience

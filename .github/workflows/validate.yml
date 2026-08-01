@@ -1,0 +1,52 @@
+name: validate
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pyyaml jsonschema
+
+      # Schema, cross-references, tier honesty, missing images, AND the
+      # credential scan. This is the gate - see SECURITY.md.
+      - name: Validate catalogue
+        run: python scripts/validate.py
+
+      # Every part needs a thumbnail; if this produces a diff, someone added a
+      # part without running it.
+      - name: Check thumbnails are up to date
+        run: |
+          python scripts/gen_thumbnails.py
+          if ! git diff --quiet -- assets/; then
+            echo "::error::assets/ is stale - run: python scripts/gen_thumbnails.py"
+            git diff --stat -- assets/
+            exit 1
+          fi
+
+      # docs/ and the README tables are generated. If they drift from the YAML,
+      # the published site is lying about the catalogue.
+      - name: Check generated site and README are up to date
+        run: |
+          python scripts/build_site.py
+          python scripts/gen_readme.py
+          if ! git diff --quiet -- docs/ README.md; then
+            echo "::error::Generated files are stale. Run:"
+            echo "  python scripts/build_site.py && python scripts/gen_readme.py"
+            git diff --stat -- docs/ README.md
+            exit 1
+          fi

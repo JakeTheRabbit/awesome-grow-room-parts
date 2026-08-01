@@ -1,0 +1,160 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: cwt-leaf-th
+name: ComWinTop CWT-LEAF-TH-S-N leaf surface temperature & wetness sensor
+manufacturer: ComWinTop
+part_numbers:
+  - CWT-LEAF-TH-S-N
+  - CWT-LEAF-TH
+category: Air quality & CO2
+subcategory: Leaf surface temperature / wetness
+bus:
+  - RS485/Modbus
+protocol_settings: |-
+  Modbus RTU, 4800 baud 8-N-1, slave address 0x01 (factory defaults). Registers: 0x0000 wetness (0.1 %), 0x0001 leaf surface temperature (0.1 C, signed). Calibration offsets: 0x0050 temperature, 0x0051 wetness, both 0.1 units, read/write.
+voltage:
+  nominal: 12
+  min: 4.5
+  max: 30
+price:
+  band: $$
+  observed: 95.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: ComWinTop (Alibaba storefront)
+    url: https://www.alibaba.com/products/cwt_leaf_sensor.html
+    region: Global
+    note: Availability is erratic; quote by part number.
+  - name: AliExpress (search CWT-LEAF-TH)
+    url: https://www.aliexpress.com/w/wholesale-CWT%252dLEAF%252dTH.html
+    region: Global
+ip_rating: IP65
+calibration_required: one-point
+calibration_notes: |-
+  Two independent trims, both stored in the sensor. Temperature: settle it beside a trusted thermometer and enter the correction. Wetness: with the pad clean and bone dry it must read 0% - only trim if the dry baseline drifts. Do NOT try to make the wetness channel match an air hygrometer.
+quality_tier: works
+deployment_count: 1
+deployment_evidence:
+  - espoe-leaf-th.yaml
+evidence: |-
+  One deployment on a PoESP32. Genuinely useful: leaf surface temperature is what leaf-VPD actually needs, and the wetness pad is a real disease-pressure signal. Single deployment keeps it out of field-proven.
+failure_modes:
+  - "The 'humidity' channel is leaf WETNESS - water sitting on a dielectric pad - not air humidity. The manual calls it %RH and that is misleading. A dry pad reads ~0%; it spikes on dew and misting."
+  - "Wiring colour trap: this model uses YELLOW for RS485 A+, unlike most of the CWT range. Miswire it and you get silence."
+  - "Manual documents function code 0x30 which does not exist; the real frames use 0x03. Use register_type: holding."
+  - "Negative temperatures are sent as two's complement - read as S_WORD or sub-zero readings wrap to ~6553C."
+  - The pad reads the pad, not a leaf. Placement matters more than calibration - clipped in canopy, shaded, same aspect as the leaves you care about.
+notes: |-
+  ComWinTop (CWT) sell a whole family of cheap industrial RS485 Modbus sensors that are barely documented in English anywhere online - the manuals arrive as PDF email attachments and then vanish. This catalogue records the wiring and register maps so the next person does not have to reverse-engineer them.
+
+  Family conventions that hold across the range:
+  - Brown = V+ (typically 4.5-30V DC), Black = GND.
+  - RS485 A+/B- colours are NOT consistent between models. The LEAF-TH uses YELLOW for A+ and BLUE for B-, which is different from most of the others. Meter the pair before you trust the colour.
+  - Factory default is usually 4800 baud 8-N-1, slave address 1.
+  - Manuals list function code 0x30 in the register table but every worked example frame uses 0x03, so use `register_type: holding`. Fall back to `register_type: read` if you get timeouts.
+  - Calibration offsets live in the sensor's own holding registers and persist across power cycles - expose them as ESPHome `number` entities and you can trim a probe from Home Assistant without reflashing.
+drivers:
+  - name: ESPHome modbus_controller
+    url: https://esphome.io/components/sensor/modbus_controller.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Modbus master
+works_with:
+  - m5stack-poesp32
+  - rs485-ttl-transceiver
+image: assets/parts/cwt-leaf-th.svg
+tags:
+  - leaf-temperature
+  - leaf-wetness
+  - vpd
+  - rs485
+  - modbus
+  - disease-pressure
+example:
+  lang: yaml
+  title: CWT-LEAF-TH over RS485, with in-sensor calibration exposed to HA
+  source: distilled from espoe-leaf-th.yaml (scrubbed)
+  code: |-
+    # Wiring: Brown = V+ (4.5-30V) | Black = GND | YELLOW = A+ | BLUE = B-
+    # (yellow-for-A+ is specific to this model - meter it, do not assume)
+    # RS485 via the PoESP32 Grove port: GPIO17 = TXD, GPIO16 = RXD
+
+    uart:
+      id: uart_bus
+      tx_pin: 17
+      rx_pin: 16
+      baud_rate: 4800        # factory default per manual
+      stop_bits: 1
+
+    modbus:
+      uart_id: uart_bus
+      id: modbus_hub
+
+    modbus_controller:
+      - id: leaf_probe
+        address: 0x01        # factory default slave address
+        modbus_id: modbus_hub
+        setup_priority: -10
+        update_interval: 10s
+
+    sensor:
+      # 0x0000 - leaf WETNESS (water on the pad), 0.1 % per count.
+      # The manual calls this %RH. It is not air humidity.
+      - platform: modbus_controller
+        modbus_controller_id: leaf_probe
+        name: Leaf Wetness
+        address: 0x0000
+        register_type: holding    # manual says 0x30; real frames use 0x03
+        value_type: U_WORD
+        unit_of_measurement: "%"
+        state_class: measurement
+        accuracy_decimals: 1
+        filters:
+          - multiply: 0.1
+
+      # 0x0001 - leaf surface temperature, 0.1 C per count, SIGNED.
+      - platform: modbus_controller
+        modbus_controller_id: leaf_probe
+        name: Leaf Surface Temperature
+        address: 0x0001
+        register_type: holding
+        value_type: S_WORD        # S_WORD or sub-zero readings wrap
+        unit_of_measurement: "\u00b0C"
+        device_class: temperature
+        state_class: measurement
+        accuracy_decimals: 1
+        filters:
+          - multiply: 0.1
+
+    number:
+      # Offsets live in the sensor's own registers and survive power cycles.
+      # lambda scales the raw register for display; multiply scales it back on write.
+      - platform: modbus_controller
+        modbus_controller_id: leaf_probe
+        name: Leaf Temp Calibration Offset
+        register_type: holding
+        address: 0x0050
+        value_type: S_WORD
+        unit_of_measurement: "\u00b0C"
+        entity_category: config
+        min_value: -10
+        max_value: 10
+        step: 0.1
+        lambda: "return x * 0.1;"
+        multiply: 10
+
+      - platform: modbus_controller
+        modbus_controller_id: leaf_probe
+        name: Leaf Wetness Calibration Offset
+        register_type: holding
+        address: 0x0051
+        value_type: S_WORD
+        unit_of_measurement: "%"
+        entity_category: config
+        min_value: -20
+        max_value: 20
+        step: 0.1
+        lambda: "return x * 0.1;"
+        multiply: 10

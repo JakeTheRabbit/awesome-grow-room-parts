@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: sensirion-sht40
+name: Sensirion SHT40 temperature & humidity sensor
+manufacturer: Sensirion
+part_numbers:
+  - SHT40
+  - SHT40-AD1B
+category: Air quality & CO2
+subcategory: Temperature / humidity
+bus:
+  - I2C
+i2c:
+  address: "0x44"
+  alternates:
+    - "0x45"
+    - "0x46"
+  configurable: false
+  how_to_change: Address is set by part variant at order time (AD1B = 0x44, BD1B = 0x45), not by a strap pin.
+voltage:
+  nominal: 3.3
+  min: 1.08
+  max: 3.6
+  logic: 3.3
+price:
+  band: $
+  observed: 14.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: DigiKey - SHT40
+    url: https://www.digikey.com/en/products/detail/sensirion-ag/SHT40-AD1B-R2/13684325
+    part_number: SHT40-AD1B
+    region: Global
+  - name: Adafruit SHT40
+    url: https://www.adafruit.com/product/4885
+    region: US
+ip_rating: none
+calibration_required: factory
+quality_tier: works
+deployment_count: 1
+deployment_evidence:
+  - aux-tvoc-1.yaml
+evidence: |-
+  One deployment. Successor to the SHT30 with lower power and slightly better accuracy; no reason not to use it on new builds, it just landed after the SHT30 fleet was already installed.
+failure_modes:
+  - Address is fixed by part variant - you cannot strap two identical parts onto one bus.
+drivers:
+  - name: ESPHome sht4x
+    url: https://esphome.io/components/sensor/sht4x.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+alternatives:
+  - sensirion-sht30
+  - m5-env3
+image: assets/parts/sensirion-sht40.svg
+tags:
+  - temperature
+  - humidity
+  - i2c

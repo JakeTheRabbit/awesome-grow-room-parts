@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: stm32-abd-doser
+name: Chill Division ABD automated batch doser (STM32, hw v2.1)
+manufacturer: Chill Division
+part_numbers:
+  - ABD_Firmware_hwV2-1
+category: Water & fertigation
+subcategory: Multi-channel doser controller
+bus:
+  - UART
+  - GPIO
+voltage:
+  nominal: 24
+  min: 12
+  max: 24
+price:
+  band: $$$
+  currency: NZD
+vendors:
+  - name: Chill Division
+    url: https://github.com/Chill-Division
+    region: Global
+    note: Custom hardware - firmware source is the reference.
+ip_rating: none
+calibration_required: periodic
+quality_tier: experimental
+deployment_count: 0
+evidence: |-
+  Custom STM32 firmware for a purpose-built multi-channel batch doser, held locally as a source tree. Not currently the production doser here (that is the ESPHome peristaltic node) but it is the more capable design - deterministic timing on a microcontroller instead of a WiFi/PoE stack with a 5 minute reboot timeout.
+failure_modes:
+  - Custom firmware means you own the bugs. There is no ESPHome community to fall back on.
+  - Anything driving dosing pumps needs the same de-energise-on-comms-loss guarantee an ESPHome node gets from on_disconnect. Verify the firmware has an equivalent before trusting it.
+notes: |-
+  Documented here for completeness because it is part of the local hardware estate. If you are building from scratch, the ESPHome peristaltic node is the lower-risk starting point.
+platforms:
+  - Standalone
+works_with:
+  - peristaltic-pump-doser
+image: assets/parts/stm32-abd-doser.svg
+tags:
+  - dosing
+  - stm32
+  - custom-firmware
+  - fertigation

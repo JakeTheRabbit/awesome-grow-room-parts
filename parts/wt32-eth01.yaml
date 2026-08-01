@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../schema/part.schema.json
+id: wt32-eth01
+name: WT32-ETH01 (ESP32 + LAN8720 Ethernet)
+manufacturer: Wireless-Tag
+part_numbers:
+  - WT32-ETH01
+category: Controllers & boards
+subcategory: Wired ESP32, no PoE
+bus:
+  - Ethernet
+  - UART
+  - I2C
+  - GPIO
+voltage:
+  nominal: 5
+  min: 5
+  max: 12
+  logic: 3.3
+  note: No PoE - needs a local 5V supply alongside the Ethernet run.
+price:
+  band: $
+  observed: 20.0
+  currency: NZD
+  observed_date: "2026-03-01"
+vendors:
+  - name: AliExpress (search WT32-ETH01)
+    url: https://www.aliexpress.com/w/wholesale-WT32-ETH01.html
+    region: Global
+    note: Generic listings rot constantly - search the part number, do not trust any single listing.
+ip_rating: none
+calibration_required: none
+quality_tier: works
+deployment_count: 0
+evidence: |-
+  Not deployed here - the facility standardised on PoE instead. Listed because it is the cheapest way to get a wired ESP32 when you already have power at the device and only need data over the cable.
+failure_modes:
+  - No PoE means two runs to every device. In a grow room that is the whole reason PoE won.
+  - LAN8720 needs clk_mode GPIO0_OUT on most clones and GPIO0_IN on others - the boards are not consistent.
+  - GPIO availability is poor; several pins are consumed by the PHY.
+drivers:
+  - name: ESPHome ethernet component
+    url: https://esphome.io/components/ethernet.html
+    kind: esphome-core
+platforms:
+  - ESPHome
+  - Home Assistant
+  - Arduino
+alternatives:
+  - m5stack-poesp32
+image: assets/parts/wt32-eth01.svg
+tags:
+  - ethernet
+  - esp32
+  - budget

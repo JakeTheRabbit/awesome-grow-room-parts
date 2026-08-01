@@ -1,0 +1,33 @@
+# Build recipe. Parts are referenced by id; totals are computed by
+# scripts/build_site.py from each part's price.observed, so they cannot drift
+# out of sync with the catalogue.
+id: budget-tent-monitor
+name: Budget tent monitor
+summary: >-
+  The cheapest honest environment monitor for a single tent: CO2, temperature,
+  humidity and a photoperiod check, on WiFi. No actuation - this build only
+  watches. Add relays once you trust the readings.
+skill_level: beginner
+estimated_build_time: 1-2 hours
+network: WiFi
+items:
+  - part: m5stack-atom-lite
+    qty: 1
+    role: Host controller. Grove port feeds the whole I2C chain.
+  - part: sensirion-scd41
+    qty: 1
+    role: CO2 plus a usable temperature and humidity reading.
+  - part: bh1750
+    qty: 1
+    role: Confirms the light actually came on and at roughly the right level.
+notes: >-
+  Both sensors sit on one Grove I2C chain (SCD41 at 0x62, BH1750 at 0x23) with
+  no address conflict, so this needs no multiplexer. Power the Atom from a
+  decent 5V supply - the SCD41 pulls ~205 mA in bursts and a weak USB brick
+  causes resets that look like sensor faults.
+  Do NOT rely on the SCD41 temperature alone for VPD in a tight tent; it
+  self-heats. Trim it with an offset against a reference thermometer first.
+watch_out: >-
+  WiFi is fine for a monitor-only build. The moment you add a valve or a heater
+  to this, move to wired Ethernet and read SAFETY.md first - a dropped WiFi
+  link with an open valve is how tents flood.
