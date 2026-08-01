@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DIY vs proprietary grow platforms — cost comparison</title>
+<meta name="description" content="Sourced cost comparison of AROYA, Growlink, TrolMaster, Pulse and Argus against a DIY build, with an interactive break-even calculator. Every figure carries its confidence level and source.">
+<style>
+:root{
+  --bg:#0d0f0e; --surface:#141817; --raised:#1b201e; --line:#2a312e;
+  --ink:#e6ebe8; --dim:#98a49e; --quiet:#6b7772;
+  --accent:#4ea87a; --accent-ink:#0d0f0e; --tint:rgba(78,168,122,.09);
+  --warn:#b04a4a; --amber:#b08a30; --blue:#3f8fa4;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+:root[data-theme="light"]{
+  --bg:#f6f8f7; --surface:#fff; --raised:#eef2f0; --line:#dde4e0;
+  --ink:#16201c; --dim:#5a6862; --quiet:#8a968f; --accent-ink:#fff;
+  --tint:rgba(78,168,122,.10);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;
+  line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px}
+header{border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:0;z-index:20}
+.hbar{display:flex;align-items:center;gap:14px;padding:10px 0;flex-wrap:wrap}
+.brand{font-weight:700;font-size:14px;white-space:nowrap}
+.brand span{color:var(--accent)}
+.hbar nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.hbar nav a{color:var(--dim);text-decoration:none;font-size:13px;padding:5px 10px;border-radius:6px}
+.hbar nav a:hover{background:var(--raised);color:var(--ink)}
+.hbar nav a.on{background:var(--accent);color:var(--accent-ink);font-weight:600}
+h1{font-size:27px;line-height:1.2;margin:26px 0 8px;letter-spacing:-.01em}
+h2{font-size:20px;margin:34px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+h3{font-size:16px;margin:20px 0 6px}
+h4{font-size:14px;margin:0 0 4px}
+.lede{color:var(--dim);font-size:16px;max-width:70ch}
+.sub{color:var(--quiet);font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--quiet);
+  background:var(--raised);font-weight:700}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tablewrap{border:1px solid var(--line);border-radius:9px;overflow-x:auto}
+.tag{font-family:var(--mono);font-size:10.5px;padding:1px 4px;border-radius:4px;
+  border:1px solid var(--line);color:var(--quiet);cursor:help;vertical-align:1px}
+.tag-a{color:var(--accent);border-color:rgba(78,168,122,.5)}
+.tag-b{color:var(--blue);border-color:rgba(63,143,164,.5)}
+.tag-c{color:var(--amber);border-color:rgba(176,138,48,.5)}
+.tag-d{color:var(--warn);border-color:rgba(176,74,74,.55)}
+.conf{font-size:10px;padding:1px 6px;border-radius:9px;font-weight:700;letter-spacing:.03em;
+  border:1px solid var(--line);color:var(--quiet);cursor:help}
+.conf-high{color:var(--accent);border-color:rgba(78,168,122,.5)}
+.conf-medium{color:var(--amber);border-color:rgba(176,138,48,.55);background:rgba(176,138,48,.09)}
+.conf-low{color:var(--warn);border-color:rgba(176,74,74,.5)}
+.note{font-size:12px;color:var(--quiet);margin-top:4px}
+.callout{border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--surface);
+  border-radius:0 9px 9px 0;padding:14px 16px;margin:16px 0}
+.callout.warn{border-left-color:var(--warn);background:rgba(176,74,74,.07)}
+.callout.amber{border-left-color:var(--amber);background:rgba(176,138,48,.07)}
+.callout h3{margin-top:0}
+/* calculator */
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:16px;margin:14px 0}
+.ctrls{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.ctrl{display:flex;flex-direction:column;gap:4px;min-width:170px;flex:1}
+.ctrl label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--quiet);font-weight:700}
+.ctrl .val{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent)}
+select{background:var(--raised);border:1px solid var(--line);color:var(--ink);
+  padding:6px 9px;border-radius:7px;font-family:var(--sans);font-size:13px}
+.headline{font-size:15px;line-height:1.5;padding:12px 14px;background:var(--tint);
+  border:1px solid rgba(78,168,122,.35);border-radius:9px;margin-bottom:12px}
+.headline b{color:var(--accent)}
+.bar{height:9px;border-radius:5px;background:var(--raised);overflow:hidden;min-width:70px}
+.bar i{display:block;height:100%;background:var(--accent)}
+.bar.v i{background:var(--blue)}
+tr.diyrow td{background:var(--tint)}
+.never{color:var(--quiet);font-style:italic}
+#chart{width:100%;height:250px;margin-top:12px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--dim);margin-top:6px}
+.legend i{display:inline-block;width:11px;height:3px;vertical-align:middle;margin-right:4px}
+/* vendor cards */
+.vcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:15px;margin-bottom:12px}
+.vcard h3{margin-top:0}
+.pos{color:var(--dim);font-size:13.5px;margin:0 0 10px}
+dl.kv{display:grid;grid-template-columns:190px 1fr;gap:6px 14px;font-size:13.5px;margin:0}
+dl.kv dt{color:var(--quiet)}
+dl.kv dd{margin:0}
+ul.cites{margin:10px 0 0;padding-left:17px;font-size:12.5px;color:var(--dim)}
+ul.cites li{margin-bottom:3px}
+ol.against{padding-left:20px}
+ol.against li{margin-bottom:14px}
+ol.against h4{color:var(--ink)}
+ol.against p{margin:0;color:var(--dim);font-size:13.5px}
+.notob{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--warn);
+  border-radius:0 9px 9px 0;padding:13px 15px;margin-bottom:10px}
+.notob h4{margin-top:0}
+.notob p{margin:0 0 6px;font-size:13.5px;color:var(--dim)}
+.notob .src{font-size:12px}
+footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 50px;
+  color:var(--quiet);font-size:12.5px}
+@media(max-width:700px){ dl.kv{grid-template-columns:1fr;gap:2px}
+  dl.kv dt{margin-top:8px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  h1{font-size:22px} .ctrl{min-width:140px} }
+</style>
+</head>
+<body>
+<header><div class="wrap hbar">
+  <div class="brand">awesome<span>-grow-room-</span>parts</div>
+  <nav>
+    <a href="./">Parts catalogue</a>
+    <a href="./diy-vs-proprietary.html" class="on">DIY vs proprietary</a>
+    <a href="https://github.com/JakeTheRabbit/awesome-grow-room-parts" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+<h1>DIY vs proprietary grow platforms</h1>
+<p class="lede">What the commercial platforms actually cost, set against a DIY build with no
+subscription — and an honest account of what you give up by not paying them.
+Every figure carries the confidence level and source it came from.</p>
+<p class="sub">Vendor research dated 2026-08-02. All vendor figures USD.
+DIY figures derived from this repository's own build recipes, converted at 1 NZD = 0.5879 USD (rate date 2026-08-01).</p>
+
+<div class="callout">
+<h3>Read the tags before the numbers</h3>
+<p style="margin:0;font-size:13.5px">
+<span class="tag tag-a">(a)</span> vendor-published &middot;
+<span class="tag tag-b">(b)</span> reseller listing &middot;
+<span class="tag tag-c">(c)</span> user-reported &middot;
+<span class="tag tag-d">(d)</span> not publicly available.
+A vendor-published figure can still be <span class="conf conf-medium">MEDIUM</span> confidence
+if it is a modelling default rather than a price list — which is exactly the case for
+AROYA's hardware anchors. Modelled numbers are not presented with the same weight as
+published ones.</p>
+</div>
+
+<h2 id="breakeven">Break-even, not a single number</h2>
+<p>A subscription is a recurring cost and a DIY build is a one-off, so a single total is
+misleading. The question that matters is <b>how long until the platform costs more than
+building it yourself</b> — and for some vendors and scales, the answer is never.</p>
+
+<div class="calc">
+  <div class="ctrls">
+    <div class="ctrl"><label for="rooms">Rooms</label>
+      <div class="val" id="roomsV">4</div>
+      <input type="range" id="rooms" min="1" max="12" value="4"></div>
+    <div class="ctrl"><label for="years">Years</label>
+      <div class="val" id="yearsV">5</div>
+      <input type="range" id="years" min="1" max="10" value="5"></div>
+    <div class="ctrl"><label for="canopy">Canopy sq ft <span title="AROYA bill per canopy square foot facility-wide, not per room, so their cost does not follow the room slider.">(AROYA only)</span></label>
+      <select id="canopy">
+        <option value="2500">up to 2,500</option>
+        <option value="5000">2,501 – 5,000</option>
+        <option value="10000" selected>5,001 – 10,000</option>
+        <option value="20000">10,001 – 20,000</option>
+        <option value="50000">20,001 – 50,000</option>
+      </select></div>
+  </div>
+  <div class="headline" id="headline"></div>
+  <div class="tablewrap"><table id="tbl"></table></div>
+  <svg id="chart" role="img" aria-label="Cumulative cost over time"></svg>
+  <div class="legend" id="legend"></div>
+  <p class="note" id="calcnote"></p>
+</div>
+
+<h2 id="honest">Where this comparison is and is not fair</h2>
+<div class="callout amber"><p style="margin:0">Vendor build totals are arithmetic on tagged list prices, not vendor quotes. They exclude tax, shipping, electrical work and, except where stated, installation. These systems are also not functionally identical: a $925 environment controller and a $47,200 substrate-analytics platform with human agronomy coaching are not the same purchase. The tables compare cost. The honest-limits section compares capability.</p></div>
+
+<h2 id="diy">The DIY side, derived from the catalogue</h2>
+<p>The DIY figures are not entered by hand. They are computed from the build recipes in this
+repository, which are themselves priced from the parts catalogue — so if a part price
+changes, this page changes with it. <b>$838 per room</b> is the
+PoE room controller plus a substrate sensing array.</p>
+<div class="tablewrap"><table id="diytbl"></table></div>
+<p class="note">Recurring cost: none. There is no subscription, no API fee, no per-seat
+charge and no per-sensor charge. That is the entire structural argument for DIY, and
+the rest of this page is about what it costs you elsewhere.</p>
+
+<h2 id="vendors">The vendors</h2>
+<div class="vcard">
+  <h3>TrolMaster</h3>
+  <p class="pos">Environment control. Dominant at small and mid indoor scale.</p>
+  <dl class="kv">
+    <dt>Subscription</dt><dd>App is free with no paid remote tier. API access is billed separately at $15 per month per device.</dd>
+    <dt>Recurring cost</dt><dd>&quot;No subscription&quot; is true for using it. The moment you want programmatic access to your own data it is $15 per device per month, indefinitely. At 20 devices that is $3,600/yr - the same order as AROYA&#x27;s mid tiers.</dd>
+    <dt>Stop paying &mdash; what happens?</dt>
+    <dd>ANSWERED. Local control at the controller face is free and always available, with local CSV logging to MicroSD. Confirmed surviving a cloud outage. The catch is that alerts die with the cloud. <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span></dd>
+    <dt>4-room figure</dt>
+    <dd>$6,391 hardware
+      
+      , no recurring
+      <span class="tag tag-b" title="Reseller or distributor listing">(b)</span> <span class="conf conf-high">HIGH</span>
+      
+      
+      <div class="note">Source: <a href="https://www.hydrobuilder.com/" target="_blank" rel="noopener noreferrer">Hydrobuilder / Forever Green retail listings</a></div>
+    </dd>
+  </dl>
+  <ul class="cites"><li><a href="https://www.trolmaster.com/News/ApiGateway" target="_blank" rel="noopener noreferrer">API Gateway: &quot;a subscription fee of $15 per month per device&quot;</a> <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span></li><li><a href="https://www.trolmaster.com/News/Warranty" target="_blank" rel="noopener noreferrer">Warranty: products 3 years, sensor probes 1 year</a> <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span></li></ul>
+</div><div class="vcard">
+  <h3>Pulse Grow</h3>
+  <p class="pos">Sensor-agnostic monitoring. The natural buy comparison for a DIY-inclined operator.</p>
+  <dl class="kv">
+    <dt>Subscription</dt><dd>Working free tier. Enthusiast $10/user/month, Professional $35/user/month.</dd>
+    <dt>Recurring cost</dt><dd>Professional is effectively mandatory at four-room scale, because Enthusiast lacks multiple grow locations and Free lacks multi-user.</dd>
+    <dt>Stop paying &mdash; what happens?</dt>
+    <dd>ANSWERED. Vendor confirms hardware keeps working without payment. <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span></dd>
+    <dt>4-room figure</dt>
+    <dd>$7,851 hardware
+      
+      , $840/yr recurring
+      <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span> <span class="conf conf-high">HIGH</span>
+      
+      
+      <div class="note">Source: <a href="https://pulsegrow.com/pages/pricing" target="_blank" rel="noopener noreferrer">pulsegrow.com vendor MSRP and pricing page</a></div>
+    </dd>
+  </dl>
+  <ul class="cites"><li><a href="https://pulsegrow.com/pages/pricing" target="_blank" rel="noopener noreferrer">Pricing tiers: Free / Enthusiast $10 / Professional $35 per user per month</a> <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span></li><li><a href="https://pulsegrow.com/" target="_blank" rel="noopener noreferrer">TEROS 12 retrofit kits, $39-69 - sensor-agnostic by design</a> <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span></li></ul>
+</div><div class="vcard">
+  <h3>Growlink</h3>
+  <p class="pos">Direct AROYA competitor. Published SaaS tiers.</p>
+  <dl class="kv">
+    <dt>Subscription</dt><dd>Root free, Sprout $25/month, Bloom $250/month per facility, Harvest $1,000/month per facility.</dd>
+    <dt>Recurring cost</dt><dd>Entry tier confirmed at $240-300/year from two independent vendor sources: a historical Pro Starter price of $20/month, and archived promo terms describing a 12-month Sprout subscription as &quot;a $300 value&quot;.</dd>
+    <dt>Stop paying &mdash; what happens?</dt>
+    <dd>NOT ANSWERED. A full-text search of the current and archived Terms of Service found no &quot;Effect of Termination&quot; clause, no statement on whether the controller keeps running, no data export obligation and no wind-down period. The Terms do reserve the right to suspend access on non-payment. <span class="tag tag-d" title="NOT publicly available - quote-only, or searched for and not found">(d)</span></dd>
+    <dt>4-room figure</dt>
+    <dd>$11,964 hardware
+      
+      , $3,000/yr recurring
+      <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span> <span class="conf conf-medium" title="Published-list floor, not an obtainable quote. Growlink state that commercial operations over 32 sensors require a separate enterprise agreement.">MEDIUM</span>
+      <div class="note">Published-list floor, not an obtainable quote. Growlink state that commercial operations over 32 sensors require a separate enterprise agreement.</div>
+      
+      <div class="note">Source: <a href="https://www.growlink.com/pricing.html" target="_blank" rel="noopener noreferrer">growlink.com pricing page and Shopify product feed</a></div>
+    </dd>
+  </dl>
+  <ul class="cites"><li><a href="https://www.growlink.com/pricing.html" target="_blank" rel="noopener noreferrer">Published subscription tiers: Root / Sprout / Bloom / Harvest</a> <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span></li><li><a href="https://www.growlink.com/terms.html" target="_blank" rel="noopener noreferrer">Terms of Service - contains no Effect of Termination clause</a> <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span></li></ul>
+</div><div class="vcard">
+  <h3>AROYA (Addium)</h3>
+  <p class="pos">Category-defining in cannabis crop steering. Highest subscription exposure.</p>
+  <dl class="kv">
+    <dt>Subscription</dt><dd>$150 to $3,900 per month, billed per canopy square foot, facility-wide. Room count is not the billing unit.</dd>
+    <dt>Recurring cost</dt><dd>Because billing is by canopy area rather than rooms, a &quot;4-room AROYA price&quot; does not exist as a concept. Two canopy scenarios are shown instead.</dd>
+    <dt>Stop paying &mdash; what happens?</dt>
+    <dd>DECLINED. AROYA&#x27;s own FAQ answers the question with &quot;There are a few factors... Please reach out to us to book a demo.&quot; <span class="tag tag-d" title="NOT publicly available - quote-only, or searched for and not found">(d)</span></dd>
+    <dt>4-room figure</dt>
+    <dd>$35,000 hardware
+      + $5,000 implementation
+      , $7,200/yr recurring
+      <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span> <span class="conf conf-medium" title="Split confidence. The subscription figure is HIGH - it is labelled by AROYA as real 2025 pricing. The hardware and implementation figures are MEDIUM: they are calculator modelling defaults (TIER_ANCHORS), not a confirmed list price.">MEDIUM</span>
+      <div class="note">Split confidence. The subscription figure is HIGH - it is labelled by AROYA as real 2025 pricing. The hardware and implementation figures are MEDIUM: they are calculator modelling defaults (TIER_ANCHORS), not a confirmed list price.</div>
+      <div class="note">at approximately 8,000 sq ft canopy</div>
+      <div class="note">Source: <a href="https://aroya.io/" target="_blank" rel="noopener noreferrer">aroya.io ROI calculator, verified in page source</a></div>
+    </dd>
+  </dl>
+  <ul class="cites"><li><a href="https://aroya.io/" target="_blank" rel="noopener noreferrer">Subscription tiers, published in ROI calculator page JavaScript</a> <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span></li><li><a href="https://aroya.io/support/frequently-asked-questions" target="_blank" rel="noopener noreferrer">FAQ declines the hardware-without-subscription question</a> <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span></li></ul>
+</div><div class="vcard">
+  <h3>Argus Controls</h3>
+  <p class="pos">Enterprise horticultural control. The only vendor with a published price list carrying real dollar figures.</p>
+  <dl class="kv">
+    <dt>Subscription</dt><dd>Capex model. Titan software from $23,000 (Basic) or $28,000 (Enterprise, adding multi-user, audit tracking and password control).</dd>
+    <dt>Recurring cost</dt><dd>Ongoing costs are not published. Payment terms are 20% deposit, 80% pre-ship, roughly 12 weeks deposit to delivery, and the customer supplies the installation crew.</dd>
+    <dt>Stop paying &mdash; what happens?</dt>
+    <dd>Not applicable in the same way - this is a capex purchase rather than a subscription platform. <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span></dd>
+    <dt>4-room figure</dt>
+    <dd>$51,000 hardware
+      
+      , no recurring
+      <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span> <span class="conf conf-high" title="Vendor-published, but from the 2018 Estimating Guide. These are 2018 dollars and should be treated as a floor, not a current quote.">HIGH-STALE</span>
+      <div class="note">Vendor-published, but from the 2018 Estimating Guide. These are 2018 dollars and should be treated as a floor, not a current quote.</div>
+      
+      <div class="note">Source: <a href="https://www.arguscontrols.com/" target="_blank" rel="noopener noreferrer">Argus Estimating Guide V3, 13 September 2018</a></div>
+    </dd>
+  </dl>
+  <ul class="cites"><li><a href="https://www.arguscontrols.com/" target="_blank" rel="noopener noreferrer">Estimating Guide V3, including a 9-zone indoor cannabis worked example</a> <span class="tag tag-a" title="Vendor-published - on the vendor&#x27;s own site, docs, contract or product feed">(a)</span></li></ul>
+</div>
+
+<h2 id="notobtainable">Where pricing simply is not obtainable</h2>
+<p>Two vendors could not be priced at all. That is recorded here as a finding rather than
+filled in with an estimate — "not published anywhere, including through distributors" is
+itself decision-relevant.</p>
+<div class="notob"><h4>Priva <span class="tag tag-d" title="NOT publicly available - quote-only, or searched for and not found">(d)</span></h4><p>No pricing published anywhere, including on authorised reseller storefronts, which list products at zero with a &quot;View Product Details&quot; prompt. US procurement and grant-budget searches turned up no disclosed contract values. API access additionally requires a Priva Gateway and a Priva Connected subscription, whose price is also unpublished.</p><p class="rel"><b>Relevance:</b> Enterprise glass horticulture. A small indoor operator would not reach the quote stage economically.</p><p class="src"><a href="https://www.priva.com/" target="_blank" rel="noopener noreferrer">https://www.priva.com/</a></p></div><div class="notob"><h4>iUNU <span class="tag tag-d" title="NOT publicly available - quote-only, or searched for and not found">(d)</span></h4><p>No pricing published; everything routes to a demo booking or a gated form. Sold as system-as-a-service on 3-5 year SLAs with vendor-financed hardware, priced by camera passes per day.</p><p class="rel"><b>Relevance:</b> Has exited cannabis as a go-to-market. The &quot;Crops Grown&quot; field on iUNU&#x27;s own contact form offers tomatoes, cucumbers, peppers, berries, leafy greens, ornamentals and other - cannabis is not an option (fetched August 2026). The product is also camera-on-rail for tall vine crops in glass, which is a poor structural fit for racked indoor rooms.</p><p class="src"><a href="https://iunu.com/" target="_blank" rel="noopener noreferrer">https://iunu.com/</a></p></div>
+
+<h2 id="hidden">Costs no vendor publishes</h2>
+<p>These are real and material, and every one of them is <span class="tag tag-d">(d)</span>.
+None appear in the tables above, on either side.</p>
+<div class="tablewrap"><table>
+<thead><tr><th style="width:200px">Cost</th><th>What is known</th></tr></thead>
+<tbody><tr><td>Sensor replacement</td><td>TrolMaster warrants products for 3 years but sensor probes for 1 year, against a consistent body of user reports of drift and failure around the two-year mark. CO2 sensors run $187-243 each and substrate probes $200-309. No vendor publishes a failure rate.</td></tr><tr><td>Renewal increases</td><td>AROYA&#x27;s contract grants repricing at the &quot;then going rate&quot; with 30 days&#x27; notice and no cap. Growlink auto-renews at the &quot;then-current standard rate&quot;, also uncapped, and has moved price three times in 30 months. No user has publicly reported an actual renewal invoice.</td></tr><tr><td>Installation and commissioning</td><td>AROYA&#x27;s calculator carries $3,000-$20,000 implementation. Growlink does not publish it, though one user reports approximately $15,000 install on a $60,000 hardware order. Argus require the customer to supply the installation crew.</td></tr><tr><td>Calibration labour</td><td>TEROS 12 is factory-calibrated and cannot be field-recalibrated - drift means RMA or replacement. TrolMaster substrate sensors need user-defined calibration to your specific media, reported drifting by 10-20% every few days. Pulse CO2 needs manual outdoor recalibration every 4-6 months and pH probes are a $99 consumable. None of this is a line item anywhere.</td></tr><tr><td>The audit sensor</td><td>Multiple experienced operators run a second trusted sensor purely to check the first. That is a real recurring cost of a system you do not fully trust, and it appears in no budget.</td></tr><tr><td>Exit cost</td><td>AROYA deletes data 90 days after termination and one 90,000 sq ft operator describes his exit as &quot;a very long and difficult exit&quot;. Growlink&#x27;s Terms carry no export obligation, and the manual CSV is a 20x downsample of what you paid to collect.</td></tr></tbody></table></div>
+
+<h2 id="against">The case against DIY</h2>
+<div class="callout warn">
+<p style="margin:0"><b>This section is deliberately unflattering to DIY. Someone should be able to read it and reasonably choose to buy. If the rest of this page is going to be credible about vendor costs, it has to be equally honest about what you give up by not paying them.</b></p>
+</div>
+<ol class="against"><li><h4>No support contract, and support is real value</h4><p>Multiple independent first-hand reports value it highly: &quot;their training, tech support, and software for the normal subscription is second to none. spend a year training, and in tech support with them twice a month, and you will benefit massively&quot; (AROYA customer). &quot;Their customer support team is incredible&quot; (Growlink). At 3am with a room at 100% RH, there is nobody to call on a DIY rig.</p></li><li><h4>No warranty, no RMA, no advance replacement</h4><p>Growlink CORE includes 3-year advance replacement. TrolMaster warrants products 3 years. AROYA replaced a foliar-killed TEROS under warranty. Your DIY board dies and you buy another one and you rebuild it.</p></li><li><h4>You are the integrator, and integration is where projects die</h4><p>A Home Assistant SDI-12 thread runs to 26 posts over months: temperature-dependent moisture readings, the TEROS 12 soilless-media calibration polynomial topping out around 80% instead of 100%, unique-ID entity errors, serial parsing bugs. One participant: &quot;the readings that get displayed don&#x27;t match the readings from the little USB dongle thingy that you use with the Aroya app. So I reworked the equations and now I have a home brewed Aroya system.&quot; The calibration polynomial is a real hidden DIY cost.</p></li><li><h4>Calibration is entirely on you, and it is harder than it looks</h4><p>TEROS 12 is factory-calibrated for a reason. AROYA&#x27;s own white paper reportedly concedes the TEROS 12 &quot;wasn&#x27;t accurate at high EC&quot;. Deriving your own media-specific VWC and EC transfer functions is a genuine soil-physics problem, not a coding problem.</p></li><li><h4>There is no mature open-source alternative, only many small immature ones</h4><p>As of August 2026 the leading crop-steering projects carry single and low-double-digit star counts. The leading project&#x27;s maintainer posted in July 2026 describing &quot;a serious silent failure: on some installs the engine couldn&#x27;t find the zone moisture probes at all, so the zones froze... and watering fell back to a dumb timer.&quot; A user later the same month: &quot;I can&#x27;t get it to work... I&#x27;ve uninstalled everything. Too bad.&quot;</p></li><li><h4>No compliance or audit trail</h4><p>AROYA at $300/month reportedly includes METRC integration and the full platform. Argus Titan Enterprise at $28,000 buys multi-user, audit tracking and password control - explicitly a compliance product. A DIY stack gives you none of this, and in a licensed operation seed-to-sale integration and audit logging are not optional.</p></li><li><h4>Silent failure risk is asymmetric</h4><p>Growlink had an app bug that &quot;will run your reservoir completely empty... and flood your tables&quot; - but that was one company&#x27;s bug, reported publicly, in a product with a support line. A DIY silent failure is yours alone to find, usually after the crop.</p></li><li><h4>Key-person risk</h4><p>A DIY system encodes its logic in one person&#x27;s head. Commercial systems are documented, transferable, and survive that person leaving. Argus&#x27;s &quot;no user configuration or programming is required&quot; is lock-in. It is also continuity.</p></li><li><h4>Even DIY partisans concede the effort</h4><p>An operator running Home Assistant with METER and Apogee sensors commercially: &quot;No subscription cost, but a lot of coding and maintenance.&quot; And on the other side: &quot;home assistant is way more effort than trolmaster and every update seems to break something.&quot;</p></li><li><h4>The engineering gap is real</h4><p>The fairest framing found in the research: &quot;Are you going to design all the sensor front ends... Are you familiar with maintaining resolution of different bit depths of analog to digital converters? Are you going to design a PCB so its actually professional?&quot; The conclusion drawn there: for microgrowers, off-the-shelf at $250-500 wins; for large operations, $4k software would be a no-brainer if it works.</p></li></ol>
+
+<h2 id="middle">Buy the sensors, refuse the platform</h2>
+<p>The most consistent pattern across the user research is neither pure DIY nor pure platform. Operators at 30,000 and 90,000 sq ft run METER sensors into a PLC or pair AROYA with OpenSprinkler; others run METER sensors into ZENTRA Cloud at $180/yr instead of AROYA, or import Pulse data into Home Assistant over the documented API and write their own crop-steering logic. Pulse Grow is the natural bridge - documented self-service API, TEROS 12 retrofit kits at $39-69, and a working free tier.</p>
+
+<footer class="wrap">
+<p>Vendor pricing research dated 2026-08-02. Figures change; the tags and source links
+are there so you can re-check any of them rather than trust this page. Nothing here is a
+vendor quote, and no vendor was contacted for comment.</p>
+<p>DIY figures are generated from <code>recipes/</code> and <code>parts/</code> in this
+repository. Vendor figures are generated from <code>data/vendor-pricing.yaml</code>.
+Edit the data, not this page.</p>
+</footer>
+</main>
+
+<script id="data" type="application/json">{"vendors": [{"id": "trolmaster", "name": "TrolMaster", "positioning": "Environment control. Dominant at small and mid indoor scale.", "subscription_model": "App is free with no paid remote tier. API access is billed separately at $15 per month per device.", "recurring_note": "\"No subscription\" is true for using it. The moment you want programmatic access to your own data it is $15 per device per month, indefinitely. At 20 devices that is $3,600/yr - the same order as AROYA's mid tiers.", "stops_paying_answer": "ANSWERED. Local control at the controller face is free and always available, with local CSV logging to MicroSD. Confirmed surviving a cloud outage. The catch is that alerts die with the cloud.", "stops_paying_confidence": "HIGH", "stops_paying_tag": "a", "four_room": {"hardware": 6391, "recurring_per_year": 0, "recurring_alt": 720, "recurring_alt_label": "if API enabled on 4 controllers", "tag": "b", "confidence": "HIGH", "source": "https://www.hydrobuilder.com/", "source_label": "Hydrobuilder / Forever Green retail listings"}, "single_room": {"hardware": 925, "recurring_per_year": 0, "tag": "b", "confidence": "HIGH", "source": "https://www.hydrobuilder.com/", "source_label": "Hydrobuilder retail listing"}, "citations": [{"label": "API Gateway: \"a subscription fee of $15 per month per device\"", "url": "https://www.trolmaster.com/News/ApiGateway", "tag": "a"}, {"label": "Warranty: products 3 years, sensor probes 1 year", "url": "https://www.trolmaster.com/News/Warranty", "tag": "a"}]}, {"id": "pulse", "name": "Pulse Grow", "positioning": "Sensor-agnostic monitoring. The natural buy comparison for a DIY-inclined operator.", "subscription_model": "Working free tier. Enthusiast $10/user/month, Professional $35/user/month.", "recurring_note": "Professional is effectively mandatory at four-room scale, because Enthusiast lacks multiple grow locations and Free lacks multi-user.", "stops_paying_answer": "ANSWERED. Vendor confirms hardware keeps working without payment.", "stops_paying_confidence": "HIGH", "stops_paying_tag": "a", "four_room": {"hardware": 7851, "recurring_per_year": 840, "tag": "a", "confidence": "HIGH", "source": "https://pulsegrow.com/pages/pricing", "source_label": "pulsegrow.com vendor MSRP and pricing page"}, "single_room": {"hardware": 1298, "recurring_per_year": 0, "tag": "a", "confidence": "HIGH", "source": "https://pulsegrow.com/pages/pricing", "source_label": "pulsegrow.com vendor MSRP"}, "citations": [{"label": "Pricing tiers: Free / Enthusiast $10 / Professional $35 per user per month", "url": "https://pulsegrow.com/pages/pricing", "tag": "a"}, {"label": "TEROS 12 retrofit kits, $39-69 - sensor-agnostic by design", "url": "https://pulsegrow.com/", "tag": "a"}]}, {"id": "growlink", "name": "Growlink", "positioning": "Direct AROYA competitor. Published SaaS tiers.", "subscription_model": "Root free, Sprout $25/month, Bloom $250/month per facility, Harvest $1,000/month per facility.", "recurring_note": "Entry tier confirmed at $240-300/year from two independent vendor sources: a historical Pro Starter price of $20/month, and archived promo terms describing a 12-month Sprout subscription as \"a $300 value\".", "stops_paying_answer": "NOT ANSWERED. A full-text search of the current and archived Terms of Service found no \"Effect of Termination\" clause, no statement on whether the controller keeps running, no data export obligation and no wind-down period. The Terms do reserve the right to suspend access on non-payment.", "stops_paying_confidence": "HIGH", "stops_paying_tag": "d", "four_room": {"hardware": 11964, "recurring_per_year": 3000, "tag": "a", "confidence": "MEDIUM", "confidence_note": "Published-list floor, not an obtainable quote. Growlink state that commercial operations over 32 sensors require a separate enterprise agreement.", "source": "https://www.growlink.com/pricing.html", "source_label": "growlink.com pricing page and Shopify product feed"}, "single_room": {"hardware": 1595, "recurring_per_year": 300, "tag": "a", "confidence": "HIGH", "source": "https://www.growlink.com/pricing.html", "source_label": "growlink.com pricing page"}, "citations": [{"label": "Published subscription tiers: Root / Sprout / Bloom / Harvest", "url": "https://www.growlink.com/pricing.html", "tag": "a"}, {"label": "Terms of Service - contains no Effect of Termination clause", "url": "https://www.growlink.com/terms.html", "tag": "a"}]}, {"id": "aroya", "name": "AROYA (Addium)", "positioning": "Category-defining in cannabis crop steering. Highest subscription exposure.", "subscription_model": "$150 to $3,900 per month, billed per canopy square foot, facility-wide. Room count is not the billing unit.", "recurring_note": "Because billing is by canopy area rather than rooms, a \"4-room AROYA price\" does not exist as a concept. Two canopy scenarios are shown instead.", "stops_paying_answer": "DECLINED. AROYA's own FAQ answers the question with \"There are a few factors... Please reach out to us to book a demo.\"", "stops_paying_confidence": "HIGH", "stops_paying_tag": "d", "four_room": {"hardware": 35000, "install": 5000, "recurring_per_year": 7200, "canopy_note": "at approximately 8,000 sq ft canopy", "tag": "a", "confidence": "MEDIUM", "confidence_note": "Split confidence. The subscription figure is HIGH - it is labelled by AROYA as real 2025 pricing. The hardware and implementation figures are MEDIUM: they are calculator modelling defaults (TIER_ANCHORS), not a confirmed list price.", "source": "https://aroya.io/", "source_label": "aroya.io ROI calculator, verified in page source"}, "single_room": {"hardware": 15000, "install": 3000, "recurring_per_year": 1800, "canopy_note": "at 2,500 sq ft canopy or under", "tag": "a", "confidence": "MEDIUM", "confidence_note": "Subscription HIGH, hardware and implementation MEDIUM - calculator modelling defaults rather than confirmed list prices.", "source": "https://aroya.io/", "source_label": "aroya.io ROI calculator, verified in page source"}, "citations": [{"label": "Subscription tiers, published in ROI calculator page JavaScript", "url": "https://aroya.io/", "tag": "a"}, {"label": "FAQ declines the hardware-without-subscription question", "url": "https://aroya.io/support/frequently-asked-questions", "tag": "a"}]}, {"id": "argus", "name": "Argus Controls", "positioning": "Enterprise horticultural control. The only vendor with a published price list carrying real dollar figures.", "min_rooms": 4, "min_rooms_note": "Argus is not sold at single-room scale - the Titan software floor alone is $23,000 before any hardware, so scaling their figure down to one room would invent a product that is not offered.", "subscription_model": "Capex model. Titan software from $23,000 (Basic) or $28,000 (Enterprise, adding multi-user, audit tracking and password control).", "recurring_note": "Ongoing costs are not published. Payment terms are 20% deposit, 80% pre-ship, roughly 12 weeks deposit to delivery, and the customer supplies the installation crew.", "stops_paying_answer": "Not applicable in the same way - this is a capex purchase rather than a subscription platform.", "stops_paying_confidence": "MEDIUM", "stops_paying_tag": "a", "four_room": {"hardware": 51000, "recurring_per_year": null, "recurring_unpublished": true, "tag": "a", "confidence": "HIGH-STALE", "confidence_note": "Vendor-published, but from the 2018 Estimating Guide. These are 2018 dollars and should be treated as a floor, not a current quote.", "source": "https://www.arguscontrols.com/", "source_label": "Argus Estimating Guide V3, 13 September 2018"}, "scenario_note": "Argus publish their own worked example for a 9-zone indoor cannabis grower at approximately $195,000 in 2018 dollars.", "citations": [{"label": "Estimating Guide V3, including a 9-zone indoor cannabis worked example", "url": "https://www.arguscontrols.com/", "tag": "a"}]}], "aroya_tiers": [[2500, 150], [5000, 300], [10000, 600], [20000, 900], [50000, 1800], [75000, 2900], [100000, 3900]], "diy": {"per_room": 837.8, "controller": 221.68, "substrate": 616.12, "recipes": {"budget-tent-monitor": {"name": "Budget tent monitor", "summary": "The cheapest honest environment monitor for a single tent: CO2, temperature, humidity and a photoperiod check, on WiFi. No actuation - this build only watches. Add relays once you trust the readings.", "total_usd": 60.03, "priced": 3, "unpriced": 0, "lines": [{"name": "M5Stack ATOM Lite (ESP32-PICO)", "qty": 1, "usd": 10.58, "source": "estimate"}, {"name": "Sensirion SCD41 true NDIR CO2 sensor", "qty": 1, "usd": 45.33, "source": "listing"}, {"name": "BH1750 ambient light sensor", "qty": 1, "usd": 4.12, "source": "estimate"}]}, "poe-room-controller": {"name": "PoE room controller (irrigation + CO2)", "summary": "The pattern the the reference facility flower rooms actually run: a wired PoE node that both senses and actuates, with the flood-safety pattern mandatory on every output. This is the build that can move water, so it is the build that has to fail safe.", "total_usd": 221.68, "priced": 6, "unpriced": 0, "lines": [{"name": "M5Stack PoESP32 / ESP32 Ethernet unit (IP101G PHY)", "qty": 1, "usd": 38.21, "source": "estimate"}, {"name": "M5Stack 4-Relay Unit", "qty": 1, "usd": 13.36, "source": "receipt"}, {"name": "Sensirion SCD41 true NDIR CO2 sensor", "qty": 1, "usd": 45.33, "source": "listing"}, {"name": "24VAC irrigation solenoid valve", "qty": 4, "usd": 27.67, "source": "receipt"}, {"name": "SSR-25DA solid state relay", "qty": 1, "usd": 10.58, "source": "estimate"}, {"name": "PCF8563 real-time clock", "qty": 1, "usd": 3.53, "source": "estimate"}]}, "substrate-sensing-array": {"name": "Multi-zone substrate sensing array", "summary": "Per-zone VWC, pore-water EC and root-zone temperature over SDI-12 - the data crop steering actually runs on. One node per row, several probes per bus.", "total_usd": 616.12, "priced": 3, "unpriced": 1, "lines": [{"name": "M5Stack ATOM Lite (ESP32-PICO)", "qty": 1, "usd": 10.58, "source": "estimate"}, {"name": "METER TEROS 12 substrate VWC / EC / temperature probe", "qty": 2, "usd": 252.8, "source": "estimate"}, {"name": "Infiwin MT22 SDI-12 substrate probe", "qty": 2, "usd": 49.97, "source": "estimate"}, {"name": "Growlink TerraLink substrate probe", "qty": 1, "usd": null, "source": "estimate"}]}}, "fx_rate": 0.5879, "fx_base": "NZD", "fx_date": "2026-08-01"}}</script>
+<script>
+"use strict";
+const DB = JSON.parse(document.getElementById('data').textContent);
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => '$' + Math.round(n).toLocaleString('en-US');
+
+/* AROYA bill per canopy square foot facility-wide. Room count is not their
+   billing unit, so their line deliberately does not follow the rooms slider. */
+function aroyaMonthly(sqft){
+  for(const [cap,rate] of DB.aroya_tiers) if(sqft<=cap) return rate;
+  return DB.aroya_tiers[DB.aroya_tiers.length-1][1];
+}
+
+/* Vendor costs are published at a 4-room and a 1-room scale. Between and
+   beyond those we scale the per-room delta linearly and say so, rather than
+   pretending a quote exists at every size. */
+function vendorAt(v, rooms, sqft){
+  const fr=v.four_room||{}, sr=v.single_room||{};
+  let hw, rec, exact=false;
+  if(v.id==='aroya'){
+    const m=aroyaMonthly(sqft);
+    // Hardware anchor follows canopy tier, not rooms.
+    hw = (sqft<=2500 ? 15000 : sqft<=5000 ? 25000 : 35000);
+    const impl = (sqft<=2500 ? 3000 : sqft<=5000 ? 5000 : 5000);
+    return {hw:hw+impl, rec:m*12, exact:false, canopy:true};
+  }
+  if(sr.hardware!=null && fr.hardware!=null){
+    const perRoom=(fr.hardware-sr.hardware)/3;
+    hw = sr.hardware + perRoom*(rooms-1);
+    rec = (rooms<=1) ? (sr.recurring_per_year||0)
+        : (fr.recurring_per_year||0);
+    exact = (rooms===1 || rooms===4);
+  } else {
+    hw = (fr.hardware||0) * (rooms/4);
+    rec = fr.recurring_per_year||0;
+    exact = (rooms===4);
+  }
+  return {hw:Math.max(0,hw), rec:rec||0, exact,
+          recUnknown: !!fr.recurring_unpublished};
+}
+
+function diyAt(rooms){ return {hw: DB.diy.per_room*rooms, rec:0, exact:true}; }
+
+function cum(x, yr){ return x.hw + x.rec*yr; }
+
+function breakEven(v, d, rooms, sqft){
+  const V=vendorAt(v,rooms,sqft), D=diyAt(rooms);
+  if(cum(V,1) >= cum(D,1)) return {year:1, immediate:true};
+  if(V.rec<=D.rec) return {year:null};          // never crosses
+  for(let y=1;y<=40;y++) if(cum(V,y)>=cum(D,y)) return {year:y};
+  return {year:null};
+}
+
+function render(){
+  const rooms=+document.getElementById('rooms').value;
+  const years=+document.getElementById('years').value;
+  const sqft=+document.getElementById('canopy').value;
+  document.getElementById('roomsV').textContent=rooms;
+  document.getElementById('yearsV').textContent=years;
+
+  const D=diyAt(rooms);
+  const rows=DB.vendors.filter(v=>!(v.min_rooms && rooms < v.min_rooms)).map(v=>{
+    const V=vendorAt(v,rooms,sqft);
+    const be=breakEven(v,D,rooms,sqft);
+    const months = (V.rec>0) ? Math.round(D.hw / (V.rec/12)) : null;
+    return {v, V, total:cum(V,years), be, months};
+  }).sort((a,b)=>a.total-b.total);
+
+  const diyTotal=cum(D,years);
+  const max=Math.max(diyTotal,...rows.map(r=>r.total));
+
+  // Headline: cheapest vendor vs DIY, in plain terms.
+  const cheapest=rows[0];
+  const multiple=diyTotal>0 ? (cheapest.total/diyTotal) : 0;
+  document.getElementById('headline').innerHTML =
+    `Over <b>${years} year${years>1?'s':''}</b> at <b>${rooms} room${rooms>1?'s':''}</b>, a DIY build totals `+
+    `<b>${money(diyTotal)}</b> with no recurring cost. The cheapest platform here is `+
+    `<b>${esc(cheapest.v.name)}</b> at <b>${money(cheapest.total)}</b>`+
+    (multiple>=1 ? ` — <b>${multiple.toFixed(1)}&times;</b> the DIY figure.` : `, which is below the DIY figure at this scale.`);
+
+  let h='<thead><tr><th>Option</th><th class="num">Up-front</th><th class="num">Per year</th>'+
+        `<th class="num">Total, ${years}yr</th><th class="num">vs DIY</th><th>Break-even</th><th>Confidence</th></tr></thead><tbody>`;
+  h+=`<tr class="diyrow"><td><b>DIY build</b><div class="note">derived from this repo's recipes</div></td>`+
+     `<td class="num">${money(D.hw)}</td><td class="num">$0</td>`+
+     `<td class="num"><b>${money(diyTotal)}</b></td><td class="num">&mdash;</td>`+
+     `<td class="never">n/a</td><td><span class="conf conf-high">DERIVED</span></td></tr>`;
+  for(const r of rows){
+    const fr=r.v.four_room||{};
+    const be=r.be.year===null
+      ? '<span class="never">never at this scale</span>'
+      : (r.be.immediate ? 'immediately' : `year ${r.be.year}`);
+    const ratio = diyTotal>0 ? (r.total/diyTotal) : 0;
+    h+=`<tr><td><b>${esc(r.v.name)}</b>`+
+       (r.V.canopy?`<div class="note">billed per canopy sq ft, not per room</div>`:'')+
+       (!r.V.exact&&!r.V.canopy?`<div class="note">scaled from published 1- and 4-room figures</div>`:'')+
+       ((r.v.four_room||{}).recurring_alt?`<div class="note">+${money((r.v.four_room||{}).recurring_alt/4*rooms)}/yr if API enabled on ${rooms} controller${rooms===1?'':'s'}</div>`:'')+
+       (r.V.recUnknown?`<div class="note">ongoing cost not published</div>`:'')+
+       `</td>`+
+       `<td class="num">${money(r.V.hw)}</td>`+
+       `<td class="num">${r.V.recUnknown?'<span class="tag tag-d" title="Not publicly available">(d)</span>':(r.V.rec?money(r.V.rec):'$0')}</td>`+
+       `<td class="num"><b>${money(r.total)}</b></td>`+
+       `<td class="num">${ratio?ratio.toFixed(1)+'×':'—'}<div class="bar v"><i style="width:${Math.min(100,r.total/max*100)}%"></i></div></td>`+
+       `<td>${be}${r.months!=null?`<div class="note">DIY build ≈ ${r.months} month${r.months===1?'':'s'} of their subscription</div>`:''}</td>`+
+       `<td><span class="conf conf-${(fr.confidence||'').split('-')[0].toLowerCase()}" title="${esc(fr.confidence_note||'')}">${esc(fr.confidence||'')}</span> `+
+       `<span class="tag tag-${esc(fr.tag||'a')}">(${esc(fr.tag||'a')})</span></td></tr>`;
+  }
+  h+='</tbody>';
+  const excluded=DB.vendors.filter(v=>v.min_rooms && rooms < v.min_rooms);
+  for(const v of excluded){
+    h+=`<tr><td><b>${esc(v.name)}</b></td><td colspan="6" class="never">`+
+       `not sold at this scale — ${esc(v.min_rooms_note||'')}</td></tr>`;
+  }
+  document.getElementById('tbl').innerHTML=h.replace('</tbody>','')+'</tbody>';
+  document.getElementById('calcnote').textContent =
+    'Vendor figures are published at 1-room and 4-room scale; other room counts scale the '+
+    'per-room delta linearly and are marked as scaled. AROYA is billed per canopy square foot '+
+    'facility-wide, so its line follows the canopy selector rather than the rooms slider. '+
+    'Excludes tax, shipping, electrical work, sensor replacement and installation except where stated.';
+
+  drawChart(rows, D, years, max);
+}
+
+function drawChart(rows, D, years, max){
+  const svg=document.getElementById('chart');
+  const W=svg.clientWidth||880, H=250, pad={l:52,r:10,t:10,b:24};
+  const x=y=>pad.l+(y/years)*(W-pad.l-pad.r);
+  const yy=v=>H-pad.b-(v/max)*(H-pad.t-pad.b);
+  const colors=['#4ea87a','#3f8fa4','#b08a30','#b04a4a','#8a6a9a','#7a8a4a'];
+  let s='';
+  // axes
+  for(let i=0;i<=4;i++){
+    const v=max*i/4, py=yy(v);
+    s+=`<line x1="${pad.l}" y1="${py}" x2="${W-pad.r}" y2="${py}" stroke="var(--line)" stroke-width="1"/>`;
+    s+=`<text x="${pad.l-6}" y="${py+4}" text-anchor="end" font-size="10" fill="var(--quiet)">${money(v)}</text>`;
+  }
+  for(let t=0;t<=years;t++){
+    s+=`<text x="${x(t)}" y="${H-8}" text-anchor="middle" font-size="10" fill="var(--quiet)">${t}</text>`;
+  }
+  const line=(o,c,w)=>{
+    let d='';
+    for(let t=0;t<=years;t++) d+=(t?' L':'M')+x(t)+' '+yy(o.hw+o.rec*t);
+    return `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}"/>`;
+  };
+  s+=line(D,'#4ea87a',3);
+  let legend=`<span><i style="background:#4ea87a"></i>DIY</span>`;
+  rows.forEach((r,i)=>{
+    const c=colors[(i+1)%colors.length];
+    s+=line(r.V,c,1.8);
+    legend+=`<span><i style="background:${c}"></i>${esc(r.v.name)}</span>`;
+  });
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML=s;
+  document.getElementById('legend').innerHTML=legend;
+}
+
+function renderDiy(){
+  const r=DB.diy.recipes;
+  let h='<thead><tr><th>Recipe</th><th class="num">USD</th><th>Notes</th></tr></thead><tbody>';
+  for(const k of Object.keys(r)){
+    const x=r[k];
+    h+=`<tr><td><b>${esc(x.name)}</b><div class="note">${esc(x.summary)}</div></td>`+
+       `<td class="num">${money(x.total_usd)}</td>`+
+       `<td class="note">${x.priced} priced part${x.priced===1?'':'s'}`+
+       (x.unpriced?`, ${x.unpriced} band-only and not counted`:'')+`</td></tr>`;
+  }
+  h+=`<tr class="diyrow"><td><b>Per room used above</b><div class="note">PoE room controller + substrate sensing array</div></td>`+
+     `<td class="num"><b>${money(DB.diy.per_room)}</b></td><td class="note">converted from ${esc(DB.diy.fx_base)} at ${esc(DB.diy.fx_rate)} (${esc(DB.diy.fx_date)})</td></tr>`;
+  document.getElementById('diytbl').innerHTML=h+'</tbody>';
+}
+
+['rooms','years','canopy'].forEach(id=>
+  document.getElementById(id).addEventListener('input',render));
+window.addEventListener('resize',render);
+renderDiy(); render();
+</script>
+</body>
+</html>

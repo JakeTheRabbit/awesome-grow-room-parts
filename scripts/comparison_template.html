@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DIY vs proprietary grow platforms — cost comparison</title>
+<meta name="description" content="Sourced cost comparison of AROYA, Growlink, TrolMaster, Pulse and Argus against a DIY build, with an interactive break-even calculator. Every figure carries its confidence level and source.">
+<style>
+:root{
+  --bg:#0d0f0e; --surface:#141817; --raised:#1b201e; --line:#2a312e;
+  --ink:#e6ebe8; --dim:#98a49e; --quiet:#6b7772;
+  --accent:#4ea87a; --accent-ink:#0d0f0e; --tint:rgba(78,168,122,.09);
+  --warn:#b04a4a; --amber:#b08a30; --blue:#3f8fa4;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+:root[data-theme="light"]{
+  --bg:#f6f8f7; --surface:#fff; --raised:#eef2f0; --line:#dde4e0;
+  --ink:#16201c; --dim:#5a6862; --quiet:#8a968f; --accent-ink:#fff;
+  --tint:rgba(78,168,122,.10);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;
+  line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px}
+header{border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:0;z-index:20}
+.hbar{display:flex;align-items:center;gap:14px;padding:10px 0;flex-wrap:wrap}
+.brand{font-weight:700;font-size:14px;white-space:nowrap}
+.brand span{color:var(--accent)}
+.hbar nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.hbar nav a{color:var(--dim);text-decoration:none;font-size:13px;padding:5px 10px;border-radius:6px}
+.hbar nav a:hover{background:var(--raised);color:var(--ink)}
+.hbar nav a.on{background:var(--accent);color:var(--accent-ink);font-weight:600}
+h1{font-size:27px;line-height:1.2;margin:26px 0 8px;letter-spacing:-.01em}
+h2{font-size:20px;margin:34px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+h3{font-size:16px;margin:20px 0 6px}
+h4{font-size:14px;margin:0 0 4px}
+.lede{color:var(--dim);font-size:16px;max-width:70ch}
+.sub{color:var(--quiet);font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--quiet);
+  background:var(--raised);font-weight:700}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tablewrap{border:1px solid var(--line);border-radius:9px;overflow-x:auto}
+.tag{font-family:var(--mono);font-size:10.5px;padding:1px 4px;border-radius:4px;
+  border:1px solid var(--line);color:var(--quiet);cursor:help;vertical-align:1px}
+.tag-a{color:var(--accent);border-color:rgba(78,168,122,.5)}
+.tag-b{color:var(--blue);border-color:rgba(63,143,164,.5)}
+.tag-c{color:var(--amber);border-color:rgba(176,138,48,.5)}
+.tag-d{color:var(--warn);border-color:rgba(176,74,74,.55)}
+.conf{font-size:10px;padding:1px 6px;border-radius:9px;font-weight:700;letter-spacing:.03em;
+  border:1px solid var(--line);color:var(--quiet);cursor:help}
+.conf-high{color:var(--accent);border-color:rgba(78,168,122,.5)}
+.conf-medium{color:var(--amber);border-color:rgba(176,138,48,.55);background:rgba(176,138,48,.09)}
+.conf-low{color:var(--warn);border-color:rgba(176,74,74,.5)}
+.note{font-size:12px;color:var(--quiet);margin-top:4px}
+.callout{border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--surface);
+  border-radius:0 9px 9px 0;padding:14px 16px;margin:16px 0}
+.callout.warn{border-left-color:var(--warn);background:rgba(176,74,74,.07)}
+.callout.amber{border-left-color:var(--amber);background:rgba(176,138,48,.07)}
+.callout h3{margin-top:0}
+/* calculator */
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:16px;margin:14px 0}
+.ctrls{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.ctrl{display:flex;flex-direction:column;gap:4px;min-width:170px;flex:1}
+.ctrl label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--quiet);font-weight:700}
+.ctrl .val{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent)}
+select{background:var(--raised);border:1px solid var(--line);color:var(--ink);
+  padding:6px 9px;border-radius:7px;font-family:var(--sans);font-size:13px}
+.headline{font-size:15px;line-height:1.5;padding:12px 14px;background:var(--tint);
+  border:1px solid rgba(78,168,122,.35);border-radius:9px;margin-bottom:12px}
+.headline b{color:var(--accent)}
+.bar{height:9px;border-radius:5px;background:var(--raised);overflow:hidden;min-width:70px}
+.bar i{display:block;height:100%;background:var(--accent)}
+.bar.v i{background:var(--blue)}
+tr.diyrow td{background:var(--tint)}
+.never{color:var(--quiet);font-style:italic}
+#chart{width:100%;height:250px;margin-top:12px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--dim);margin-top:6px}
+.legend i{display:inline-block;width:11px;height:3px;vertical-align:middle;margin-right:4px}
+/* vendor cards */
+.vcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:15px;margin-bottom:12px}
+.vcard h3{margin-top:0}
+.pos{color:var(--dim);font-size:13.5px;margin:0 0 10px}
+dl.kv{display:grid;grid-template-columns:190px 1fr;gap:6px 14px;font-size:13.5px;margin:0}
+dl.kv dt{color:var(--quiet)}
+dl.kv dd{margin:0}
+ul.cites{margin:10px 0 0;padding-left:17px;font-size:12.5px;color:var(--dim)}
+ul.cites li{margin-bottom:3px}
+ol.against{padding-left:20px}
+ol.against li{margin-bottom:14px}
+ol.against h4{color:var(--ink)}
+ol.against p{margin:0;color:var(--dim);font-size:13.5px}
+.notob{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--warn);
+  border-radius:0 9px 9px 0;padding:13px 15px;margin-bottom:10px}
+.notob h4{margin-top:0}
+.notob p{margin:0 0 6px;font-size:13.5px;color:var(--dim)}
+.notob .src{font-size:12px}
+footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 50px;
+  color:var(--quiet);font-size:12.5px}
+@media(max-width:700px){ dl.kv{grid-template-columns:1fr;gap:2px}
+  dl.kv dt{margin-top:8px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  h1{font-size:22px} .ctrl{min-width:140px} }
+</style>
+</head>
+<body>
+<header><div class="wrap hbar">
+  <div class="brand">awesome<span>-grow-room-</span>parts</div>
+  <nav>
+    <a href="./">Parts catalogue</a>
+    <a href="./diy-vs-proprietary.html" class="on">DIY vs proprietary</a>
+    <a href="https://github.com/JakeTheRabbit/awesome-grow-room-parts" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+<h1>DIY vs proprietary grow platforms</h1>
+<p class="lede">What the commercial platforms actually cost, set against a DIY build with no
+subscription — and an honest account of what you give up by not paying them.
+Every figure carries the confidence level and source it came from.</p>
+<p class="sub">Vendor research dated __RESEARCH_DATE__. All vendor figures USD.
+DIY figures derived from this repository's own build recipes, converted at __FX__.</p>
+
+<div class="callout">
+<h3>Read the tags before the numbers</h3>
+<p style="margin:0;font-size:13.5px">
+<span class="tag tag-a">(a)</span> vendor-published &middot;
+<span class="tag tag-b">(b)</span> reseller listing &middot;
+<span class="tag tag-c">(c)</span> user-reported &middot;
+<span class="tag tag-d">(d)</span> not publicly available.
+A vendor-published figure can still be <span class="conf conf-medium">MEDIUM</span> confidence
+if it is a modelling default rather than a price list — which is exactly the case for
+AROYA's hardware anchors. Modelled numbers are not presented with the same weight as
+published ones.</p>
+</div>
+
+<h2 id="breakeven">Break-even, not a single number</h2>
+<p>A subscription is a recurring cost and a DIY build is a one-off, so a single total is
+misleading. The question that matters is <b>how long until the platform costs more than
+building it yourself</b> — and for some vendors and scales, the answer is never.</p>
+
+<div class="calc">
+  <div class="ctrls">
+    <div class="ctrl"><label for="rooms">Rooms</label>
+      <div class="val" id="roomsV">4</div>
+      <input type="range" id="rooms" min="1" max="12" value="4"></div>
+    <div class="ctrl"><label for="years">Years</label>
+      <div class="val" id="yearsV">5</div>
+      <input type="range" id="years" min="1" max="10" value="5"></div>
+    <div class="ctrl"><label for="canopy">Canopy sq ft <span title="AROYA bill per canopy square foot facility-wide, not per room, so their cost does not follow the room slider.">(AROYA only)</span></label>
+      <select id="canopy">
+        <option value="2500">up to 2,500</option>
+        <option value="5000">2,501 – 5,000</option>
+        <option value="10000" selected>5,001 – 10,000</option>
+        <option value="20000">10,001 – 20,000</option>
+        <option value="50000">20,001 – 50,000</option>
+      </select></div>
+  </div>
+  <div class="headline" id="headline"></div>
+  <div class="tablewrap"><table id="tbl"></table></div>
+  <svg id="chart" role="img" aria-label="Cumulative cost over time"></svg>
+  <div class="legend" id="legend"></div>
+  <p class="note" id="calcnote"></p>
+</div>
+
+<h2 id="honest">Where this comparison is and is not fair</h2>
+<div class="callout amber"><p style="margin:0">__METHODOLOGY__</p></div>
+
+<h2 id="diy">The DIY side, derived from the catalogue</h2>
+<p>The DIY figures are not entered by hand. They are computed from the build recipes in this
+repository, which are themselves priced from the parts catalogue — so if a part price
+changes, this page changes with it. <b>__DIY_PER_ROOM__ per room</b> is the
+PoE room controller plus a substrate sensing array.</p>
+<div class="tablewrap"><table id="diytbl"></table></div>
+<p class="note">Recurring cost: none. There is no subscription, no API fee, no per-seat
+charge and no per-sensor charge. That is the entire structural argument for DIY, and
+the rest of this page is about what it costs you elsewhere.</p>
+
+<h2 id="vendors">The vendors</h2>
+__VENDORS__
+
+<h2 id="notobtainable">Where pricing simply is not obtainable</h2>
+<p>Two vendors could not be priced at all. That is recorded here as a finding rather than
+filled in with an estimate — "not published anywhere, including through distributors" is
+itself decision-relevant.</p>
+__NOTOBTAINABLE__
+
+<h2 id="hidden">Costs no vendor publishes</h2>
+<p>These are real and material, and every one of them is <span class="tag tag-d">(d)</span>.
+None appear in the tables above, on either side.</p>
+<div class="tablewrap"><table>
+<thead><tr><th style="width:200px">Cost</th><th>What is known</th></tr></thead>
+<tbody>__HIDDEN__</tbody></table></div>
+
+<h2 id="against">The case against DIY</h2>
+<div class="callout warn">
+<p style="margin:0"><b>__AGAINST_PREAMBLE__</b></p>
+</div>
+<ol class="against">__AGAINST__</ol>
+
+<h2 id="middle">__MIDDLE_HEAD__</h2>
+<p>__MIDDLE__</p>
+
+<footer class="wrap">
+<p>Vendor pricing research dated __RESEARCH_DATE__. Figures change; the tags and source links
+are there so you can re-check any of them rather than trust this page. Nothing here is a
+vendor quote, and no vendor was contacted for comment.</p>
+<p>DIY figures are generated from <code>recipes/</code> and <code>parts/</code> in this
+repository. Vendor figures are generated from <code>data/vendor-pricing.yaml</code>.
+Edit the data, not this page.</p>
+</footer>
+</main>
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+"use strict";
+const DB = JSON.parse(document.getElementById('data').textContent);
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => '$' + Math.round(n).toLocaleString('en-US');
+
+/* AROYA bill per canopy square foot facility-wide. Room count is not their
+   billing unit, so their line deliberately does not follow the rooms slider. */
+function aroyaMonthly(sqft){
+  for(const [cap,rate] of DB.aroya_tiers) if(sqft<=cap) return rate;
+  return DB.aroya_tiers[DB.aroya_tiers.length-1][1];
+}
+
+/* Vendor costs are published at a 4-room and a 1-room scale. Between and
+   beyond those we scale the per-room delta linearly and say so, rather than
+   pretending a quote exists at every size. */
+function vendorAt(v, rooms, sqft){
+  const fr=v.four_room||{}, sr=v.single_room||{};
+  let hw, rec, exact=false;
+  if(v.id==='aroya'){
+    const m=aroyaMonthly(sqft);
+    // Hardware anchor follows canopy tier, not rooms.
+    hw = (sqft<=2500 ? 15000 : sqft<=5000 ? 25000 : 35000);
+    const impl = (sqft<=2500 ? 3000 : sqft<=5000 ? 5000 : 5000);
+    return {hw:hw+impl, rec:m*12, exact:false, canopy:true};
+  }
+  if(sr.hardware!=null && fr.hardware!=null){
+    const perRoom=(fr.hardware-sr.hardware)/3;
+    hw = sr.hardware + perRoom*(rooms-1);
+    rec = (rooms<=1) ? (sr.recurring_per_year||0)
+        : (fr.recurring_per_year||0);
+    exact = (rooms===1 || rooms===4);
+  } else {
+    hw = (fr.hardware||0) * (rooms/4);
+    rec = fr.recurring_per_year||0;
+    exact = (rooms===4);
+  }
+  return {hw:Math.max(0,hw), rec:rec||0, exact,
+          recUnknown: !!fr.recurring_unpublished};
+}
+
+function diyAt(rooms){ return {hw: DB.diy.per_room*rooms, rec:0, exact:true}; }
+
+function cum(x, yr){ return x.hw + x.rec*yr; }
+
+function breakEven(v, d, rooms, sqft){
+  const V=vendorAt(v,rooms,sqft), D=diyAt(rooms);
+  if(cum(V,1) >= cum(D,1)) return {year:1, immediate:true};
+  if(V.rec<=D.rec) return {year:null};          // never crosses
+  for(let y=1;y<=40;y++) if(cum(V,y)>=cum(D,y)) return {year:y};
+  return {year:null};
+}
+
+function render(){
+  const rooms=+document.getElementById('rooms').value;
+  const years=+document.getElementById('years').value;
+  const sqft=+document.getElementById('canopy').value;
+  document.getElementById('roomsV').textContent=rooms;
+  document.getElementById('yearsV').textContent=years;
+
+  const D=diyAt(rooms);
+  const rows=DB.vendors.filter(v=>!(v.min_rooms && rooms < v.min_rooms)).map(v=>{
+    const V=vendorAt(v,rooms,sqft);
+    const be=breakEven(v,D,rooms,sqft);
+    const months = (V.rec>0) ? Math.round(D.hw / (V.rec/12)) : null;
+    return {v, V, total:cum(V,years), be, months};
+  }).sort((a,b)=>a.total-b.total);
+
+  const diyTotal=cum(D,years);
+  const max=Math.max(diyTotal,...rows.map(r=>r.total));
+
+  // Headline: cheapest vendor vs DIY, in plain terms.
+  const cheapest=rows[0];
+  const multiple=diyTotal>0 ? (cheapest.total/diyTotal) : 0;
+  document.getElementById('headline').innerHTML =
+    `Over <b>${years} year${years>1?'s':''}</b> at <b>${rooms} room${rooms>1?'s':''}</b>, a DIY build totals `+
+    `<b>${money(diyTotal)}</b> with no recurring cost. The cheapest platform here is `+
+    `<b>${esc(cheapest.v.name)}</b> at <b>${money(cheapest.total)}</b>`+
+    (multiple>=1 ? ` — <b>${multiple.toFixed(1)}&times;</b> the DIY figure.` : `, which is below the DIY figure at this scale.`);
+
+  let h='<thead><tr><th>Option</th><th class="num">Up-front</th><th class="num">Per year</th>'+
+        `<th class="num">Total, ${years}yr</th><th class="num">vs DIY</th><th>Break-even</th><th>Confidence</th></tr></thead><tbody>`;
+  h+=`<tr class="diyrow"><td><b>DIY build</b><div class="note">derived from this repo's recipes</div></td>`+
+     `<td class="num">${money(D.hw)}</td><td class="num">$0</td>`+
+     `<td class="num"><b>${money(diyTotal)}</b></td><td class="num">&mdash;</td>`+
+     `<td class="never">n/a</td><td><span class="conf conf-high">DERIVED</span></td></tr>`;
+  for(const r of rows){
+    const fr=r.v.four_room||{};
+    const be=r.be.year===null
+      ? '<span class="never">never at this scale</span>'
+      : (r.be.immediate ? 'immediately' : `year ${r.be.year}`);
+    const ratio = diyTotal>0 ? (r.total/diyTotal) : 0;
+    h+=`<tr><td><b>${esc(r.v.name)}</b>`+
+       (r.V.canopy?`<div class="note">billed per canopy sq ft, not per room</div>`:'')+
+       (!r.V.exact&&!r.V.canopy?`<div class="note">scaled from published 1- and 4-room figures</div>`:'')+
+       ((r.v.four_room||{}).recurring_alt?`<div class="note">+${money((r.v.four_room||{}).recurring_alt/4*rooms)}/yr if API enabled on ${rooms} controller${rooms===1?'':'s'}</div>`:'')+
+       (r.V.recUnknown?`<div class="note">ongoing cost not published</div>`:'')+
+       `</td>`+
+       `<td class="num">${money(r.V.hw)}</td>`+
+       `<td class="num">${r.V.recUnknown?'<span class="tag tag-d" title="Not publicly available">(d)</span>':(r.V.rec?money(r.V.rec):'$0')}</td>`+
+       `<td class="num"><b>${money(r.total)}</b></td>`+
+       `<td class="num">${ratio?ratio.toFixed(1)+'×':'—'}<div class="bar v"><i style="width:${Math.min(100,r.total/max*100)}%"></i></div></td>`+
+       `<td>${be}${r.months!=null?`<div class="note">DIY build ≈ ${r.months} month${r.months===1?'':'s'} of their subscription</div>`:''}</td>`+
+       `<td><span class="conf conf-${(fr.confidence||'').split('-')[0].toLowerCase()}" title="${esc(fr.confidence_note||'')}">${esc(fr.confidence||'')}</span> `+
+       `<span class="tag tag-${esc(fr.tag||'a')}">(${esc(fr.tag||'a')})</span></td></tr>`;
+  }
+  h+='</tbody>';
+  const excluded=DB.vendors.filter(v=>v.min_rooms && rooms < v.min_rooms);
+  for(const v of excluded){
+    h+=`<tr><td><b>${esc(v.name)}</b></td><td colspan="6" class="never">`+
+       `not sold at this scale — ${esc(v.min_rooms_note||'')}</td></tr>`;
+  }
+  document.getElementById('tbl').innerHTML=h.replace('</tbody>','')+'</tbody>';
+  document.getElementById('calcnote').textContent =
+    'Vendor figures are published at 1-room and 4-room scale; other room counts scale the '+
+    'per-room delta linearly and are marked as scaled. AROYA is billed per canopy square foot '+
+    'facility-wide, so its line follows the canopy selector rather than the rooms slider. '+
+    'Excludes tax, shipping, electrical work, sensor replacement and installation except where stated.';
+
+  drawChart(rows, D, years, max);
+}
+
+function drawChart(rows, D, years, max){
+  const svg=document.getElementById('chart');
+  const W=svg.clientWidth||880, H=250, pad={l:52,r:10,t:10,b:24};
+  const x=y=>pad.l+(y/years)*(W-pad.l-pad.r);
+  const yy=v=>H-pad.b-(v/max)*(H-pad.t-pad.b);
+  const colors=['#4ea87a','#3f8fa4','#b08a30','#b04a4a','#8a6a9a','#7a8a4a'];
+  let s='';
+  // axes
+  for(let i=0;i<=4;i++){
+    const v=max*i/4, py=yy(v);
+    s+=`<line x1="${pad.l}" y1="${py}" x2="${W-pad.r}" y2="${py}" stroke="var(--line)" stroke-width="1"/>`;
+    s+=`<text x="${pad.l-6}" y="${py+4}" text-anchor="end" font-size="10" fill="var(--quiet)">${money(v)}</text>`;
+  }
+  for(let t=0;t<=years;t++){
+    s+=`<text x="${x(t)}" y="${H-8}" text-anchor="middle" font-size="10" fill="var(--quiet)">${t}</text>`;
+  }
+  const line=(o,c,w)=>{
+    let d='';
+    for(let t=0;t<=years;t++) d+=(t?' L':'M')+x(t)+' '+yy(o.hw+o.rec*t);
+    return `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}"/>`;
+  };
+  s+=line(D,'#4ea87a',3);
+  let legend=`<span><i style="background:#4ea87a"></i>DIY</span>`;
+  rows.forEach((r,i)=>{
+    const c=colors[(i+1)%colors.length];
+    s+=line(r.V,c,1.8);
+    legend+=`<span><i style="background:${c}"></i>${esc(r.v.name)}</span>`;
+  });
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML=s;
+  document.getElementById('legend').innerHTML=legend;
+}
+
+function renderDiy(){
+  const r=DB.diy.recipes;
+  let h='<thead><tr><th>Recipe</th><th class="num">USD</th><th>Notes</th></tr></thead><tbody>';
+  for(const k of Object.keys(r)){
+    const x=r[k];
+    h+=`<tr><td><b>${esc(x.name)}</b><div class="note">${esc(x.summary)}</div></td>`+
+       `<td class="num">${money(x.total_usd)}</td>`+
+       `<td class="note">${x.priced} priced part${x.priced===1?'':'s'}`+
+       (x.unpriced?`, ${x.unpriced} band-only and not counted`:'')+`</td></tr>`;
+  }
+  h+=`<tr class="diyrow"><td><b>Per room used above</b><div class="note">PoE room controller + substrate sensing array</div></td>`+
+     `<td class="num"><b>${money(DB.diy.per_room)}</b></td><td class="note">converted from ${esc(DB.diy.fx_base)} at ${esc(DB.diy.fx_rate)} (${esc(DB.diy.fx_date)})</td></tr>`;
+  document.getElementById('diytbl').innerHTML=h+'</tbody>';
+}
+
+['rooms','years','canopy'].forEach(id=>
+  document.getElementById(id).addEventListener('input',render));
+window.addEventListener('resize',render);
+renderDiy(); render();
+</script>
+</body>
+</html>

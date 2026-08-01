@@ -43,10 +43,11 @@ jobs:
       - name: Check generated site and README are up to date
         run: |
           python scripts/build_site.py
+          python scripts/build_comparison.py
           python scripts/gen_readme.py
           if ! git diff --quiet -- docs/ README.md; then
             echo "::error::Generated files are stale. Run:"
-            echo "  python scripts/build_site.py && python scripts/gen_readme.py"
+            echo "  python scripts/build_site.py && python scripts/build_comparison.py && python scripts/gen_readme.py"
             git diff --stat -- docs/ README.md
             exit 1
           fi

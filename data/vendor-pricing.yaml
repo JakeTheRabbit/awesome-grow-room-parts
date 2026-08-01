@@ -1,0 +1,403 @@
+# Proprietary grow-platform pricing, for the DIY vs buy comparison page.
+#
+# Every figure here carries the confidence tag and source it came from, and the
+# page renders both. Nothing is estimated, interpolated or inferred from
+# "typical market pricing" - where a number is not obtainable, that is recorded
+# as a finding rather than filled in.
+#
+# Tags, carried through from the source research:
+#   a  vendor-published (own site, docs, contract or product feed)
+#   b  reseller / distributor listing
+#   c  user-reported (forum, Reddit, or trade press quoting a named customer)
+#   d  NOT publicly available - quote-only, or searched for and not found
+#
+# Confidence is separate from tag. A vendor-published figure can still be
+# MEDIUM if it is a modelling default rather than a price list - see the AROYA
+# hardware anchors, which are explicitly weaker than the subscription tiers.
+
+meta:
+  research_date: "2026-08-02"
+  currency: USD
+  note: >-
+    All vendor figures USD. DIY figures are derived from this repository's own
+    build recipes, which are priced in NZD and converted using data/fx.yaml.
+  methodology: >-
+    Vendor build totals are arithmetic on tagged list prices, not vendor quotes.
+    They exclude tax, shipping, electrical work and, except where stated,
+    installation. These systems are also not functionally identical: a $925
+    environment controller and a $47,200 substrate-analytics platform with human
+    agronomy coaching are not the same purchase. The tables compare cost. The
+    honest-limits section compares capability.
+
+# ---------------------------------------------------------------------------
+vendors:
+  - id: trolmaster
+    name: TrolMaster
+    positioning: Environment control. Dominant at small and mid indoor scale.
+    subscription_model: >-
+      App is free with no paid remote tier. API access is billed separately at
+      $15 per month per device.
+    recurring_note: >-
+      "No subscription" is true for using it. The moment you want programmatic
+      access to your own data it is $15 per device per month, indefinitely. At
+      20 devices that is $3,600/yr - the same order as AROYA's mid tiers.
+    stops_paying_answer: >-
+      ANSWERED. Local control at the controller face is free and always
+      available, with local CSV logging to MicroSD. Confirmed surviving a cloud
+      outage. The catch is that alerts die with the cloud.
+    stops_paying_confidence: HIGH
+    stops_paying_tag: a
+    four_room:
+      hardware: 6391
+      recurring_per_year: 0
+      recurring_alt: 720
+      recurring_alt_label: if API enabled on 4 controllers
+      tag: b
+      confidence: HIGH
+      source: https://www.hydrobuilder.com/
+      source_label: Hydrobuilder / Forever Green retail listings
+    single_room:
+      hardware: 925
+      recurring_per_year: 0
+      tag: b
+      confidence: HIGH
+      source: https://www.hydrobuilder.com/
+      source_label: Hydrobuilder retail listing
+    citations:
+      - label: "API Gateway: \"a subscription fee of $15 per month per device\""
+        url: https://www.trolmaster.com/News/ApiGateway
+        tag: a
+      - label: "Warranty: products 3 years, sensor probes 1 year"
+        url: https://www.trolmaster.com/News/Warranty
+        tag: a
+
+  - id: pulse
+    name: Pulse Grow
+    positioning: Sensor-agnostic monitoring. The natural buy comparison for a DIY-inclined operator.
+    subscription_model: >-
+      Working free tier. Enthusiast $10/user/month, Professional $35/user/month.
+    recurring_note: >-
+      Professional is effectively mandatory at four-room scale, because
+      Enthusiast lacks multiple grow locations and Free lacks multi-user.
+    stops_paying_answer: >-
+      ANSWERED. Vendor confirms hardware keeps working without payment.
+    stops_paying_confidence: HIGH
+    stops_paying_tag: a
+    four_room:
+      hardware: 7851
+      recurring_per_year: 840
+      tag: a
+      confidence: HIGH
+      source: https://pulsegrow.com/pages/pricing
+      source_label: pulsegrow.com vendor MSRP and pricing page
+    single_room:
+      hardware: 1298
+      recurring_per_year: 0
+      tag: a
+      confidence: HIGH
+      source: https://pulsegrow.com/pages/pricing
+      source_label: pulsegrow.com vendor MSRP
+    citations:
+      - label: "Pricing tiers: Free / Enthusiast $10 / Professional $35 per user per month"
+        url: https://pulsegrow.com/pages/pricing
+        tag: a
+      - label: "TEROS 12 retrofit kits, $39-69 - sensor-agnostic by design"
+        url: https://pulsegrow.com/
+        tag: a
+
+  - id: growlink
+    name: Growlink
+    positioning: Direct AROYA competitor. Published SaaS tiers.
+    subscription_model: >-
+      Root free, Sprout $25/month, Bloom $250/month per facility,
+      Harvest $1,000/month per facility.
+    recurring_note: >-
+      Entry tier confirmed at $240-300/year from two independent vendor
+      sources: a historical Pro Starter price of $20/month, and archived promo
+      terms describing a 12-month Sprout subscription as "a $300 value".
+    stops_paying_answer: >-
+      NOT ANSWERED. A full-text search of the current and archived Terms of
+      Service found no "Effect of Termination" clause, no statement on whether
+      the controller keeps running, no data export obligation and no wind-down
+      period. The Terms do reserve the right to suspend access on non-payment.
+    stops_paying_confidence: HIGH
+    stops_paying_tag: d
+    four_room:
+      hardware: 11964
+      recurring_per_year: 3000
+      tag: a
+      confidence: MEDIUM
+      confidence_note: >-
+        Published-list floor, not an obtainable quote. Growlink state that
+        commercial operations over 32 sensors require a separate enterprise
+        agreement.
+      source: https://www.growlink.com/pricing.html
+      source_label: growlink.com pricing page and Shopify product feed
+    single_room:
+      hardware: 1595
+      recurring_per_year: 300
+      tag: a
+      confidence: HIGH
+      source: https://www.growlink.com/pricing.html
+      source_label: growlink.com pricing page
+    citations:
+      - label: "Published subscription tiers: Root / Sprout / Bloom / Harvest"
+        url: https://www.growlink.com/pricing.html
+        tag: a
+      - label: "Terms of Service - contains no Effect of Termination clause"
+        url: https://www.growlink.com/terms.html
+        tag: a
+
+  - id: aroya
+    name: AROYA (Addium)
+    positioning: Category-defining in cannabis crop steering. Highest subscription exposure.
+    subscription_model: >-
+      $150 to $3,900 per month, billed per canopy square foot, facility-wide.
+      Room count is not the billing unit.
+    recurring_note: >-
+      Because billing is by canopy area rather than rooms, a "4-room AROYA
+      price" does not exist as a concept. Two canopy scenarios are shown
+      instead.
+    stops_paying_answer: >-
+      DECLINED. AROYA's own FAQ answers the question with "There are a few
+      factors... Please reach out to us to book a demo."
+    stops_paying_confidence: HIGH
+    stops_paying_tag: d
+    four_room:
+      hardware: 35000
+      install: 5000
+      recurring_per_year: 7200
+      canopy_note: at approximately 8,000 sq ft canopy
+      tag: a
+      confidence: MEDIUM
+      confidence_note: >-
+        Split confidence. The subscription figure is HIGH - it is labelled by
+        AROYA as real 2025 pricing. The hardware and implementation figures are
+        MEDIUM: they are calculator modelling defaults (TIER_ANCHORS), not a
+        confirmed list price.
+      source: https://aroya.io/
+      source_label: aroya.io ROI calculator, verified in page source
+    single_room:
+      hardware: 15000
+      install: 3000
+      recurring_per_year: 1800
+      canopy_note: at 2,500 sq ft canopy or under
+      tag: a
+      confidence: MEDIUM
+      confidence_note: >-
+        Subscription HIGH, hardware and implementation MEDIUM - calculator
+        modelling defaults rather than confirmed list prices.
+      source: https://aroya.io/
+      source_label: aroya.io ROI calculator, verified in page source
+    citations:
+      - label: "Subscription tiers, published in ROI calculator page JavaScript"
+        url: https://aroya.io/
+        tag: a
+      - label: "FAQ declines the hardware-without-subscription question"
+        url: https://aroya.io/support/frequently-asked-questions
+        tag: a
+
+  - id: argus
+    name: Argus Controls
+    positioning: Enterprise horticultural control. The only vendor with a published price list carrying real dollar figures.
+    min_rooms: 4
+    min_rooms_note: >-
+      Argus is not sold at single-room scale - the Titan software floor alone is
+      $23,000 before any hardware, so scaling their figure down to one room
+      would invent a product that is not offered.
+    subscription_model: >-
+      Capex model. Titan software from $23,000 (Basic) or $28,000
+      (Enterprise, adding multi-user, audit tracking and password control).
+    recurring_note: >-
+      Ongoing costs are not published. Payment terms are 20% deposit, 80%
+      pre-ship, roughly 12 weeks deposit to delivery, and the customer supplies
+      the installation crew.
+    stops_paying_answer: >-
+      Not applicable in the same way - this is a capex purchase rather than a
+      subscription platform.
+    stops_paying_confidence: MEDIUM
+    stops_paying_tag: a
+    four_room:
+      hardware: 51000
+      recurring_per_year: null
+      recurring_unpublished: true
+      tag: a
+      confidence: HIGH-STALE
+      confidence_note: >-
+        Vendor-published, but from the 2018 Estimating Guide. These are 2018
+        dollars and should be treated as a floor, not a current quote.
+      source: https://www.arguscontrols.com/
+      source_label: Argus Estimating Guide V3, 13 September 2018
+    scenario_note: >-
+      Argus publish their own worked example for a 9-zone indoor cannabis
+      grower at approximately $195,000 in 2018 dollars.
+    citations:
+      - label: "Estimating Guide V3, including a 9-zone indoor cannabis worked example"
+        url: https://www.arguscontrols.com/
+        tag: a
+
+# ---------------------------------------------------------------------------
+# Vendors where pricing could not be obtained. Recording this is a finding,
+# not a gap - "not published anywhere, including through distributors" is
+# itself decision-relevant information.
+not_obtainable:
+  - name: Priva
+    finding: >-
+      No pricing published anywhere, including on authorised reseller
+      storefronts, which list products at zero with a "View Product Details"
+      prompt. US procurement and grant-budget searches turned up no disclosed
+      contract values. API access additionally requires a Priva Gateway and a
+      Priva Connected subscription, whose price is also unpublished.
+    relevance: >-
+      Enterprise glass horticulture. A small indoor operator would not reach
+      the quote stage economically.
+    tag: d
+    url: https://www.priva.com/
+
+  - name: iUNU
+    finding: >-
+      No pricing published; everything routes to a demo booking or a gated
+      form. Sold as system-as-a-service on 3-5 year SLAs with vendor-financed
+      hardware, priced by camera passes per day.
+    relevance: >-
+      Has exited cannabis as a go-to-market. The "Crops Grown" field on iUNU's
+      own contact form offers tomatoes, cucumbers, peppers, berries, leafy
+      greens, ornamentals and other - cannabis is not an option (fetched
+      August 2026). The product is also camera-on-rail for tall vine crops in
+      glass, which is a poor structural fit for racked indoor rooms.
+    tag: d
+    url: https://iunu.com/
+
+# ---------------------------------------------------------------------------
+# Costs that are real, material, and that no vendor publishes. Every one is (d).
+hidden_costs:
+  - item: Sensor replacement
+    detail: >-
+      TrolMaster warrants products for 3 years but sensor probes for 1 year,
+      against a consistent body of user reports of drift and failure around the
+      two-year mark. CO2 sensors run $187-243 each and substrate probes
+      $200-309. No vendor publishes a failure rate.
+  - item: Renewal increases
+    detail: >-
+      AROYA's contract grants repricing at the "then going rate" with 30 days'
+      notice and no cap. Growlink auto-renews at the "then-current standard
+      rate", also uncapped, and has moved price three times in 30 months. No
+      user has publicly reported an actual renewal invoice.
+  - item: Installation and commissioning
+    detail: >-
+      AROYA's calculator carries $3,000-$20,000 implementation. Growlink does
+      not publish it, though one user reports approximately $15,000 install on
+      a $60,000 hardware order. Argus require the customer to supply the
+      installation crew.
+  - item: Calibration labour
+    detail: >-
+      TEROS 12 is factory-calibrated and cannot be field-recalibrated - drift
+      means RMA or replacement. TrolMaster substrate sensors need user-defined
+      calibration to your specific media, reported drifting by 10-20% every few
+      days. Pulse CO2 needs manual outdoor recalibration every 4-6 months and
+      pH probes are a $99 consumable. None of this is a line item anywhere.
+  - item: The audit sensor
+    detail: >-
+      Multiple experienced operators run a second trusted sensor purely to
+      check the first. That is a real recurring cost of a system you do not
+      fully trust, and it appears in no budget.
+  - item: Exit cost
+    detail: >-
+      AROYA deletes data 90 days after termination and one 90,000 sq ft
+      operator describes his exit as "a very long and difficult exit".
+      Growlink's Terms carry no export obligation, and the manual CSV is a 20x
+      downsample of what you paid to collect.
+
+# ---------------------------------------------------------------------------
+# Reproduced from the source research, section 9.3, deliberately unsoftened.
+# A reader should be able to finish this section and reasonably decide to buy.
+# That is the point of including it.
+case_against_diy:
+  preamble: >-
+    This section is deliberately unflattering to DIY. Someone should be able to
+    read it and reasonably choose to buy. If the rest of this page is going to
+    be credible about vendor costs, it has to be equally honest about what you
+    give up by not paying them.
+  points:
+    - title: No support contract, and support is real value
+      detail: >-
+        Multiple independent first-hand reports value it highly: "their
+        training, tech support, and software for the normal subscription is
+        second to none. spend a year training, and in tech support with them
+        twice a month, and you will benefit massively" (AROYA customer).
+        "Their customer support team is incredible" (Growlink). At 3am with a
+        room at 100% RH, there is nobody to call on a DIY rig.
+    - title: No warranty, no RMA, no advance replacement
+      detail: >-
+        Growlink CORE includes 3-year advance replacement. TrolMaster warrants
+        products 3 years. AROYA replaced a foliar-killed TEROS under warranty.
+        Your DIY board dies and you buy another one and you rebuild it.
+    - title: You are the integrator, and integration is where projects die
+      detail: >-
+        A Home Assistant SDI-12 thread runs to 26 posts over months:
+        temperature-dependent moisture readings, the TEROS 12 soilless-media
+        calibration polynomial topping out around 80% instead of 100%,
+        unique-ID entity errors, serial parsing bugs. One participant: "the
+        readings that get displayed don't match the readings from the little
+        USB dongle thingy that you use with the Aroya app. So I reworked the
+        equations and now I have a home brewed Aroya system." The calibration
+        polynomial is a real hidden DIY cost.
+    - title: Calibration is entirely on you, and it is harder than it looks
+      detail: >-
+        TEROS 12 is factory-calibrated for a reason. AROYA's own white paper
+        reportedly concedes the TEROS 12 "wasn't accurate at high EC". Deriving
+        your own media-specific VWC and EC transfer functions is a genuine
+        soil-physics problem, not a coding problem.
+    - title: There is no mature open-source alternative, only many small immature ones
+      detail: >-
+        As of August 2026 the leading crop-steering projects carry single and
+        low-double-digit star counts. The leading project's maintainer posted
+        in July 2026 describing "a serious silent failure: on some installs the
+        engine couldn't find the zone moisture probes at all, so the zones
+        froze... and watering fell back to a dumb timer." A user later the same
+        month: "I can't get it to work... I've uninstalled everything. Too bad."
+    - title: No compliance or audit trail
+      detail: >-
+        AROYA at $300/month reportedly includes METRC integration and the full
+        platform. Argus Titan Enterprise at $28,000 buys multi-user, audit
+        tracking and password control - explicitly a compliance product. A DIY
+        stack gives you none of this, and in a licensed operation seed-to-sale
+        integration and audit logging are not optional.
+    - title: Silent failure risk is asymmetric
+      detail: >-
+        Growlink had an app bug that "will run your reservoir completely
+        empty... and flood your tables" - but that was one company's bug,
+        reported publicly, in a product with a support line. A DIY silent
+        failure is yours alone to find, usually after the crop.
+    - title: Key-person risk
+      detail: >-
+        A DIY system encodes its logic in one person's head. Commercial systems
+        are documented, transferable, and survive that person leaving. Argus's
+        "no user configuration or programming is required" is lock-in. It is
+        also continuity.
+    - title: Even DIY partisans concede the effort
+      detail: >-
+        An operator running Home Assistant with METER and Apogee sensors
+        commercially: "No subscription cost, but a lot of coding and
+        maintenance." And on the other side: "home assistant is way more effort
+        than trolmaster and every update seems to break something."
+    - title: The engineering gap is real
+      detail: >-
+        The fairest framing found in the research: "Are you going to design all
+        the sensor front ends... Are you familiar with maintaining resolution of
+        different bit depths of analog to digital converters? Are you going to
+        design a PCB so its actually professional?" The conclusion drawn there:
+        for microgrowers, off-the-shelf at $250-500 wins; for large operations,
+        $4k software would be a no-brainer if it works.
+
+# The pattern the research found most often among sophisticated operators.
+middle_path:
+  headline: Buy the sensors, refuse the platform
+  detail: >-
+    The most consistent pattern across the user research is neither pure DIY
+    nor pure platform. Operators at 30,000 and 90,000 sq ft run METER sensors
+    into a PLC or pair AROYA with OpenSprinkler; others run METER sensors into
+    ZENTRA Cloud at $180/yr instead of AROYA, or import Pulse data into Home
+    Assistant over the documented API and write their own crop-steering logic.
+    Pulse Grow is the natural bridge - documented self-service API, TEROS 12
+    retrofit kits at $39-69, and a working free tier.

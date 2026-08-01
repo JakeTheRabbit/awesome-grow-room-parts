@@ -23,6 +23,42 @@ Everything beyond that seed is contributable. If you have run a part in anger,
 
 ---
 
+## DIY vs proprietary — what the platforms actually cost
+
+**→ [Read the cost comparison](https://jaketherabbit.github.io/awesome-grow-room-parts/diy-vs-proprietary.html)**
+
+A sourced comparison of AROYA, Growlink, TrolMaster, Pulse Grow and Argus against a
+DIY build, with an interactive break-even calculator. Every figure carries the
+confidence level and the source it came from, and modelled numbers are not presented
+with the same weight as published ones.
+
+At four rooms over five years: **TrolMaster ~$6.4k · Pulse ~$12k · Growlink ~$27k ·
+AROYA ~$76k** at 8,000 sq ft canopy · **Argus ~$195k** in their own published worked
+example for a 9-zone indoor cannabis grower (2018 dollars).
+
+Some of what the research turned up:
+
+- **AROYA's commercial subscription tiers are published in their ROI calculator's page
+  JavaScript** — $150–$3,900/month, billed per canopy square foot facility-wide. They
+  corroborate three independent user-reported quotes, including one that an AROYA
+  employee publicly disputed.
+- **"No subscription" is not the same as no recurring cost.** TrolMaster's app is free,
+  but their own API Gateway page charges $15/month per device for programmatic access
+  to your own data.
+- **Only two of five vendors will say what happens to your hardware if you stop paying.**
+  TrolMaster and Pulse both answer it. AROYA's FAQ declines and routes to a sales demo.
+  Growlink's Terms of Service contains no "Effect of Termination" clause at all.
+- **Priva and iUNU could not be priced at all** — not published anywhere, including
+  through distributors. iUNU has also exited cannabis: their own contact form no longer
+  lists it as a crop.
+
+The page also reproduces, in full and unsoftened, **the case against DIY** — no support
+contract, no warranty, you are the integrator, calibration is your problem, no compliance
+audit trail, key-person risk. You should be able to read that section and reasonably
+decide to buy. If it were not there, the rest would not be worth trusting.
+
+---
+
 ## Start here
 
 | | |
