@@ -56,7 +56,11 @@ works_with:
 use_cases:
 - dripper blockage prevention
 - feed line filtration
-image: assets/parts/amiad-screen-filter.svg
+image: assets/parts/amiad-screen-filter.png
+image_source: manufacturer
+image_source_url: https://www.amiad.com/product/tagline/
+image_credit: >-
+  Amiad TAGLINE manual filter family shown with screen elements; this entry is the 25 mm 130 micron model.
 tags:
 - filter
 - irrigation

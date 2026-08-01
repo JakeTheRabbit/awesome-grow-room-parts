@@ -66,7 +66,9 @@ use_cases:
 - "3-phase power monitoring"
 - equipment failure detection from load curve
 - phase balance checking
-image: assets/parts/shelly-pro-3em.svg
+image: assets/parts/shelly-pro-3em.png
+image_source: manufacturer
+image_source_url: https://www.shelly.com/products/shelly-pro-3em-x1
 tags:
 - energy
 - power

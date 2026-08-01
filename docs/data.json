@@ -59,7 +59,9 @@
         "netafim-pcj-dripper",
         "pressure-reducing-valve"
       ],
-      "image": "assets/parts/amiad-screen-filter.svg",
+      "image": "assets/parts/amiad-screen-filter.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://www.amiad.com/product/tagline/",
       "use_cases": [
         "dripper blockage prevention",
         "feed line filtration"
@@ -69,7 +71,8 @@
         "irrigation",
         "screen",
         "maintenance"
-      ]
+      ],
+      "image_large": "assets/parts/amiad-screen-filter-lg.png"
     },
     {
       "id": "as7341",
@@ -5052,7 +5055,9 @@
       "works_with": [
         "ssr-25da"
       ],
-      "image": "assets/parts/shelly-pro-3em.svg",
+      "image": "assets/parts/shelly-pro-3em.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://www.shelly.com/products/shelly-pro-3em-x1",
       "use_cases": [
         "3-phase power monitoring",
         "equipment failure detection from load curve",
@@ -5064,7 +5069,8 @@
         "3-phase",
         "monitoring",
         "din-rail"
-      ]
+      ],
+      "image_large": "assets/parts/shelly-pro-3em-lg.png"
     },
     {
       "id": "solenoid-valve-24vac",
