@@ -6,548 +6,788 @@
 <title>Awesome Grow Room Parts</title>
 <meta name="description" content="A field-evidenced parts catalogue for automated grow rooms. Quality tiers earned from real deployment counts, not opinion.">
 <style>
+/* Layout language poached from the ESPHome Device Builder device table:
+   sticky uppercase header, tight cell rhythm, quiet header text, sortable
+   columns with a fading sort glyph, and - the important part - a mobile
+   breakpoint that turns rows into stacked label/value cards rather than a
+   horizontally scrolling mess. */
 :root{
-  --bg:#0d0f0e; --panel:#141817; --panel-2:#1b201e; --line:#2a312e;
-  --ink:#e6ebe8; --ink-dim:#98a49e; --ink-faint:#6b7772;
-  --accent:#4ea87a; --accent-ink:#0d0f0e;
+  --bg:#0d0f0e; --surface:#141817; --raised:#1b201e; --line:#2a312e;
+  --ink:#e6ebe8; --dim:#98a49e; --quiet:#6b7772;
+  --accent:#4ea87a; --accent-ink:#0d0f0e; --tint:rgba(78,168,122,.09);
   --t-proven:#3fa46a; --t-works:#3f8fa4; --t-exp:#b08a30; --t-avoid:#b04a4a;
-  --radius:10px; --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
   --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  /* Density. Compact is the default so a 1080p screen clears 25 rows. */
+  --row-pad:3px; --thumb:26px; --cell-fs:13px;
 }
+:root[data-density="comfortable"]{ --row-pad:5px; --thumb:34px; --cell-fs:13.5px; }
 :root[data-theme="light"]{
-  --bg:#f6f8f7; --panel:#fff; --panel-2:#eef2f0; --line:#dde4e0;
-  --ink:#16201c; --ink-dim:#5a6862; --ink-faint:#8a968f; --accent-ink:#fff;
+  --bg:#f6f8f7; --surface:#fff; --raised:#eef2f0; --line:#dde4e0;
+  --ink:#16201c; --dim:#5a6862; --quiet:#8a968f; --accent-ink:#fff;
+  --tint:rgba(78,168,122,.10);
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+html,body{margin:0;padding:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;overflow:hidden}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
-.wrap{max-width:1280px;margin:0 auto;padding:0 20px}
+button{font-family:inherit;font-size:inherit;color:inherit}
 
-/* ---------- header ---------- */
-header{border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--bg));
-  position:sticky;top:0;z-index:50;backdrop-filter:blur(8px)}
-.hbar{display:flex;align-items:center;gap:16px;padding:12px 0;flex-wrap:wrap}
-.brand{font-weight:700;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
+/* header / toolbar */
+header{border-bottom:1px solid var(--line);background:var(--surface);flex-shrink:0}
+.hbar{display:flex;align-items:center;gap:12px;padding:8px 14px}
+.brand{font-weight:700;font-size:14px;letter-spacing:-.01em;white-space:nowrap}
 .brand span{color:var(--accent)}
-#q{flex:1;min-width:200px;background:var(--panel-2);border:1px solid var(--line);color:var(--ink);
-  padding:9px 12px;border-radius:var(--radius);font-size:14px;font-family:var(--sans)}
-#q:focus{outline:2px solid var(--accent);outline-offset:-1px}
-.tabs{display:flex;gap:4px}
-.tab{background:none;border:1px solid transparent;color:var(--ink-dim);padding:7px 12px;
-  border-radius:var(--radius);cursor:pointer;font-size:13px;font-family:var(--sans)}
-.tab:hover{color:var(--ink);background:var(--panel-2)}
+.tabs{display:flex;gap:2px;margin-left:4px}
+.tab{background:none;border:1px solid transparent;color:var(--dim);padding:4px 10px;
+  border-radius:6px;cursor:pointer;font-size:12.5px}
+.tab:hover{color:var(--ink);background:var(--raised)}
 .tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
-.iconbtn{background:var(--panel-2);border:1px solid var(--line);color:var(--ink-dim);
-  width:34px;height:34px;border-radius:var(--radius);cursor:pointer;font-size:15px}
-.iconbtn:hover{color:var(--ink)}
+.spacer{flex:1}
+.toolbar{display:flex;align-items:center;gap:8px;padding:7px 14px;
+  border-bottom:1px solid var(--line);background:var(--bg);flex-wrap:wrap;flex-shrink:0}
+#q{flex:1;min-width:160px;max-width:340px;background:var(--raised);
+  border:1px solid var(--line);color:var(--ink);padding:5px 10px;border-radius:6px;font-size:13px}
+#q:focus{outline:1.5px solid var(--accent);outline-offset:-1px}
+.ctl{position:relative}
+.btn{background:var(--raised);border:1px solid var(--line);color:var(--dim);
+  padding:5px 10px;border-radius:6px;cursor:pointer;font-size:12.5px;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:5px}
+.btn:hover{color:var(--ink);border-color:var(--accent)}
+.btn .cnt{background:var(--accent);color:var(--accent-ink);border-radius:9px;
+  padding:0 5px;font-size:10.5px;font-weight:700}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{background:var(--raised);border:none;color:var(--dim);padding:5px 9px;
+  cursor:pointer;font-size:12.5px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.pop{position:absolute;top:calc(100% + 5px);left:0;z-index:60;background:var(--surface);
+  border:1px solid var(--line);border-radius:8px;padding:7px;min-width:210px;
+  max-height:min(60vh,420px);overflow-y:auto;box-shadow:0 8px 26px rgba(0,0,0,.5)}
+.pop.right{left:auto;right:0}
+.pop h5{margin:6px 6px 4px;font-size:10px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--quiet);font-weight:700}
+.opt{display:flex;align-items:center;gap:7px;padding:3px 6px;font-size:12.5px;
+  color:var(--dim);cursor:pointer;border-radius:4px;white-space:nowrap}
+.opt:hover{background:var(--raised);color:var(--ink)}
+.opt input{accent-color:var(--accent);margin:0;cursor:pointer}
+.opt .n{margin-left:auto;font-size:10.5px;color:var(--quiet);font-variant-numeric:tabular-nums}
+.popbar{display:flex;gap:6px;padding:6px 6px 2px;border-top:1px solid var(--line);margin-top:5px}
+.popbar button{flex:1;background:var(--raised);border:1px solid var(--line);color:var(--dim);
+  padding:4px;border-radius:5px;cursor:pointer;font-size:11.5px}
+.popbar button:hover{color:var(--ink)}
+.statusrow{display:flex;align-items:center;gap:10px;padding:4px 14px;font-size:11.5px;
+  color:var(--quiet);border-bottom:1px solid var(--line);flex-shrink:0}
+.statusrow b{color:var(--dim);font-variant-numeric:tabular-nums}
+.linkish{background:none;border:none;color:var(--accent);cursor:pointer;font-size:11.5px;padding:0}
+.linkish:hover{text-decoration:underline}
 
-/* ---------- layout ---------- */
-.cols{display:grid;grid-template-columns:220px 1fr;gap:24px;padding:20px 0 60px}
-@media(max-width:860px){.cols{grid-template-columns:1fr}
-  aside{position:static!important;max-height:none!important;border-bottom:1px solid var(--line);padding-bottom:12px}}
-aside{position:sticky;top:66px;align-self:start;max-height:calc(100vh - 86px);overflow-y:auto;
-  scrollbar-width:thin}
-.fgroup{margin-bottom:16px}
-.fgroup h4{margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;
-  color:var(--ink-faint);font-weight:700}
-.fopt{display:flex;align-items:center;gap:7px;padding:2px 0;font-size:13px;color:var(--ink-dim);cursor:pointer}
-.fopt:hover{color:var(--ink)}
-.fopt input{accent-color:var(--accent);margin:0;cursor:pointer}
-.fopt .n{margin-left:auto;font-size:11px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
-#clear{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--ink-dim);
-  padding:7px;border-radius:var(--radius);cursor:pointer;font-size:12px;margin-bottom:14px}
-#clear:hover{color:var(--ink)}
+main{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden}
+.pagepad{padding:16px 14px 60px;max-width:1100px}
 
-/* ---------- grid ---------- */
-.meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;
-  font-size:13px;color:var(--ink-dim);gap:12px;flex-wrap:wrap}
-select{background:var(--panel-2);border:1px solid var(--line);color:var(--ink);padding:6px 9px;
-  border-radius:8px;font-size:13px;font-family:var(--sans)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:14px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-  overflow:hidden;cursor:pointer;display:flex;flex-direction:column;
-  transition:border-color .12s,transform .12s}
-.card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.card img{width:100%;aspect-ratio:216/260;object-fit:cover;background:var(--panel-2);display:block}
-.cbody{padding:10px 11px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
-.cname{font-size:13.5px;font-weight:600;line-height:1.3}
-.cmaker{font-size:11.5px;color:var(--ink-faint)}
-.crow{display:flex;gap:5px;flex-wrap:wrap;margin-top:auto;padding-top:4px;align-items:center}
-.pill{font-size:10.5px;padding:2px 6px;border-radius:20px;background:var(--panel-2);
-  color:var(--ink-dim);border:1px solid var(--line);white-space:nowrap}
-.tier{font-size:10.5px;padding:2px 7px;border-radius:20px;font-weight:600;color:#fff;white-space:nowrap}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:var(--cell-fs)}
+thead{position:sticky;top:0;z-index:2;background:var(--surface)}
+th{padding:7px 10px;text-align:left;font-weight:700;font-size:10.5px;color:var(--quiet);
+  text-transform:uppercase;letter-spacing:.045em;white-space:nowrap;
+  border-bottom:1px solid var(--line);user-select:none}
+th.sortable{cursor:pointer}
+th.sortable:hover{color:var(--accent)}
+th.sorted{color:var(--accent)}
+th .thc{display:inline-flex;align-items:center;gap:3px}
+.sicon{font-size:9px;opacity:.35}
+th.sorted .sicon{opacity:1}
+th.sortable:hover .sicon{opacity:.7}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+tbody tr.row{border-bottom:1px solid var(--line);cursor:pointer;transition:background .1s}
+tbody tr.row:hover{background:var(--tint)}
+tbody tr.row.open{background:var(--tint)}
+tbody tr.row:focus-visible{outline:1.5px solid var(--accent);outline-offset:-2px}
+td{padding:var(--row-pad) 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:260px;color:var(--ink)}
+.namecell{display:flex;align-items:center;gap:8px;min-width:0}
+.namecell img{width:var(--thumb);height:var(--thumb);object-fit:cover;border-radius:4px;
+  background:var(--raised);flex-shrink:0}
+.nametext{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.sub{color:var(--quiet);font-size:11px}
+code,.mono{font-family:var(--mono);font-size:11.5px}
+.tier{display:inline-block;padding:1px 6px;border-radius:9px;font-size:10.5px;
+  font-weight:600;color:#fff;white-space:nowrap}
 .tier.field-proven{background:var(--t-proven)} .tier.works{background:var(--t-works)}
 .tier.experimental{background:var(--t-exp)} .tier.avoid{background:var(--t-avoid)}
-.dep{font-size:10.5px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
-.empty{padding:60px 20px;text-align:center;color:var(--ink-faint)}
+.chipmini{display:inline-block;padding:0 5px;border-radius:9px;background:var(--raised);
+  border:1px solid var(--line);color:var(--dim);font-size:10.5px;margin-right:3px}
+.empty-cell{color:var(--quiet)}
 
-/* ---------- detail dialog ---------- */
-dialog{border:none;padding:0;background:transparent;max-width:100%;max-height:100%}
-dialog::backdrop{background:rgba(0,0,0,.72)}
-.sheet{background:var(--panel);border:1px solid var(--line);border-radius:14px;width:min(880px,94vw);
-  max-height:90vh;overflow-y:auto;color:var(--ink)}
-.shead{display:flex;gap:16px;padding:20px;border-bottom:1px solid var(--line);
-  position:sticky;top:0;background:var(--panel);z-index:2}
-.shead img{width:104px;height:125px;object-fit:cover;border-radius:8px;flex-shrink:0;background:var(--panel-2)}
-.shead h2{margin:0 0 4px;font-size:19px;line-height:1.25}
-.sclose{margin-left:auto;background:var(--panel-2);border:1px solid var(--line);color:var(--ink-dim);
-  width:30px;height:30px;border-radius:8px;cursor:pointer;flex-shrink:0;font-size:15px}
-.sbody{padding:20px}
-.sec{margin-bottom:22px}
-.sec h3{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint)}
-.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;font-size:13.5px}
-.kv dt{color:var(--ink-faint)}
-.kv dd{margin:0}
-.sec ul{margin:0;padding-left:18px;font-size:13.5px}
-.sec li{margin-bottom:5px}
-.vend{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;background:var(--panel-2);
-  border:1px solid var(--line);border-radius:8px;margin-bottom:6px;font-size:13px;flex-wrap:wrap}
-.vend code{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint)}
-pre{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:12px;
-  overflow-x:auto;margin:0;font-family:var(--mono);font-size:12px;line-height:1.55}
-.codehead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
-.copy{background:var(--accent);color:var(--accent-ink);border:none;padding:5px 11px;border-radius:7px;
-  cursor:pointer;font-size:12px;font-weight:600;font-family:var(--sans)}
-.warnbox{background:rgba(176,74,74,.12);border:1px solid rgba(176,74,74,.45);border-radius:8px;
-  padding:11px 13px;font-size:13.5px}
-.chips{display:flex;gap:6px;flex-wrap:wrap}
-.chip{font-size:12px;padding:3px 9px;border-radius:20px;background:var(--panel-2);
-  border:1px solid var(--line);cursor:pointer;color:var(--ink-dim)}
+/* inline detail drawer */
+tr.drawer>td{padding:0;max-width:none;white-space:normal;background:var(--surface);
+  border-bottom:2px solid var(--accent)}
+.dwrap{padding:14px 16px 18px;display:grid;grid-template-columns:150px 1fr;gap:16px}
+.dwrap img.hero{width:150px;height:180px;object-fit:cover;border-radius:6px;background:var(--raised)}
+.dmain{min-width:0}
+.dhead{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.dhead h3{margin:0;font-size:16px}
+.dclose{margin-left:auto;background:var(--raised);border:1px solid var(--line);
+  color:var(--dim);width:26px;height:26px;border-radius:5px;cursor:pointer;flex-shrink:0}
+.dsec{margin-bottom:14px}
+.dsec h4{margin:0 0 5px;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--quiet)}
+.kv{display:grid;grid-template-columns:135px 1fr;gap:3px 12px;font-size:12.5px}
+.kv dt{color:var(--quiet)}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.dsec ul{margin:0;padding-left:16px;font-size:12.5px}
+.dsec li{margin-bottom:3px}
+.warnbox{background:rgba(176,74,74,.12);border:1px solid rgba(176,74,74,.4);
+  border-radius:6px;padding:8px 10px;font-size:12.5px}
+.vend{display:flex;justify-content:space-between;gap:8px;padding:5px 8px;background:var(--raised);
+  border:1px solid var(--line);border-radius:5px;margin-bottom:4px;font-size:12.5px;flex-wrap:wrap}
+pre{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px;
+  overflow-x:auto;margin:0;font-family:var(--mono);font-size:11.5px;line-height:1.5}
+.codehead{display:flex;justify-content:space-between;align-items:center;gap:8px;
+  margin-bottom:5px;flex-wrap:wrap}
+.copy{background:var(--accent);color:var(--accent-ink);border:none;padding:3px 10px;
+  border-radius:5px;cursor:pointer;font-size:11.5px;font-weight:600}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{font-size:11.5px;padding:2px 8px;border-radius:9px;background:var(--raised);
+  border:1px solid var(--line);cursor:pointer;color:var(--dim)}
 .chip:hover{border-color:var(--accent);color:var(--ink)}
+.note{font-size:11.5px;color:var(--quiet);margin-top:6px}
 
-/* ---------- pages ---------- */
-.page{padding:8px 0 60px}
-.page h2{font-size:22px;margin:0 0 6px}
-.lede{color:var(--ink-dim);font-size:14px;max-width:70ch;margin:0 0 22px}
-.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius)}
-table{border-collapse:collapse;width:100%;font-size:13px;min-width:560px}
-th,td{padding:8px 11px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
-th{background:var(--panel-2);font-size:11px;text-transform:uppercase;letter-spacing:.06em;
-  color:var(--ink-faint);position:sticky;top:0}
-tbody tr:hover{background:var(--panel-2)}
-td code,th code{font-family:var(--mono);font-size:12px}
-.addr{font-family:var(--mono);font-weight:700}
+/* optional card view */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:12px;padding:12px 14px 60px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  overflow:hidden;cursor:pointer;display:flex;flex-direction:column}
+.card:hover{border-color:var(--accent)}
+.card img{width:100%;aspect-ratio:216/200;object-fit:cover;background:var(--raised);display:block}
+.cbody{padding:8px 9px 10px;display:flex;flex-direction:column;gap:4px;flex:1}
+.cname{font-size:12.5px;font-weight:600;line-height:1.3}
+.crow{display:flex;gap:4px;flex-wrap:wrap;margin-top:auto;padding-top:3px;align-items:center}
+
+/* static pages */
+.pagepad h2{font-size:19px;margin:0 0 5px}
+.lede{color:var(--dim);font-size:13px;max-width:72ch;margin:0 0 16px}
+.bordered{border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.bordered thead{position:static;background:var(--raised)}
 tr.collide td{background:rgba(176,74,74,.13)}
-tr.collide:hover td{background:rgba(176,74,74,.2)}
-.badge-collide{background:var(--t-avoid);color:#fff;font-size:10px;padding:2px 6px;border-radius:20px;font-weight:700}
-.badge-ok{color:var(--ink-faint);font-size:11px}
-.rec{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-  padding:18px;margin-bottom:18px}
-.rec h3{margin:0 0 4px;font-size:17px}
-.rec .sum{color:var(--ink-dim);font-size:13.5px;margin-bottom:12px;max-width:75ch}
-.tot{font-size:15px;font-weight:700;color:var(--accent);white-space:nowrap}
-.note{font-size:13px;color:var(--ink-dim);margin-top:10px;max-width:78ch}
-.note b{color:var(--ink)}
-footer{border-top:1px solid var(--line);padding:22px 0;color:var(--ink-faint);font-size:12.5px}
+.badge-collide{background:var(--t-avoid);color:#fff;font-size:10px;padding:1px 6px;
+  border-radius:9px;font-weight:700}
+.badge-ok{color:var(--quiet);font-size:11px}
+.addr{font-family:var(--mono);font-weight:700}
+.rec{background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:14px;margin-bottom:14px}
+.rec h3{margin:0 0 3px;font-size:15px}
+.rec .sum{color:var(--dim);font-size:12.5px;margin-bottom:10px;max-width:75ch}
+.tot{font-size:14px;font-weight:700;color:var(--accent);white-space:nowrap}
+.noresult{padding:40px 16px;text-align:center;color:var(--quiet)}
 .hidden{display:none!important}
+
+/* mobile: rows become stacked label/value cards */
+@media(max-width:820px){
+  body{overflow:auto}
+  main{overflow:visible}
+  .hbar{flex-wrap:wrap;gap:8px}
+  #q{max-width:none}
+  thead{display:none}
+  table.parts,table.parts tbody{display:block}
+  table.parts tbody tr.row{display:flex;flex-direction:column;gap:1px;position:relative;
+    margin:8px 10px;padding:9px 11px;border:1px solid var(--line);border-radius:8px;
+    background:var(--surface)}
+  table.parts td{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    max-width:none;white-space:normal;overflow:visible;text-overflow:clip;
+    padding:2px 0;border:none;text-align:left}
+  table.parts td::before{content:attr(data-label);flex-shrink:0;font-size:10px;
+    font-weight:700;letter-spacing:.045em;text-transform:uppercase;color:var(--quiet)}
+  table.parts td.col-name{order:-1;padding-bottom:5px}
+  table.parts td.col-name::before{display:none}
+  table.parts td.col-name .nametext{font-size:14px;font-weight:700;white-space:normal}
+  table.parts tr.drawer{display:block;margin:-4px 10px 8px}
+  table.parts tr.drawer>td{display:block;padding:0}
+  .dwrap{grid-template-columns:1fr;gap:10px;padding:12px}
+  .dwrap img.hero{width:110px;height:132px}
+  .kv{grid-template-columns:1fr;gap:1px}
+  .kv dt{margin-top:5px;font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+  .scrollx{overflow-x:auto}
+}
 </style>
 </head>
 <body>
 <header>
-  <div class="wrap hbar">
+  <div class="hbar">
     <div class="brand">awesome<span>-grow-room-</span>parts</div>
-    <input id="q" type="search" placeholder="Search parts, part numbers, buses, failure modes…" autocomplete="off" aria-label="Search parts">
     <nav class="tabs" role="tablist">
-      <button class="tab" role="tab" data-page="catalogue" aria-selected="true">Catalogue</button>
-      <button class="tab" role="tab" data-page="i2c" aria-selected="false">I²C map</button>
+      <button class="tab" role="tab" data-page="catalogue" aria-selected="true">Parts</button>
+      <button class="tab" role="tab" data-page="i2c" aria-selected="false">I&sup2;C map</button>
       <button class="tab" role="tab" data-page="recipes" aria-selected="false">Builds</button>
     </nav>
-    <button class="iconbtn" id="theme" title="Toggle light/dark" aria-label="Toggle theme">◐</button>
+    <div class="spacer"></div>
+    <div class="seg" id="density" title="Row density">
+      <button data-d="compact" aria-pressed="true">Compact</button>
+      <button data-d="comfortable" aria-pressed="false">Roomy</button>
+    </div>
+    <button class="btn" id="theme" title="Toggle light / dark">&#9686;</button>
   </div>
 </header>
 
-<main class="wrap">
-  <!-- CATALOGUE -->
+<div class="toolbar" id="toolbar">
+  <input id="q" type="search" placeholder="Search name, part number, bus, address, failure mode..." autocomplete="off" aria-label="Search parts">
+  <div class="ctl"><button class="btn" id="facetBtn" aria-expanded="false">Filters <span class="cnt hidden" id="facetCount">0</span> &#9662;</button>
+    <div class="pop hidden" id="facetPop"></div></div>
+  <div class="ctl"><button class="btn" id="colBtn" aria-expanded="false">Columns &#9662;</button>
+    <div class="pop right hidden" id="colPop"></div></div>
+  <div class="seg" id="view">
+    <button data-v="table" aria-pressed="true">Table</button>
+    <button data-v="cards" aria-pressed="false">Cards</button>
+  </div>
+</div>
+
+<div class="statusrow" id="statusrow">
+  <span><b id="count">0</b> parts</span>
+  <button class="linkish hidden" id="clear">Clear filters</button>
+  <span class="spacer"></span>
+  <button class="linkish" id="share">Copy shareable link</button>
+</div>
+
+<main>
   <div id="page-catalogue">
-    <div class="cols">
-      <aside>
-        <button id="clear">Clear all filters</button>
-        <div id="facets"></div>
-      </aside>
-      <section>
-        <div class="meta">
-          <span id="count"></span>
-          <label>Sort
-            <select id="sort">
-              <option value="deployment">Most deployed</option>
-              <option value="tier">Quality tier</option>
-              <option value="name">Name A–Z</option>
-              <option value="price-asc">Price low→high</option>
-              <option value="price-desc">Price high→low</option>
-            </select>
-          </label>
-        </div>
-        <div class="grid" id="grid"></div>
-        <div class="empty hidden" id="empty">No parts match. Try clearing a filter.</div>
-      </section>
-    </div>
+    <table class="parts" id="ptable"><thead id="phead"></thead><tbody id="pbody"></tbody></table>
+    <div class="grid hidden" id="pgrid"></div>
+    <div class="noresult hidden" id="noresult">No parts match. Try clearing a filter.</div>
   </div>
 
-  <!-- I2C MAP -->
-  <div id="page-i2c" class="page hidden">
-    <h2>I²C address collision map</h2>
-    <p class="lede">Every I²C part in the catalogue, by address. Two parts at the same address
-      cannot share a bus — you need a TCA9548A multiplexer, a second I²C bus on spare GPIOs, or a
-      part whose address is strappable. Plan the bus here <em>before</em> you order.</p>
-    <div class="tablewrap"><table id="i2ctable"></table></div>
+  <div id="page-i2c" class="pagepad hidden">
+    <h2>I&sup2;C address collision map</h2>
+    <p class="lede">Every I&sup2;C part by address. Two parts at the same address cannot share a bus &mdash;
+      you need a multiplexer, a second I&sup2;C bus on spare GPIOs, or a part whose address is strappable.
+      Composite modules occupy several addresses at once; each one is listed. Plan the bus here
+      <em>before</em> you order.</p>
+    <div class="bordered scrollx"><table id="i2ctable"></table></div>
     <p class="note" id="i2cnote"></p>
   </div>
 
-  <!-- RECIPES -->
-  <div id="page-recipes" class="page hidden">
+  <div id="page-recipes" class="pagepad hidden">
     <h2>Build recipes</h2>
-    <p class="lede">Complete bills of materials that reference catalogue parts by id. Totals are
-      computed from each part's observed price at build time, so they cannot drift out of sync
-      with the catalogue.</p>
+    <p class="lede">Bills of materials referencing catalogue parts by id. Totals are computed from
+      each part's observed price at build time, so they cannot drift from the catalogue.</p>
     <div id="recipes"></div>
   </div>
 </main>
 
-<dialog id="detail"><div class="sheet" id="sheet"></div></dialog>
-
-<footer class="wrap">
-  <div>Quality tiers are earned from deployment evidence in production ESPHome configs, not vendor
-  claims. <b>field-proven</b> means the part is named in the stated number of live device files.</div>
-  <div style="margin-top:6px">Generated from <code>parts/*.yaml</code> — edit the YAML, not this page.
-  Prices are indicative and were observed on the stated date.</div>
-</footer>
-
 <script id="data" type="application/json">__DATA__</script>
 <script>
+"use strict";
 const DB = JSON.parse(document.getElementById('data').textContent);
 const PARTS = DB.parts, RECIPES = DB.recipes;
 const byId = Object.fromEntries(PARTS.map(p => [p.id, p]));
-const TIER_ORDER = {'field-proven':0, 'works':1, 'experimental':2, 'avoid':3};
+const TIER_ORDER = {'field-proven':0,'works':1,'experimental':2,'avoid':3};
+const BAND_ORDER = {'$':1,'$$':2,'$$$':3,'$$$$':4};
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
   ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const EMPTY = '<span class="empty-cell">&mdash;</span>';
 
-/* Build a lowercase haystack per part once, so search stays instant. */
-PARTS.forEach(p => {
-  p._hay = [p.name, p.manufacturer, p.id, p.subcategory, p.category, p.notes, p.evidence,
-    (p.part_numbers||[]).join(' '), (p.bus||[]).join(' '), (p.tags||[]).join(' '),
-    (p.failure_modes||[]).join(' '), (p.vendors||[]).map(v=>v.name).join(' '),
-    (p.i2c||{}).address || '', (p.platforms||[]).join(' ')
-  ].join(' ').toLowerCase();
-});
+const nom = p => { const v=p.voltage||{}; return v.nominal ?? v.max ?? v.min ?? null; };
+const priceOf = p => (p.price && p.price.observed != null) ? p.price.observed : null;
+
+/* Column registry. Every schema field is available as a column; `def` marks
+   the default-on set. `num` selects a numeric comparator - string compare
+   would put "16777216" above "2097152", the classic table-sort bug. */
+const COLS = [
+  {id:'name', label:'Part', def:true, lock:true, sort:p=>p.name.toLowerCase(),
+   cell:p=>'<div class="namecell"><img src="'+esc(p.image)+'" alt="" loading="lazy">'+
+     '<span class="nametext">'+esc(p.name)+'</span></div>'},
+  {id:'tier', label:'Tier', def:true, sort:p=>TIER_ORDER[p.quality_tier]!==undefined?TIER_ORDER[p.quality_tier]:null,
+   cell:p=>'<span class="tier '+esc(p.quality_tier)+'">'+esc(p.quality_tier)+'</span>'},
+  {id:'deployment_count', label:'Live', def:true, num:true,
+   sort:p=>p.deployment_count!=null?p.deployment_count:null,
+   cell:p=>p.deployment_count!=null?String(p.deployment_count):EMPTY},
+  {id:'category', label:'Category', def:true, sort:p=>p.category||'',
+   cell:p=>esc(p.category||'')||EMPTY},
+  {id:'bus', label:'Bus', def:true, sort:p=>(p.bus||[]).join('/'),
+   cell:p=>(p.bus||[]).map(b=>'<span class="chipmini">'+esc(b)+'</span>').join('')||EMPTY},
+  {id:'i2c', label:'I²C', def:true, sort:p=>(p.i2c&&p.i2c.address)||null,
+   cell:p=>(p.i2c&&p.i2c.address)?'<code class="addr">'+esc(p.i2c.address)+'</code>':EMPTY},
+  {id:'price', label:'Price', def:true, num:true, sort:p=>priceOf(p),
+   cell:p=>priceOf(p)!=null?esc((p.price.currency||'')+' '+priceOf(p).toFixed(2))
+        :((p.price&&p.price.band)?esc(p.price.band):EMPTY)},
+  {id:'voltage', label:'Voltage', def:true, num:true, sort:p=>nom(p),
+   cell:p=>nom(p)!=null?esc(nom(p)+' V'):EMPTY},
+
+  {id:'manufacturer', label:'Manufacturer', sort:p=>(p.manufacturer||'').toLowerCase(),
+   cell:p=>esc(p.manufacturer||'')||EMPTY},
+  {id:'subcategory', label:'Subcategory', sort:p=>p.subcategory||'',
+   cell:p=>esc(p.subcategory||'')||EMPTY},
+  {id:'band', label:'Price band', sort:p=>(p.price&&BAND_ORDER[p.price.band])||null,
+   cell:p=>(p.price&&p.price.band)?esc(p.price.band):EMPTY},
+  {id:'i2c_alt', label:'I²C alternates', sort:p=>((p.i2c&&p.i2c.alternates)||[]).join(','),
+   cell:p=>((p.i2c&&p.i2c.alternates)||[]).map(a=>'<code>'+esc(a)+'</code>').join(' ')||EMPTY},
+  {id:'i2c_also', label:'Also occupies', sort:p=>((p.i2c&&p.i2c.also_occupies)||[]).join(','),
+   cell:p=>((p.i2c&&p.i2c.also_occupies)||[]).map(a=>'<code>'+esc(a)+'</code>').join(' ')||EMPTY},
+  {id:'ip_rating', label:'IP rating', sort:p=>p.ip_rating||'',
+   cell:p=>esc(p.ip_rating||'')||EMPTY},
+  {id:'calibration', label:'Calibration', sort:p=>p.calibration_required||'',
+   cell:p=>esc(p.calibration_required||'')||EMPTY},
+  {id:'platforms', label:'Compatibility', sort:p=>(p.platforms||[]).join(','),
+   cell:p=>(p.platforms||[]).map(x=>'<span class="chipmini">'+esc(x)+'</span>').join('')||EMPTY},
+  {id:'protocol', label:'Protocol', sort:p=>p.protocol_settings||'',
+   cell:p=>esc(p.protocol_settings||'')||EMPTY},
+  {id:'part_numbers', label:'Part numbers', sort:p=>(p.part_numbers||[]).join(','),
+   cell:p=>(p.part_numbers||[]).map(n=>'<code>'+esc(n)+'</code>').join(', ')||EMPTY},
+  {id:'vendors', label:'Vendors', sort:p=>(p.vendors||[]).map(v=>v.name).join(','),
+   cell:p=>(p.vendors||[]).length?esc((p.vendors||[]).map(v=>v.name.split(/[-–(]/)[0].trim()).join(', ')):EMPTY},
+  {id:'vendor_count', label:'# Vendors', num:true, sort:p=>(p.vendors||[]).length,
+   cell:p=>String((p.vendors||[]).length||0)},
+  {id:'failure_count', label:'# Failure modes', num:true, sort:p=>(p.failure_modes||[]).length,
+   cell:p=>String((p.failure_modes||[]).length||0)},
+  {id:'has_example', label:'Example', sort:p=>p.example?0:1,
+   cell:p=>p.example?'<span class="chipmini">yes</span>':EMPTY},
+  {id:'tags', label:'Tags', sort:p=>(p.tags||[]).join(','),
+   cell:p=>(p.tags||[]).map(t=>'<span class="chipmini">'+esc(t)+'</span>').join('')||EMPTY},
+  {id:'id', label:'ID', sort:p=>p.id, cell:p=>'<code>'+esc(p.id)+'</code>'}
+];
+const COLBY = {}; COLS.forEach(c=>COLBY[c.id]=c);
 
 const FACETS = [
-  ['category',   'Category',   p => [p.category]],
-  ['quality_tier','Quality tier', p => [p.quality_tier]],
-  ['bus',        'Bus / protocol', p => p.bus || []],
-  ['platforms',  'Works with', p => p.platforms || []],
-  ['price',      'Price band', p => p.price ? [p.price.band] : []],
-  ['voltage',    'Operating voltage', p => {
-      const v = p.voltage || {}; const n = v.nominal ?? v.max ?? v.min;
-      if (n == null) return [];
-      if (n <= 3.3) return ['3.3 V'];
-      if (n <= 5) return ['5 V'];
-      if (n <= 12) return ['12 V'];
-      if (n <= 24) return ['24 V'];
-      return ['> 24 V'];
-  }],
-  ['vendor',     'Vendor', p => [...new Set((p.vendors||[]).map(v => v.name.split(/[-–(]/)[0].trim()))]],
+  ['category','Category',p=>[p.category]],
+  ['quality_tier','Quality tier',p=>[p.quality_tier]],
+  ['bus','Bus / protocol',p=>p.bus||[]],
+  ['platforms','Compatibility',p=>p.platforms||[]],
+  ['band','Price band',p=>p.price?[p.price.band]:[]],
+  ['volt','Voltage',p=>{const n=nom(p); if(n==null)return [];
+    return [n<=3.3?'3.3 V':n<=5?'5 V':n<=12?'12 V':n<=24?'24 V':'> 24 V'];}],
+  ['vendor','Vendor',p=>{const s=new Set((p.vendors||[]).map(v=>v.name.split(/[-–(]/)[0].trim()));
+    return Array.from(s);}],
+  ['ip','IP rating',p=>p.ip_rating?[p.ip_rating]:[]],
+  ['cal','Calibration',p=>p.calibration_required?[p.calibration_required]:[]]
 ];
-const active = {};  // facet key -> Set of selected values
 
-function renderFacets(){
-  const host = document.getElementById('facets');
-  host.innerHTML = FACETS.map(([key, label, get]) => {
-    const counts = {};
-    // Count against parts filtered by every OTHER facet, so counts stay useful.
-    matching(key).forEach(p => get(p).forEach(v => { if(v) counts[v] = (counts[v]||0)+1; }));
-    const vals = Object.keys(counts).sort((a,b) =>
-      key === 'quality_tier' ? (TIER_ORDER[a]-TIER_ORDER[b]) : (counts[b]-counts[a] || a.localeCompare(b)));
-    if(!vals.length) return '';
-    return `<div class="fgroup"><h4>${esc(label)}</h4>` + vals.map(v => {
-      const on = active[key]?.has(v);
-      return `<label class="fopt"><input type="checkbox" data-k="${esc(key)}" value="${esc(v)}"
-        ${on?'checked':''}><span>${esc(v)}</span><span class="n">${counts[v]}</span></label>`;
-    }).join('') + '</div>';
-  }).join('');
+const LSKEY='agrp.view.v1';
+const state = {cols:COLS.filter(c=>c.def).map(c=>c.id), sort:'deployment_count', dir:-1,
+  q:'', facets:{}, view:'table', density:'compact', open:null};
+
+function loadState(){
+  try{ const s=JSON.parse(localStorage.getItem(LSKEY)||'{}');
+    if(Array.isArray(s.cols)&&s.cols.length) state.cols=s.cols.filter(c=>COLBY[c]);
+    if(s.sort&&COLBY[s.sort]) state.sort=s.sort;
+    if(s.dir===1||s.dir===-1) state.dir=s.dir;
+    if(s.view) state.view=s.view;
+    if(s.density) state.density=s.density;
+  }catch(e){}
+  /* A shared URL must render exactly as sent, so it wins over localStorage. */
+  const u=new URLSearchParams(location.search);
+  if(u.get('cols')){ const c=u.get('cols').split(',').filter(x=>COLBY[x]); if(c.length) state.cols=c; }
+  if(u.get('sort')){ const parts=u.get('sort').split(':');
+    if(COLBY[parts[0]]){ state.sort=parts[0]; state.dir=parts[1]==='asc'?1:-1; } }
+  if(u.get('q')) state.q=u.get('q');
+  if(u.get('view')) state.view=u.get('view');
+  if(u.get('density')) state.density=u.get('density');
+  FACETS.forEach(f=>{ const v=u.get('f_'+f[0]); if(v) state.facets[f[0]]=new Set(v.split('|')); });
+  if(state.cols.indexOf('name')===-1) state.cols.unshift('name');
+}
+function saveState(){
+  try{ localStorage.setItem(LSKEY, JSON.stringify({cols:state.cols,sort:state.sort,
+    dir:state.dir,view:state.view,density:state.density})); }catch(e){}
+}
+function shareURL(){
+  const u=new URLSearchParams();
+  u.set('cols',state.cols.join(','));
+  u.set('sort',state.sort+':'+(state.dir===1?'asc':'desc'));
+  if(state.q) u.set('q',state.q);
+  if(state.view!=='table') u.set('view',state.view);
+  if(state.density!=='compact') u.set('density',state.density);
+  Object.keys(state.facets).forEach(k=>{ const s=state.facets[k];
+    if(s&&s.size) u.set('f_'+k,Array.from(s).join('|')); });
+  return location.origin+location.pathname+'?'+u.toString();
 }
 
-/* Parts passing search + all facets, optionally ignoring one facet (for counts). */
-function matching(ignoreKey){
-  const q = document.getElementById('q').value.trim().toLowerCase();
-  const terms = q ? q.split(/\s+/) : [];
-  return PARTS.filter(p => {
-    if(terms.length && !terms.every(t => p._hay.includes(t))) return false;
-    for(const [key,,get] of FACETS){
-      if(key === ignoreKey) continue;
-      const sel = active[key];
-      if(sel && sel.size){
-        const vals = get(p);
-        if(!vals.some(v => sel.has(v))) return false;
-      }
+PARTS.forEach(p=>{ p._hay=[p.name,p.manufacturer,p.id,p.subcategory,p.category,p.notes,p.evidence,
+  (p.part_numbers||[]).join(' '),(p.bus||[]).join(' '),(p.tags||[]).join(' '),
+  (p.failure_modes||[]).join(' '),(p.vendors||[]).map(v=>v.name).join(' '),
+  (p.i2c&&p.i2c.address)||'',((p.i2c&&p.i2c.alternates)||[]).join(' '),
+  ((p.i2c&&p.i2c.also_occupies)||[]).join(' '),(p.platforms||[]).join(' '),
+  p.ip_rating||'',p.calibration_required||''].join(' ').toLowerCase(); });
+
+function matching(ignore){
+  const terms=state.q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  return PARTS.filter(p=>{
+    if(terms.length && !terms.every(t=>p._hay.indexOf(t)!==-1)) return false;
+    for(let i=0;i<FACETS.length;i++){
+      const k=FACETS[i][0], get=FACETS[i][2];
+      if(k===ignore) continue;
+      const sel=state.facets[k];
+      if(sel&&sel.size && !get(p).some(v=>sel.has(v))) return false;
     }
     return true;
   });
 }
-
-function sortParts(list){
-  const mode = document.getElementById('sort').value;
-  const price = p => p.price?.observed ?? Infinity;
-  return [...list].sort((a,b) => {
-    switch(mode){
-      case 'name': return a.name.localeCompare(b.name);
-      case 'tier': return (TIER_ORDER[a.quality_tier]-TIER_ORDER[b.quality_tier])
-                       || ((b.deployment_count||0)-(a.deployment_count||0));
-      case 'price-asc': return price(a)-price(b);
-      case 'price-desc': return (price(b)===Infinity?-1:price(b))-(price(a)===Infinity?-1:price(a));
-      default: return ((b.deployment_count||0)-(a.deployment_count||0))
-                   || (TIER_ORDER[a.quality_tier]-TIER_ORDER[b.quality_tier]);
-    }
+/* Rows with no value for the sorted column go to the BOTTOM in both
+   directions - flipping the sort should not fill the top of the table with
+   blanks. They are therefore compared before the direction multiplier is
+   applied, and never fed to `x-y` (Infinity-Infinity is NaN, and NaN
+   silently makes a comparator non-transitive). */
+const MISSING = v => v == null || v === '' || (typeof v === 'number' && !isFinite(v));
+function sorted(list){
+  const c=COLBY[state.sort]||COLBY.name;
+  return list.slice().sort((a,b)=>{
+    const x=c.sort(a), y=c.sort(b);
+    const mx=MISSING(x), my=MISSING(y);
+    if(mx&&my) return a.name.localeCompare(b.name);
+    if(mx) return 1;
+    if(my) return -1;
+    let r;
+    if(c.num || (typeof x==='number'&&typeof y==='number')) r = x-y;
+    else r = String(x).localeCompare(String(y));
+    if(!r) return a.name.localeCompare(b.name);   // stable, direction-independent
+    return r*state.dir;
   });
+}
+
+function renderHead(){
+  document.getElementById('phead').innerHTML='<tr>'+state.cols.map(id=>{
+    const c=COLBY[id]; if(!c) return '';
+    const on=state.sort===id;
+    const gl=on?(state.dir===1?'▲':'▼'):'▬';
+    return '<th class="sortable'+(on?' sorted':'')+(c.num?' num':'')+'" data-col="'+esc(id)+
+      '" title="Sort by '+esc(c.label)+'"><span class="thc">'+esc(c.label)+
+      '<span class="sicon">'+gl+'</span></span></th>';
+  }).join('')+'</tr>';
+}
+function renderBody(list){
+  document.getElementById('pbody').innerHTML=list.map(p=>{
+    const cells=state.cols.map(id=>{
+      const c=COLBY[id]; if(!c) return '';
+      return '<td class="col-'+esc(id)+(c.num?' num':'')+'" data-label="'+esc(c.label)+'">'+c.cell(p)+'</td>';
+    }).join('');
+    const row='<tr class="row'+(state.open===p.id?' open':'')+'" data-id="'+esc(p.id)+'" tabindex="0">'+cells+'</tr>';
+    const drawer=state.open===p.id
+      ? '<tr class="drawer"><td colspan="'+state.cols.length+'">'+detailHTML(p)+'</td></tr>' : '';
+    return row+drawer;
+  }).join('');
+}
+function renderCards(list){
+  document.getElementById('pgrid').innerHTML=list.map(p=>
+    '<article class="card" data-id="'+esc(p.id)+'" tabindex="0">'+
+    '<img src="'+esc(p.image)+'" alt="" loading="lazy">'+
+    '<div class="cbody"><div class="cname">'+esc(p.name)+'</div>'+
+    '<div class="sub">'+esc(p.manufacturer||'')+'</div><div class="crow">'+
+    '<span class="tier '+esc(p.quality_tier)+'">'+esc(p.quality_tier)+'</span>'+
+    ((p.i2c&&p.i2c.address)?'<span class="chipmini">'+esc(p.i2c.address)+'</span>':'')+
+    (p.deployment_count?'<span class="chipmini">'+p.deployment_count+' live</span>':'')+
+    '</div></div></article>').join('');
+}
+
+function detailHTML(p){
+  const row=(k,v)=>v?'<dt>'+esc(k)+'</dt><dd>'+v+'</dd>':'';
+  const v=p.voltage||{};
+  const volts=(v.min!=null||v.nominal!=null)
+    ? esc([v.min!=null?v.min+'V':null,v.max!=null?v.max+'V':null].filter(Boolean).join(' – ')
+      +(v.nominal!=null?' (nominal '+v.nominal+'V)':'')) : '';
+  let i2c='';
+  if(p.i2c&&p.i2c.address){
+    i2c='<code class="addr">'+esc(p.i2c.address)+'</code>';
+    if(p.i2c.alternates&&p.i2c.alternates.length)
+      i2c+=' · moves to '+p.i2c.alternates.map(a=>'<code>'+esc(a)+'</code>').join(' ');
+    if(p.i2c.also_occupies&&p.i2c.also_occupies.length)
+      i2c+=' · <b>also occupies</b> '+p.i2c.also_occupies.map(a=>'<code>'+esc(a)+'</code>').join(' ');
+    if(p.i2c.how_to_change) i2c+='<div class="note">'+esc(p.i2c.how_to_change)+'</div>';
+  }
+  const price=p.price?esc((p.price.observed!=null?(p.price.currency||'')+' '+p.price.observed:p.price.band)
+      +(p.price.observed_date?' (observed '+p.price.observed_date+')':'')):'';
+  const sec=(t,h)=>h?'<div class="dsec"><h4>'+t+'</h4>'+h+'</div>':'';
+  const ul=a=>(a&&a.length)?'<ul>'+a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'';
+  const refs=(a,l)=>(a&&a.length)?'<div class="dsec"><h4>'+l+'</h4><div class="chips">'+
+    a.filter(r=>byId[r]).map(r=>'<span class="chip" data-goto="'+esc(r)+'">'+esc(byId[r].name)+'</span>').join('')+
+    '</div></div>':'';
+  let h='<div class="dwrap"><img class="hero" src="'+esc(p.image)+'" alt=""><div class="dmain">';
+  h+='<div class="dhead"><div><h3>'+esc(p.name)+'</h3><div class="sub">'+esc(p.manufacturer||'')+
+     (p.subcategory?' · '+esc(p.subcategory):'')+'</div></div>'+
+     '<button class="dclose" aria-label="Close">✕</button></div>';
+  h+=sec('Why this tier','<div style="font-size:12.5px">'+esc(p.evidence||'')+'</div>'+
+    ((p.deployment_evidence&&p.deployment_evidence.length)
+      ?'<details class="note"><summary style="cursor:pointer">'+p.deployment_evidence.length+
+       ' evidence configs</summary><div class="mono" style="margin-top:4px;line-height:1.6">'+
+       p.deployment_evidence.map(esc).join('<br>')+'</div></details>':''));
+  h+='<div class="dsec"><h4>Specifications</h4><dl class="kv">'+
+    row('Category',esc(p.category))+
+    row('Part numbers',(p.part_numbers||[]).map(n=>'<code>'+esc(n)+'</code>').join(', '))+
+    row('I²C',i2c)+row('Protocol',esc(p.protocol_settings||''))+
+    row('Voltage',volts)+row('Price',price)+
+    row('IP rating',esc(p.ip_rating||''))+row('Calibration',esc(p.calibration_required||''))+
+    row('Compatibility',(p.platforms||[]).map(esc).join(', '))+'</dl></div>';
+  h+=sec('Calibration notes',p.calibration_notes?'<div style="font-size:12.5px">'+esc(p.calibration_notes)+'</div>':'');
+  h+=sec('Notes',p.notes?'<div style="font-size:12.5px">'+esc(p.notes)+'</div>':'');
+  if(p.failure_modes&&p.failure_modes.length)
+    h+='<div class="dsec"><h4>Failure modes</h4><div class="warnbox">'+ul(p.failure_modes)+'</div></div>';
+  if(p.vendors&&p.vendors.length)
+    h+='<div class="dsec"><h4>Where to buy</h4>'+p.vendors.map(vn=>
+      '<div class="vend"><a href="'+esc(vn.url)+'" target="_blank" rel="noopener noreferrer">'+esc(vn.name)+'</a>'+
+      '<span>'+(vn.part_number?'<code>'+esc(vn.part_number)+'</code>':'')+
+      (vn.region?' · '+esc(vn.region):'')+'</span></div>').join('')+
+      '<div class="note">Dead link? Search the manufacturer part number — that is why it is recorded.</div></div>';
+  if(p.example)
+    h+='<div class="dsec"><h4>Copy-paste example</h4><div class="codehead">'+
+      '<span class="note" style="margin:0">'+esc(p.example.title||'')+'</span>'+
+      '<button class="copy" data-copy="'+esc(p.id)+'">Copy</button></div>'+
+      '<pre><code id="code-'+esc(p.id)+'">'+esc(p.example.code)+'</code></pre>'+
+      (p.example.source?'<div class="note">Distilled from '+esc(p.example.source)+
+       '. Credentials scrubbed — supply your own <code>!secret</code> values.</div>':'')+'</div>';
+  if(p.drivers&&p.drivers.length)
+    h+='<div class="dsec"><h4>Drivers &amp; docs</h4>'+p.drivers.map(d=>
+      '<div class="vend"><a href="'+esc(d.url)+'" target="_blank" rel="noopener noreferrer">'+esc(d.name)+'</a>'+
+      '<span class="chipmini">'+esc(d.kind||'link')+'</span></div>').join('')+'</div>';
+  h+=refs(p.works_with,'Pairs with')+refs(p.alternatives,'Alternatives');
+  return h+'</div></div>';
+}
+
+function renderFacets(){
+  document.getElementById('facetPop').innerHTML=FACETS.map(f=>{
+    const key=f[0], label=f[1], get=f[2];
+    const counts={};
+    matching(key).forEach(p=>get(p).forEach(v=>{ if(v) counts[v]=(counts[v]||0)+1; }));
+    const vals=Object.keys(counts).sort((a,b)=>
+      key==='quality_tier'?(TIER_ORDER[a]-TIER_ORDER[b]):(counts[b]-counts[a]||a.localeCompare(b)));
+    if(!vals.length) return '';
+    return '<h5>'+esc(label)+'</h5>'+vals.map(v=>{
+      const on=state.facets[key]&&state.facets[key].has(v);
+      return '<label class="opt"><input type="checkbox" data-f="'+esc(key)+'" value="'+esc(v)+'"'+
+        (on?' checked':'')+'><span>'+esc(v)+'</span><span class="n">'+counts[v]+'</span></label>';
+    }).join('');
+  }).join('');
+  let n=0; Object.keys(state.facets).forEach(k=>{ if(state.facets[k]) n+=state.facets[k].size; });
+  const badge=document.getElementById('facetCount');
+  badge.textContent=n; badge.classList.toggle('hidden',!n);
+  document.getElementById('clear').classList.toggle('hidden',!n && !state.q);
+}
+function renderColPicker(){
+  document.getElementById('colPop').innerHTML='<h5>Visible columns</h5>'+COLS.map(c=>{
+    const on=state.cols.indexOf(c.id)!==-1;
+    return '<label class="opt"><input type="checkbox" data-c="'+esc(c.id)+'"'+(on?' checked':'')+
+      (c.lock?' disabled':'')+'><span>'+esc(c.label)+(c.lock?' (fixed)':'')+'</span></label>';
+  }).join('')+'<div class="popbar"><button data-preset="default">Default</button>'+
+    '<button data-preset="all">All</button><button data-preset="min">Minimal</button></div>';
 }
 
 function render(){
-  const list = sortParts(matching(null));
-  document.getElementById('grid').innerHTML = list.map(p => {
-    const addr = p.i2c?.address ? `<span class="pill">I²C ${esc(p.i2c.address)}</span>` : '';
-    const dep = p.deployment_count ? `<span class="dep">${p.deployment_count} live</span>` : '';
-    const price = p.price?.observed
-      ? `<span class="pill">${p.price.currency||''} ${p.price.observed}</span>`
-      : (p.price?.band ? `<span class="pill">${esc(p.price.band)}</span>` : '');
-    return `<article class="card" data-id="${esc(p.id)}" tabindex="0" role="button">
-      <img src="${esc(p.image)}" alt="" loading="lazy">
-      <div class="cbody">
-        <div class="cname">${esc(p.name)}</div>
-        <div class="cmaker">${esc(p.manufacturer||'')}</div>
-        <div class="crow">
-          <span class="tier ${esc(p.quality_tier)}">${esc(p.quality_tier)}</span>
-          ${addr}${price}${dep}
-        </div>
-      </div></article>`;
-  }).join('');
-  document.getElementById('count').textContent =
-    `${list.length} of ${PARTS.length} parts`;
-  document.getElementById('empty').classList.toggle('hidden', list.length > 0);
-  renderFacets();
+  const list=sorted(matching(null));
+  document.getElementById('count').textContent=list.length;
+  document.getElementById('noresult').classList.toggle('hidden',list.length>0);
+  const cards=state.view==='cards';
+  document.getElementById('ptable').classList.toggle('hidden',cards||!list.length);
+  document.getElementById('pgrid').classList.toggle('hidden',!cards||!list.length);
+  if(cards) renderCards(list); else { renderHead(); renderBody(list); }
+  renderFacets(); renderColPicker(); saveState();
 }
 
-/* ---------- detail ---------- */
-function openPart(id){
-  const p = byId[id]; if(!p) return;
-  const row = (k,v) => v ? `<dt>${esc(k)}</dt><dd>${v}</dd>` : '';
-  const v = p.voltage || {};
-  const volts = v.nominal!=null || v.min!=null
-    ? esc([v.min!=null?v.min+'V':null, v.max!=null?v.max+'V':null].filter(Boolean).join(' – ')
-        + (v.nominal!=null?` (nominal ${v.nominal}V)`:''))
-    : '';
-  const i2c = p.i2c?.address
-    ? `<span class="addr">${esc(p.i2c.address)}</span>` +
-      (p.i2c.alternates?.length ? ` — alternates ${p.i2c.alternates.map(esc).join(', ')}` : '') +
-      (p.i2c.how_to_change ? `<div style="color:var(--ink-dim);font-size:12.5px;margin-top:3px">${esc(p.i2c.how_to_change)}</div>` : '')
-    : '';
-  const price = p.price ? esc(
-      (p.price.observed!=null ? `${p.price.currency||''} ${p.price.observed}` : p.price.band) +
-      (p.price.observed_date ? ` (observed ${p.price.observed_date})` : '')) +
-      (p.price.note ? `<div style="color:var(--ink-dim);font-size:12.5px;margin-top:3px">${esc(p.price.note)}</div>`:'')
-    : '';
+document.getElementById('q').addEventListener('input',e=>{ state.q=e.target.value; render(); });
+document.getElementById('clear').addEventListener('click',()=>{
+  state.facets={}; state.q=''; document.getElementById('q').value=''; render(); });
+document.getElementById('phead').addEventListener('click',e=>{
+  const th=e.target.closest('th[data-col]'); if(!th) return;
+  const id=th.dataset.col;
+  if(state.sort===id) state.dir*=-1;
+  else { state.sort=id; state.dir=COLBY[id].num?-1:1; }
+  render();
+});
+document.getElementById('pbody').addEventListener('click',e=>{
+  if(e.target.closest('a,button,details,summary,pre')) return;
+  const tr=e.target.closest('tr.row'); if(!tr) return;
+  state.open = state.open===tr.dataset.id ? null : tr.dataset.id;
+  render();
+});
+document.getElementById('pbody').addEventListener('keydown',e=>{
+  if(e.key!=='Enter'&&e.key!==' ') return;
+  const tr=e.target.closest('tr.row'); if(!tr) return;
+  e.preventDefault();
+  state.open = state.open===tr.dataset.id ? null : tr.dataset.id;
+  render();
+});
+document.getElementById('pgrid').addEventListener('click',e=>{
+  const c=e.target.closest('.card'); if(!c) return;
+  state.view='table'; state.open=c.dataset.id;
+  const seg=document.getElementById('view');
+  Array.prototype.forEach.call(seg.children,b=>b.setAttribute('aria-pressed',String(b.dataset.v==='table')));
+  render();
+  const r=document.querySelector('tr.row[data-id="'+CSS.escape(c.dataset.id)+'"]');
+  if(r) r.scrollIntoView({block:'center'});
+});
 
-  const sec = (title, html) => html ? `<div class="sec"><h3>${title}</h3>${html}</div>` : '';
-  const list = arr => arr?.length ? `<ul>${arr.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : '';
-  const refs = (arr,label) => arr?.length ? `<div class="sec"><h3>${label}</h3><div class="chips">${
-      arr.filter(r=>byId[r]).map(r=>`<span class="chip" data-goto="${esc(r)}">${esc(byId[r].name)}</span>`).join('')
-    }</div></div>` : '';
-
-  document.getElementById('sheet').innerHTML = `
-    <div class="shead">
-      <img src="${esc(p.image)}" alt="">
-      <div>
-        <h2>${esc(p.name)}</h2>
-        <div style="color:var(--ink-dim);font-size:13.5px">${esc(p.manufacturer||'')}${p.subcategory?' · '+esc(p.subcategory):''}</div>
-        <div class="crow" style="margin-top:8px">
-          <span class="tier ${esc(p.quality_tier)}">${esc(p.quality_tier)}</span>
-          ${p.deployment_count?`<span class="pill">${p.deployment_count} live configs</span>`:''}
-          ${(p.bus||[]).map(b=>`<span class="pill">${esc(b)}</span>`).join('')}
-        </div>
-      </div>
-      <button class="sclose" aria-label="Close">✕</button>
-    </div>
-    <div class="sbody">
-      ${sec('Why this tier', `<div>${esc(p.evidence||'')}</div>` +
-        (p.deployment_evidence?.length
-          ? `<details style="margin-top:8px"><summary style="cursor:pointer;color:var(--ink-dim);font-size:13px">
-             ${p.deployment_evidence.length} evidence files</summary>
-             <div style="font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);margin-top:6px;line-height:1.7">
-             ${p.deployment_evidence.map(esc).join('<br>')}</div></details>` : ''))}
-
-      <div class="sec"><h3>Specifications</h3><dl class="kv">
-        ${row('Category', esc(p.category))}
-        ${row('Part numbers', (p.part_numbers||[]).map(n=>`<code>${esc(n)}</code>`).join(', '))}
-        ${row('I²C address', i2c)}
-        ${row('Protocol', esc(p.protocol_settings||''))}
-        ${row('Voltage', volts)}
-        ${row('Price', price)}
-        ${row('IP rating', esc(p.ip_rating||''))}
-        ${row('Calibration', esc(p.calibration_required||''))}
-        ${row('Works with', (p.platforms||[]).map(esc).join(', '))}
-      </dl></div>
-
-      ${sec('Calibration notes', p.calibration_notes?`<div style="font-size:13.5px">${esc(p.calibration_notes)}</div>`:'')}
-      ${sec('Notes', p.notes?`<div style="font-size:13.5px">${esc(p.notes)}</div>`:'')}
-      ${p.failure_modes?.length ? `<div class="sec"><h3>Failure modes</h3>
-        <div class="warnbox">${list(p.failure_modes)}</div></div>`:''}
-
-      ${p.vendors?.length ? `<div class="sec"><h3>Where to buy</h3>${p.vendors.map(vn=>
-        `<div class="vend"><a href="${esc(vn.url)}" target="_blank" rel="noopener noreferrer">${esc(vn.name)}</a>
-        <span>${vn.part_number?`<code>${esc(vn.part_number)}</code>`:''}${vn.region?` · ${esc(vn.region)}`:''}</span></div>`
-      ).join('') + `<div class="note">If a link is dead, search the manufacturer part number above —
-        that is why it is recorded.</div>`}</div>`:''}
-
-      ${p.example ? `<div class="sec"><h3>Copy-paste example</h3>
-        <div class="codehead">
-          <span style="font-size:13px;color:var(--ink-dim)">${esc(p.example.title||'')}</span>
-          <button class="copy" data-copy="${esc(p.id)}">Copy</button>
-        </div>
-        <pre><code id="code-${esc(p.id)}">${esc(p.example.code)}</code></pre>
-        ${p.example.source?`<div class="note">Distilled from ${esc(p.example.source)}. Credentials scrubbed — add your own <code>!secret</code> values.</div>`:''}
-      </div>`:''}
-
-      ${p.drivers?.length ? `<div class="sec"><h3>Drivers &amp; docs</h3>${p.drivers.map(d=>
-        `<div class="vend"><a href="${esc(d.url)}" target="_blank" rel="noopener noreferrer">${esc(d.name)}</a>
-         <span class="pill">${esc(d.kind||'link')}</span></div>`).join('')}</div>`:''}
-
-      ${refs(p.works_with,'Pairs with')}
-      ${refs(p.alternatives,'Alternatives')}
-    </div>`;
-  document.getElementById('detail').showModal();
+function togglePop(btn,pop){
+  const open=!pop.classList.contains('hidden');
+  document.querySelectorAll('.pop').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('[aria-expanded]').forEach(b=>b.setAttribute('aria-expanded','false'));
+  if(!open){ pop.classList.remove('hidden'); btn.setAttribute('aria-expanded','true'); }
 }
+document.getElementById('facetBtn').addEventListener('click',e=>{
+  e.stopPropagation(); togglePop(e.currentTarget,document.getElementById('facetPop')); });
+document.getElementById('colBtn').addEventListener('click',e=>{
+  e.stopPropagation(); togglePop(e.currentTarget,document.getElementById('colPop')); });
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.ctl')) document.querySelectorAll('.pop').forEach(p=>p.classList.add('hidden')); });
+document.getElementById('facetPop').addEventListener('change',e=>{
+  const k=e.target.dataset.f; if(!k) return;
+  if(!state.facets[k]) state.facets[k]=new Set();
+  if(e.target.checked) state.facets[k].add(e.target.value); else state.facets[k].delete(e.target.value);
+  render();
+});
+document.getElementById('colPop').addEventListener('change',e=>{
+  const id=e.target.dataset.c; if(!id) return;
+  if(e.target.checked){
+    if(state.cols.indexOf(id)===-1)
+      /* Re-derive from COLS so column order stays canonical rather than
+         reflecting the order the user happened to tick things. */
+      state.cols=COLS.filter(c=>state.cols.indexOf(c.id)!==-1||c.id===id).map(c=>c.id);
+  } else state.cols=state.cols.filter(c=>c!==id);
+  if(state.cols.indexOf('name')===-1) state.cols.unshift('name');
+  if(state.cols.indexOf(state.sort)===-1){ state.sort='name'; state.dir=1; }
+  render();
+});
+document.getElementById('colPop').addEventListener('click',e=>{
+  const p=e.target.dataset?e.target.dataset.preset:null; if(!p) return;
+  state.cols = p==='all' ? COLS.map(c=>c.id)
+             : p==='min' ? ['name','tier','deployment_count']
+             : COLS.filter(c=>c.def).map(c=>c.id);
+  if(state.cols.indexOf(state.sort)===-1){ state.sort='name'; state.dir=1; }
+  render();
+});
+document.getElementById('view').addEventListener('click',e=>{
+  const v=e.target.dataset?e.target.dataset.v:null; if(!v) return;
+  state.view=v;
+  Array.prototype.forEach.call(e.currentTarget.children,b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)));
+  render();
+});
+document.getElementById('density').addEventListener('click',e=>{
+  const d=e.target.dataset?e.target.dataset.d:null; if(!d) return;
+  state.density=d; document.documentElement.dataset.density=d;
+  Array.prototype.forEach.call(e.currentTarget.children,b=>b.setAttribute('aria-pressed',String(b.dataset.d===d)));
+  saveState();
+});
+document.getElementById('share').addEventListener('click',e=>{
+  const url=shareURL();
+  history.replaceState(null,'',url);
+  const done=t=>{ e.target.textContent=t; setTimeout(()=>e.target.textContent='Copy shareable link',1500); };
+  if(navigator.clipboard) navigator.clipboard.writeText(url).then(()=>done('Link copied')).catch(()=>done('URL updated'));
+  else done('URL updated');
+});
+document.addEventListener('click',e=>{
+  if(e.target.classList.contains('dclose')){ state.open=null; render(); return; }
+  const g=e.target.dataset?e.target.dataset.goto:null;
+  if(g){ e.preventDefault(); state.open=g; state.view='table'; render();
+    const r=document.querySelector('tr.row[data-id="'+CSS.escape(g)+'"]');
+    if(r) r.scrollIntoView({block:'center'}); }
+  const cp=e.target.dataset?e.target.dataset.copy:null;
+  if(cp){ const el=document.getElementById('code-'+cp); const code=el?el.textContent:'';
+    if(navigator.clipboard) navigator.clipboard.writeText(code).then(()=>{
+      e.target.textContent='Copied'; setTimeout(()=>e.target.textContent='Copy',1400); }); }
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(!document.querySelectorAll('.pop:not(.hidden)').length && state.open){ state.open=null; render(); }
+    else document.querySelectorAll('.pop').forEach(p=>p.classList.add('hidden'));
+  }
+  if(e.key==='/'&&document.activeElement!==document.getElementById('q')){
+    e.preventDefault(); document.getElementById('q').focus(); }
+});
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',String(x===t)));
+  const pg=t.dataset.page;
+  document.getElementById('page-catalogue').classList.toggle('hidden',pg!=='catalogue');
+  document.getElementById('page-i2c').classList.toggle('hidden',pg!=='i2c');
+  document.getElementById('page-recipes').classList.toggle('hidden',pg!=='recipes');
+  document.getElementById('toolbar').classList.toggle('hidden',pg!=='catalogue');
+  document.getElementById('statusrow').classList.toggle('hidden',pg!=='catalogue');
+}));
+document.getElementById('theme').addEventListener('click',()=>{
+  const el=document.documentElement;
+  el.dataset.theme = el.dataset.theme==='dark'?'light':'dark';
+});
 
-/* ---------- I2C collision map ---------- */
+let i2cSort={k:'addr',dir:1};
 function renderI2C(){
-  const rows = [];
-  PARTS.forEach(p => {
-    if(!p.i2c?.address) return;
-    const alt = p.i2c.alternates || [], cfg = !!p.i2c.configurable;
-    rows.push({addr:p.i2c.address.toLowerCase(), p, alt, cfg, extra:false});
-    // Composite modules hold several addresses at once. Each one occupies the
-    // bus and can collide, so every one has to appear on the map.
-    (p.i2c.also_occupies || []).forEach(a =>
-      rows.push({addr:a.toLowerCase(), p, alt, cfg, extra:true}));
+  const rows=[];
+  PARTS.forEach(p=>{
+    if(!(p.i2c&&p.i2c.address)) return;
+    const alt=p.i2c.alternates||[], cfg=!!p.i2c.configurable;
+    rows.push({addr:p.i2c.address.toLowerCase(),p:p,alt:alt,cfg:cfg,extra:false});
+    (p.i2c.also_occupies||[]).forEach(a=>rows.push({addr:a.toLowerCase(),p:p,alt:alt,cfg:cfg,extra:true}));
   });
-  const groups = {};
-  rows.forEach(r => (groups[r.addr] ||= []).push(r));
-  const addrs = Object.keys(groups).sort();
-  const collisions = addrs.filter(a => groups[a].length > 1);
-
-  document.getElementById('i2ctable').innerHTML =
-    `<thead><tr><th>Address</th><th>Part</th><th>Status</th><th>Can move to</th></tr></thead><tbody>` +
-    addrs.map(a => groups[a].map((r,i) => {
-      const clash = groups[a].length > 1;
-      return `<tr class="${clash?'collide':''}">
-        ${i===0?`<td class="addr" rowspan="${groups[a].length}">${esc(a)}</td>`:''}
-        <td><a href="#" data-goto="${esc(r.p.id)}">${esc(r.p.name)}</a>
-            ${r.extra?`<span class="pill" title="This module also holds its primary address">
-              secondary chip · primary ${esc(r.p.i2c.address)}</span>`:''}</td>
-        <td>${clash?`<span class="badge-collide">collision ×${groups[a].length}</span>`
-                   :`<span class="badge-ok">exclusive</span>`}</td>
-        <td>${r.alt.length?r.alt.map(x=>`<code>${esc(x)}</code>`).join(' '):
-             (r.cfg?'<span class="badge-ok">strappable</span>':'<span class="badge-ok">fixed</span>')}</td>
-      </tr>`;
-    }).join('')).join('') + `</tbody>`;
-
+  const groups={}; rows.forEach(r=>{ if(!groups[r.addr]) groups[r.addr]=[]; groups[r.addr].push(r); });
+  const collisions=Object.keys(groups).filter(a=>groups[a].length>1);
+  const K={addr:r=>r.addr, part:r=>r.p.name.toLowerCase(),
+           status:r=>groups[r.addr].length, moves:r=>r.alt.length};
+  const sortedRows=rows.slice().sort((a,b)=>{
+    const x=K[i2cSort.k](a), y=K[i2cSort.k](b);
+    let r = (typeof x==='number') ? (x-y) : String(x).localeCompare(String(y));
+    if(!r) r=a.addr.localeCompare(b.addr)||a.p.name.localeCompare(b.p.name);
+    return r*i2cSort.dir;
+  });
+  const h=(k,l,num)=>'<th class="sortable'+(i2cSort.k===k?' sorted':'')+(num?' num':'')+
+    '" data-k="'+k+'"><span class="thc">'+l+'<span class="sicon">'+
+    (i2cSort.k===k?(i2cSort.dir===1?'▲':'▼'):'▬')+'</span></span></th>';
+  document.getElementById('i2ctable').innerHTML=
+    '<thead><tr>'+h('addr','Address')+h('part','Part')+h('status','Status',1)+h('moves','Can move to',1)+
+    '</tr></thead><tbody>'+sortedRows.map(r=>{
+      const clash=groups[r.addr].length>1;
+      return '<tr class="'+(clash?'collide':'')+'">'+
+        '<td data-label="Address"><code class="addr">'+esc(r.addr)+'</code></td>'+
+        '<td data-label="Part"><a href="#" data-goto="'+esc(r.p.id)+'">'+esc(r.p.name)+'</a>'+
+        (r.extra?'<span class="chipmini">secondary · primary '+esc(r.p.i2c.address)+'</span>':'')+'</td>'+
+        '<td data-label="Status">'+(clash?'<span class="badge-collide">collision ×'+groups[r.addr].length+'</span>'
+          :'<span class="badge-ok">exclusive</span>')+'</td>'+
+        '<td data-label="Can move to">'+(r.alt.length?r.alt.map(x=>'<code>'+esc(x)+'</code>').join(' ')
+          :(r.cfg?'<span class="badge-ok">strappable</span>':'<span class="badge-ok">fixed</span>'))+'</td></tr>';
+    }).join('')+'</tbody>';
   document.getElementById('i2cnote').innerHTML = collisions.length
-    ? `<b>${collisions.length} address${collisions.length>1?'es':''} with a collision:</b> ` +
-      collisions.map(a=>`<code>${esc(a)}</code>`).join(', ') +
-      `. A collision only bites if you put both parts on the <em>same</em> bus. Fixes, cheapest first:
-       give one part a strappable alternate address; add a second I²C bus on spare GPIO pins (free on ESP32);
-       or add a TCA9548A multiplexer — but note the mux itself defaults to <code>0x70</code>, which
-       collides with the QMP6988 in the M5Stack ENV.III, so move it to <code>0x71</code>.`
+    ? '<b>'+collisions.length+' address'+(collisions.length>1?'es':'')+' with a collision:</b> '+
+      collisions.sort().map(a=>'<code>'+esc(a)+'</code>').join(', ')+
+      '. A collision only bites if both parts share one bus. Cheapest fixes first: strap one part to an '+
+      'alternate address; add a second I²C bus on spare GPIOs (free on ESP32); or add a multiplexer '+
+      '— noting the TCA9548A itself defaults to <code>0x70</code>, which collides with the QMP6988 '+
+      'in an ENV.III, so move it to <code>0x71</code>.'
     : 'No collisions in the current catalogue.';
 }
+document.getElementById('i2ctable').addEventListener('click',e=>{
+  const th=e.target.closest('th[data-k]'); if(!th) return;
+  const k=th.dataset.k;
+  if(i2cSort.k===k) i2cSort.dir*=-1; else { i2cSort.k=k; i2cSort.dir=1; }
+  renderI2C();
+});
 
-/* ---------- recipes ---------- */
 function renderRecipes(){
-  document.getElementById('recipes').innerHTML = RECIPES.map(r => {
-    let total = 0, cur = '', partial = false;
-    const rows = (r.items||[]).map(it => {
-      const p = byId[it.part];
-      if(!p) return `<tr><td colspan="4">Unknown part <code>${esc(it.part)}</code></td></tr>`;
-      const unit = p.price?.observed;
-      if(unit != null){ total += unit * (it.qty||1); cur = p.price.currency || cur; }
-      else partial = true;
-      return `<tr>
-        <td><a href="#" data-goto="${esc(p.id)}">${esc(p.name)}</a>
-            <div style="color:var(--ink-faint);font-size:12px">${esc(it.role||'')}</div></td>
-        <td style="text-align:right">${it.qty||1}</td>
-        <td style="text-align:right">${unit!=null?esc(unit.toFixed(2)):'—'}</td>
-        <td style="text-align:right">${unit!=null?esc((unit*(it.qty||1)).toFixed(2)):'—'}</td>
-      </tr>`;
+  document.getElementById('recipes').innerHTML=RECIPES.map(r=>{
+    let total=0,cur='',partial=false;
+    const rows=(r.items||[]).map(it=>{
+      const p=byId[it.part];
+      if(!p) return '<tr><td colspan="4">Unknown part <code>'+esc(it.part)+'</code></td></tr>';
+      const unit=(p.price&&p.price.observed!=null)?p.price.observed:null;
+      if(unit!=null){ total+=unit*(it.qty||1); cur=p.price.currency||cur; } else partial=true;
+      return '<tr><td data-label="Part"><a href="#" data-goto="'+esc(p.id)+'">'+esc(p.name)+'</a>'+
+        '<div class="sub">'+esc(it.role||'')+'</div></td>'+
+        '<td class="num" data-label="Qty">'+(it.qty||1)+'</td>'+
+        '<td class="num" data-label="Unit">'+(unit!=null?esc(unit.toFixed(2)):'—')+'</td>'+
+        '<td class="num" data-label="Line">'+(unit!=null?esc((unit*(it.qty||1)).toFixed(2)):'—')+'</td></tr>';
     }).join('');
-    return `<div class="rec">
-      <h3>${esc(r.name)}</h3>
-      <div class="sum">${esc(r.summary||'')}</div>
-      <div class="crow" style="margin-bottom:12px">
-        ${r.skill_level?`<span class="pill">${esc(r.skill_level)}</span>`:''}
-        ${r.network?`<span class="pill">${esc(r.network)}</span>`:''}
-        ${r.estimated_build_time?`<span class="pill">${esc(r.estimated_build_time)}</span>`:''}
-      </div>
-      <div class="tablewrap"><table>
-        <thead><tr><th>Part</th><th style="text-align:right">Qty</th>
-        <th style="text-align:right">Unit</th><th style="text-align:right">Line</th></tr></thead>
-        <tbody>${rows}</tbody>
-        <tfoot><tr><td colspan="3" style="text-align:right"><b>Total${partial?' (priced items only)':''}</b></td>
-        <td style="text-align:right"><span class="tot">${esc(cur)} ${total.toFixed(2)}</span></td></tr></tfoot>
-      </table></div>
-      ${r.notes?`<div class="note"><b>Notes.</b> ${esc(r.notes)}</div>`:''}
-      ${r.watch_out?`<div class="note" style="margin-top:8px"><div class="warnbox"><b>Watch out.</b> ${esc(r.watch_out)}</div></div>`:''}
-    </div>`;
+    return '<div class="rec"><h3>'+esc(r.name)+'</h3><div class="sum">'+esc(r.summary||'')+'</div>'+
+      '<div class="crow" style="margin-bottom:10px">'+
+      (r.skill_level?'<span class="chipmini">'+esc(r.skill_level)+'</span>':'')+
+      (r.network?'<span class="chipmini">'+esc(r.network)+'</span>':'')+
+      (r.estimated_build_time?'<span class="chipmini">'+esc(r.estimated_build_time)+'</span>':'')+'</div>'+
+      '<div class="bordered scrollx"><table><thead><tr><th>Part</th><th class="num">Qty</th>'+
+      '<th class="num">Unit</th><th class="num">Line</th></tr></thead><tbody>'+rows+'</tbody>'+
+      '<tfoot><tr><td colspan="3" class="num"><b>Total'+(partial?' (priced items only)':'')+'</b></td>'+
+      '<td class="num"><span class="tot">'+esc(cur)+' '+total.toFixed(2)+'</span></td></tr></tfoot>'+
+      '</table></div>'+
+      (r.notes?'<div class="note"><b>Notes.</b> '+esc(r.notes)+'</div>':'')+
+      (r.watch_out?'<div class="note" style="margin-top:6px"><div class="warnbox"><b>Watch out.</b> '+
+        esc(r.watch_out)+'</div></div>':'')+'</div>';
   }).join('');
 }
 
-/* ---------- wiring ---------- */
-document.getElementById('q').addEventListener('input', render);
-document.getElementById('sort').addEventListener('change', render);
-document.getElementById('facets').addEventListener('change', e => {
-  const k = e.target.dataset.k; if(!k) return;
-  (active[k] ||= new Set());
-  e.target.checked ? active[k].add(e.target.value) : active[k].delete(e.target.value);
-  render();
-});
-document.getElementById('clear').addEventListener('click', () => {
-  Object.keys(active).forEach(k => active[k].clear());
-  document.getElementById('q').value = '';
-  render();
-});
-document.getElementById('grid').addEventListener('click', e => {
-  const c = e.target.closest('.card'); if(c) openPart(c.dataset.id);
-});
-document.getElementById('grid').addEventListener('keydown', e => {
-  if(e.key==='Enter'||e.key===' '){ const c=e.target.closest('.card');
-    if(c){ e.preventDefault(); openPart(c.dataset.id);} }
-});
-document.addEventListener('click', e => {
-  if(e.target.classList.contains('sclose')) document.getElementById('detail').close();
-  const goto = e.target.dataset?.goto;
-  if(goto){ e.preventDefault(); document.getElementById('detail').close(); openPart(goto); }
-  const cp = e.target.dataset?.copy;
-  if(cp){
-    const code = document.getElementById('code-'+cp)?.textContent || '';
-    navigator.clipboard.writeText(code).then(() => {
-      e.target.textContent = 'Copied'; setTimeout(()=>e.target.textContent='Copy', 1400);
-    });
-  }
-});
-document.getElementById('detail').addEventListener('click', e => {
-  if(e.target.id === 'detail') e.target.close();  // click backdrop
-});
-document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
-  document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', String(x===t)));
-  const page = t.dataset.page;
-  document.getElementById('page-catalogue').classList.toggle('hidden', page!=='catalogue');
-  document.getElementById('page-i2c').classList.toggle('hidden', page!=='i2c');
-  document.getElementById('page-recipes').classList.toggle('hidden', page!=='recipes');
-}));
-document.getElementById('theme').addEventListener('click', () => {
-  const el = document.documentElement;
-  el.dataset.theme = el.dataset.theme === 'dark' ? 'light' : 'dark';
-});
-
+loadState();
+document.documentElement.dataset.density=state.density;
+document.getElementById('q').value=state.q;
+Array.prototype.forEach.call(document.getElementById('view').children,
+  b=>b.setAttribute('aria-pressed',String(b.dataset.v===state.view)));
+Array.prototype.forEach.call(document.getElementById('density').children,
+  b=>b.setAttribute('aria-pressed',String(b.dataset.d===state.density)));
 render(); renderI2C(); renderRecipes();
 </script>
 </body>

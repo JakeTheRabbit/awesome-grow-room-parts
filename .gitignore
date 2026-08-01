@@ -28,3 +28,6 @@ desktop.ini
 .idea/
 *.swp
 *~
+
+# local preview server config, not part of the catalogue
+.claude/
