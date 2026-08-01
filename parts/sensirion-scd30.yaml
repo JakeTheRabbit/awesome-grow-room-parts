@@ -59,7 +59,7 @@ alternatives:
   - sensirion-scd40
 use_cases:
 - CO2 monitoring
-- legacy NDIR replacement
+- older NDIR sensor replacement
 image: assets/parts/sensirion-scd30.png
 image_source_url: https://sensirion.com/products/catalog/SCD30
 image_source: manufacturer

@@ -4345,7 +4345,7 @@
       "image_source_url": "https://sensirion.com/products/catalog/SCD30",
       "use_cases": [
         "CO2 monitoring",
-        "legacy NDIR replacement"
+        "older NDIR sensor replacement"
       ],
       "tags": [
         "co2",
