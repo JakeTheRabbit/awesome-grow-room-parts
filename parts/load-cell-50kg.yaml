@@ -47,7 +47,9 @@ works_with:
 use_cases:
 - CO2 cylinder weight
 - substrate weight for dryback
-image: assets/parts/load-cell-50kg.svg
+image: assets/parts/load-cell-50kg.png
+image_source_url: https://www.sparkfun.com/products/13329
+image_source: vendor
 tags:
   - load-cell
   - weight

@@ -71,7 +71,9 @@ alternatives:
 use_cases:
 - "non-contact tank level"
 - runoff volume tracking
-image: assets/parts/ultrasonic-tank-sensor.svg
+image: assets/parts/ultrasonic-tank-sensor.png
+image_source_url: https://www.dfrobot.com/product-1935.html
+image_source: manufacturer
 tags:
   - tank-level
   - ultrasonic

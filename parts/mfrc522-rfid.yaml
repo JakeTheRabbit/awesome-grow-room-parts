@@ -86,7 +86,9 @@ works_with:
 use_cases:
 - door access logging
 - "staff room-entry tracking"
-image: assets/parts/mfrc522-rfid.svg
+image: assets/parts/mfrc522-rfid.png
+image_source_url: https://shop.m5stack.com/products/rfid-unit-2-ws1850s
+image_source: vendor
 example:
   lang: yaml
   title: RC522 over I2C, forwarding scans to Home Assistant

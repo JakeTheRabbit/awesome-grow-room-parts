@@ -55,7 +55,9 @@ platforms:
 - Arduino
 use_cases:
 - room occupancy detection
-image: assets/parts/seeed-leapmmw-mmwave.svg
+image: assets/parts/seeed-leapmmw-mmwave.png
+image_source_url: https://www.seeedstudio.com/24GHz-mmWave-Sensor-Human-Static-Presence-Module-Lite-p-5524.html
+image_source: manufacturer
 tags:
 - mmwave
 - presence

@@ -96,7 +96,9 @@ alternatives:
 use_cases:
 - "wired node for load-bearing actuators"
 - PoE sensor node
-image: assets/parts/m5stack-poesp32.svg
+image: assets/parts/m5stack-poesp32.png
+image_source_url: https://shop.m5stack.com/products/esp32-ethernet-unit-with-poe
+image_source: vendor
 example:
   lang: yaml
   title: IP101 Ethernet - the exact pin map used on all 48 nodes

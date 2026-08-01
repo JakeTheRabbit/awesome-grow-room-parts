@@ -2179,7 +2179,9 @@
       "works_with": [
         "hx711-adc"
       ],
-      "image": "assets/parts/load-cell-50kg.svg",
+      "image": "assets/parts/load-cell-50kg.png",
+      "image_source": "vendor",
+      "image_source_url": "https://www.sparkfun.com/products/13329",
       "use_cases": [
         "CO2 cylinder weight",
         "substrate weight for dryback"
@@ -2187,7 +2189,8 @@
       "tags": [
         "load-cell",
         "weight"
-      ]
+      ],
+      "image_large": "assets/parts/load-cell-50kg-lg.png"
     },
     {
       "id": "m5-env3",
@@ -3017,7 +3020,9 @@
         "w5500-eth-module",
         "m5stack-atom-lite"
       ],
-      "image": "assets/parts/m5stack-poesp32.svg",
+      "image": "assets/parts/m5stack-poesp32.png",
+      "image_source": "vendor",
+      "image_source_url": "https://shop.m5stack.com/products/esp32-ethernet-unit-with-poe",
       "use_cases": [
         "wired node for load-bearing actuators",
         "PoE sensor node"
@@ -3035,7 +3040,8 @@
         "m5stack",
         "core",
         "reliability"
-      ]
+      ],
+      "image_large": "assets/parts/m5stack-poesp32-lg.png"
     },
     {
       "id": "meter-teros12",
@@ -3276,7 +3282,9 @@
         "m5stack-poesp32",
         "tca9548a-mux"
       ],
-      "image": "assets/parts/mfrc522-rfid.svg",
+      "image": "assets/parts/mfrc522-rfid.png",
+      "image_source": "vendor",
+      "image_source_url": "https://shop.m5stack.com/products/rfid-unit-2-ws1850s",
       "use_cases": [
         "door access logging",
         "staff room-entry tracking"
@@ -3294,7 +3302,8 @@
         "spi",
         "door",
         "core"
-      ]
+      ],
+      "image_large": "assets/parts/mfrc522-rfid-lg.png"
     },
     {
       "id": "mlx90614-ncir",
@@ -4208,7 +4217,9 @@
         "ESPHome",
         "Arduino"
       ],
-      "image": "assets/parts/seeed-leapmmw-mmwave.svg",
+      "image": "assets/parts/seeed-leapmmw-mmwave.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://www.seeedstudio.com/24GHz-mmWave-Sensor-Human-Static-Presence-Module-Lite-p-5524.html",
       "use_cases": [
         "room occupancy detection"
       ],
@@ -4218,7 +4229,8 @@
         "hall-of-shame",
         "uart",
         "abandoned"
-      ]
+      ],
+      "image_large": "assets/parts/seeed-leapmmw-mmwave-lg.png"
     },
     {
       "id": "senninger-pressure-regulator",
@@ -5789,7 +5801,9 @@
         "cwt-wls-water-level",
         "hx711-adc"
       ],
-      "image": "assets/parts/ultrasonic-tank-sensor.svg",
+      "image": "assets/parts/ultrasonic-tank-sensor.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://www.dfrobot.com/product-1935.html",
       "use_cases": [
         "non-contact tank level",
         "runoff volume tracking"
@@ -5798,7 +5812,8 @@
         "tank-level",
         "ultrasonic",
         "irrigation"
-      ]
+      ],
+      "image_large": "assets/parts/ultrasonic-tank-sensor-lg.png"
     },
     {
       "id": "w5500-eth-module",

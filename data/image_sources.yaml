@@ -197,3 +197,30 @@ parts:
   shelly-pro-3em:
     page: https://www.shelly.com/products/shelly-pro-3em-120a
     source: manufacturer
+
+  # ── Added in the second image pass ──────────────────────────────────
+  m5stack-poesp32:
+    page: https://shop.m5stack.com/products/esp32-ethernet-unit-with-poe
+    source: vendor
+  mfrc522-rfid:
+    # Generic RC522 modules have no manufacturer product page. M5Stack's RFID2
+    # unit is the packaged equivalent and is what the I2C examples here target.
+    page: https://shop.m5stack.com/products/rfid-unit-2-ws1850s
+    source: vendor
+  rs485-ttl-transceiver:
+    page: https://shop.m5stack.com/products/rs485-unit
+    source: vendor
+  seeed-leapmmw-mmwave:
+    page: https://www.seeedstudio.com/24GHz-mmWave-Sensor-Human-Static-Presence-Module-Lite-p-5524.html
+    source: manufacturer
+  zphs01b-multigas:
+    page: https://www.winsen-sensor.com/product/zphs01b.html
+    source: manufacturer
+  load-cell-50kg:
+    page: https://www.sparkfun.com/products/13329
+    source: vendor
+  ultrasonic-tank-sensor:
+    # NOT Adafruit 4540 - that is a strain-gauge load cell, which is what the
+    # first pass wrongly fetched here. This is a waterproof ultrasonic module.
+    page: https://www.dfrobot.com/product-1935.html
+    source: manufacturer
