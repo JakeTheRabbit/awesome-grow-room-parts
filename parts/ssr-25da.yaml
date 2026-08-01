@@ -71,6 +71,10 @@ works_with:
 - m5stack-poesp32
 alternatives:
 - m5stack-4relay
+use_cases:
+- CO2 solenoid switching
+- lighting contactor drive
+- pump switching
 image: assets/parts/ssr-25da.svg
 example:
   lang: yaml

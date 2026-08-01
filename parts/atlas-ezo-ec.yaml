@@ -59,6 +59,9 @@ works_with:
   - atlas-ezo-rtd
 alternatives:
   - cwt-bl-ec-4400
+use_cases:
+- nutrient EC monitoring
+- feed strength verification
 image: assets/parts/atlas-ezo-ec.png
 image_source_url: https://atlas-scientific.com/embedded-solutions/ezo-conductivity-circuit/
 image_source: manufacturer

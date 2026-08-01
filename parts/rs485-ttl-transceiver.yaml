@@ -61,6 +61,8 @@ works_with:
   - cwt-ps-par
   - cwt-sws-wind
   - thc-s-rs485
+use_cases:
+- RS485 Modbus sensor interfacing
 image: assets/parts/rs485-ttl-transceiver.svg
 tags:
   - rs485

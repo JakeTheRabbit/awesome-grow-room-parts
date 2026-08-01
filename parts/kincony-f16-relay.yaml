@@ -67,6 +67,8 @@ platforms:
 - Modbus master
 alternatives:
 - m5stack-4relay
+use_cases:
+- high channel count relay control
 image: assets/parts/kincony-f16-relay.svg
 example:
   lang: yaml

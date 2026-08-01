@@ -74,6 +74,23 @@ works_with:
   - m5stack-airq
   - sensirion-scd41
   - m5stack-poesp32
+use_cases:
+- particulate monitoring
+- VOC trend tracking
+- filter change indication
+- dust from media handling
+accuracy:
+- metric: PM2.5 mass concentration
+  spec: "+/-10 % precision"
+  range: "0-1000 ug/m3"
+- metric: Temperature
+  spec: 0.45 C typical
+- metric: Relative humidity
+  spec: 4.5 %RH typical
+  range: "0-90 %RH"
+- metric: VOC Index
+  spec: "0-500 index output (relative, not an absolute concentration)"
+datasheet_url: https://sensirion.com/products/catalog/SEN55
 image: assets/parts/sensirion-sen55.png
 image_source_url: https://sensirion.com/products/catalog/SEN55
 image_source: manufacturer

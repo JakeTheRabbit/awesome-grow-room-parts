@@ -73,6 +73,9 @@ works_with:
   - sensirion-sen55
   - sensirion-scd41
   - pcf8563-rtc
+use_cases:
+- "whole-room air quality reference"
+- CO2 plus particulate in one node
 image: assets/parts/m5stack-airq.svg
 tags:
   - air-quality

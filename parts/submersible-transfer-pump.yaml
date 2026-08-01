@@ -42,6 +42,9 @@ works_with:
 - float-switch
 - ssr-25da
 - ultrasonic-tank-sensor
+use_cases:
+- tank to tank transfer
+- sump emptying
 image: assets/parts/submersible-transfer-pump.svg
 tags:
 - pump

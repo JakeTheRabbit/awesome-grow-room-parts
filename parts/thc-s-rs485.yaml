@@ -52,6 +52,9 @@ alternatives:
   - meter-teros12
   - infiwin-mt22
   - chill-division-sdi12
+use_cases:
+- budget substrate VWC and EC
+- "coco-coir pore-water EC"
 image: assets/parts/thc-s-rs485.svg
 tags:
   - vwc

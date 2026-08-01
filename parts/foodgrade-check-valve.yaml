@@ -43,6 +43,9 @@ works_with:
 - peristaltic-pump-doser
 - tygon-chemical-tubing
 - stm32-abd-doser
+use_cases:
+- dosing line backflow prevention
+- "stock cross-contamination prevention"
 image: assets/parts/foodgrade-check-valve.svg
 tags:
 - check-valve

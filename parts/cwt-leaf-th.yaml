@@ -65,6 +65,9 @@ platforms:
 works_with:
   - m5stack-poesp32
   - rs485-ttl-transceiver
+use_cases:
+- leaf surface wetness for disease pressure
+- leaf temperature for VPD accuracy
 image: assets/parts/cwt-leaf-th.svg
 tags:
   - leaf-temperature

@@ -48,6 +48,8 @@ platforms:
   - Arduino
 alternatives:
   - m5stack-poesp32
+use_cases:
+- cheap wired ESP32 node
 image: assets/parts/wt32-eth01.svg
 tags:
   - ethernet

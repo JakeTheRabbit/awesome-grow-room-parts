@@ -36,6 +36,8 @@ platforms:
   - Standalone
 works_with:
   - peristaltic-pump-doser
+use_cases:
+- "multi-channel nutrient dosing"
 image: assets/parts/stm32-abd-doser.svg
 tags:
   - dosing

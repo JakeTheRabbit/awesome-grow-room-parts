@@ -77,6 +77,9 @@ works_with:
 alternatives:
   - m5stack-atoms3-lite
   - m5stack-poesp32
+use_cases:
+- compact WiFi sensor node
+- "SDI-12 substrate node host"
 image: assets/parts/m5stack-atom-lite.png
 image_source_url: https://shop.m5stack.com/products/atom-lite-esp32-development-kit
 image_source: vendor

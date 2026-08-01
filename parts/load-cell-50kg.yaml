@@ -44,6 +44,9 @@ platforms:
   - Arduino
 works_with:
   - hx711-adc
+use_cases:
+- CO2 cylinder weight
+- substrate weight for dryback
 image: assets/parts/load-cell-50kg.svg
 tags:
   - load-cell

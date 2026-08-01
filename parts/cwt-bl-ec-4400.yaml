@@ -60,6 +60,8 @@ works_with:
   - m5stack-poesp32
 alternatives:
   - atlas-ezo-ec
+use_cases:
+- inline nutrient EC monitoring
 image: assets/parts/cwt-bl-ec-4400.svg
 tags:
   - ec

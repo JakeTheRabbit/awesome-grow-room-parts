@@ -93,6 +93,9 @@ works_with:
 alternatives:
 - w5500-eth-module
 - m5stack-atom-lite
+use_cases:
+- "wired node for load-bearing actuators"
+- PoE sensor node
 image: assets/parts/m5stack-poesp32.svg
 example:
   lang: yaml

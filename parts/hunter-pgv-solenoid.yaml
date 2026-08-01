@@ -71,6 +71,9 @@ works_with:
 - amiad-screen-filter
 alternatives:
 - solenoid-valve-24vac
+use_cases:
+- irrigation zone valve
+- "shot-based fertigation"
 image: assets/parts/hunter-pgv-solenoid.svg
 tags:
 - solenoid

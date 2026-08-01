@@ -52,6 +52,8 @@ works_with:
 alternatives:
   - bosch-bme280
   - m5-env3
+use_cases:
+- barometric pressure for altitude compensation
 image: assets/parts/bosch-bmp280.svg
 tags:
   - pressure

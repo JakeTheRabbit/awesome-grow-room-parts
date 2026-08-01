@@ -53,6 +53,9 @@ platforms:
   - Arduino
 alternatives:
   - atlas-ezo-ph
+use_cases:
+- reservoir sanitiser level
+- oxidiser dosing feedback
 image: assets/parts/dfrobot-gravity-orp.png
 image_source_url: https://www.dfrobot.com/product-1071.html
 image_source: manufacturer

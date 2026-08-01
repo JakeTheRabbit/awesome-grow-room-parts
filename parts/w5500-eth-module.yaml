@@ -50,6 +50,8 @@ works_with:
   - kincony-f16-relay
 alternatives:
   - m5stack-poesp32
+use_cases:
+- wired ESP32 networking
 image: assets/parts/w5500-eth-module.svg
 tags:
   - ethernet

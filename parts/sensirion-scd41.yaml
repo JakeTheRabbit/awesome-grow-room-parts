@@ -95,6 +95,23 @@ works_with:
 alternatives:
   - sensirion-scd40
   - sensirion-scd30
+use_cases:
+- CO2 injection control
+- "sealed-room CO2 monitoring"
+- room T/RH for VPD
+- ventilation interlock
+accuracy:
+- metric: CO2
+  spec: "+/-50 ppm +/-2.5 % of measured value"
+  conditions: As published by Sensirion for the SCD41; specified across the measurement range.
+  range: "400-5000 ppm"
+- metric: Temperature
+  spec: 0.8 C typical
+  range: "-10 to 60 C"
+- metric: Relative humidity
+  spec: 6 %RH typical
+  range: "0-95 %RH"
+datasheet_url: https://sensirion.com/products/catalog/SCD41
 image: assets/parts/sensirion-scd41.png
 image_source_url: https://sensirion.com/products/catalog/SCD41
 image_source: manufacturer

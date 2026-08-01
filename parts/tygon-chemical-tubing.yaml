@@ -52,6 +52,9 @@ works_with:
 - peristaltic-pump-doser
 - stm32-abd-doser
 - atlas-ezo-ph
+use_cases:
+- peristaltic dosing lines
+- concentrated pH adjuster transfer
 image: assets/parts/tygon-chemical-tubing.svg
 tags:
 - tubing

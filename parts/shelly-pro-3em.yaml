@@ -62,6 +62,10 @@ platforms:
 - Standalone
 works_with:
 - ssr-25da
+use_cases:
+- "3-phase power monitoring"
+- equipment failure detection from load curve
+- phase balance checking
 image: assets/parts/shelly-pro-3em.svg
 tags:
 - energy

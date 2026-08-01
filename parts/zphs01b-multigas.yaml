@@ -54,6 +54,8 @@ platforms:
 alternatives:
 - sensirion-sen55
 - sensirion-scd41
+use_cases:
+- "multi-gas air quality monitoring"
 image: assets/parts/zphs01b-multigas.svg
 tags:
 - air-quality

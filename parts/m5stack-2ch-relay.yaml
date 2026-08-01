@@ -65,6 +65,9 @@ works_with:
 alternatives:
 - m5stack-4relay
 - ssr-25da
+use_cases:
+- small zone switching
+- "low blast-radius actuation"
 image: assets/parts/m5stack-2ch-relay.png
 image_source_url: https://shop.m5stack.com/products/2-channel-spst-relay-unit
 image_source: vendor

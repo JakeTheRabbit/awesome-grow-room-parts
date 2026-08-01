@@ -61,6 +61,10 @@ alternatives:
   - growlink-terralink
   - chill-division-sdi12
   - thc-s-rs485
+use_cases:
+- substrate dryback tracking
+- "budget multi-zone VWC"
+- "pore-water EC monitoring"
 image: assets/parts/infiwin-mt22.svg
 tags:
   - vwc

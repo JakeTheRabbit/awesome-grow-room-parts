@@ -75,6 +75,9 @@ works_with:
 alternatives:
   - sensirion-sht30
   - bosch-bme280
+use_cases:
+- room T/RH/pressure in one Grove unit
+- VPD calculation input
 image: assets/parts/m5-env3.png
 image_source_url: https://shop.m5stack.com/products/env-iii-unit-with-temperature-humidity-air-pressure-sensor-sht30-qmp6988
 image_source: vendor

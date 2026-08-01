@@ -69,6 +69,9 @@ works_with:
 - m5stack-atom-lite
 alternatives:
 - atlas-ezo-rtd
+use_cases:
+- reservoir water temperature
+- "root-zone water temperature"
 image: assets/parts/ds18b20.png
 image_source_url: https://www.adafruit.com/product/381
 image_source: vendor

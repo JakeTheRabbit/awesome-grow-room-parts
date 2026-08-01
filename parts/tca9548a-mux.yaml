@@ -91,6 +91,9 @@ works_with:
 - m5-env3
 - mlx90640-thermal
 - mfrc522-rfid
+use_cases:
+- I2C address collision escape
+- multiple identical sensors on one bus
 image: assets/parts/tca9548a-mux.png
 image_source_url: https://www.adafruit.com/product/2717
 image_source: vendor

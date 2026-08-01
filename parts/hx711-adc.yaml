@@ -55,6 +55,9 @@ platforms:
 works_with:
   - load-cell-50kg
   - m5stack-dial
+use_cases:
+- load cell readout
+- gravimetric dryback measurement
 image: assets/parts/hx711-adc.png
 image_source_url: https://www.sparkfun.com/products/13879
 image_source: vendor

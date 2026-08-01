@@ -26,7 +26,8 @@ FIELDS = [
     "i2c", "protocol_settings", "voltage", "price", "vendors", "ip_rating",
     "calibration_required", "calibration_notes", "quality_tier", "deployment_count",
     "deployment_evidence", "evidence", "failure_modes", "notes", "drivers",
-    "platforms", "works_with", "alternatives", "image", "example", "tags",
+    "platforms", "works_with", "alternatives", "image", "image_source", "image_source_url",
+    "use_cases", "accuracy", "datasheet_url", "example", "tags",
 ]
 
 
@@ -42,6 +43,15 @@ def load_dir(path):
 
 def main():
     parts = [{k: p[k] for k in FIELDS if k in p} for p in load_dir(os.path.join(ROOT, "parts"))]
+
+    # A part with a real photo also has a 480px sibling for the hover preview.
+    # Derived here rather than stored, so the two can never disagree.
+    for p in parts:
+        img = p.get("image", "")
+        if img.endswith(".png"):
+            big = img[:-4] + "-lg.png"
+            if os.path.isfile(os.path.join(ROOT, big)):
+                p["image_large"] = big
     recipes = load_dir(os.path.join(ROOT, "recipes"))
     if not parts:
         print("no parts found", file=sys.stderr)

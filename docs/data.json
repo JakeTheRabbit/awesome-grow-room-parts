@@ -60,6 +60,10 @@
         "pressure-reducing-valve"
       ],
       "image": "assets/parts/amiad-screen-filter.svg",
+      "use_cases": [
+        "dripper blockage prevention",
+        "feed line filtration"
+      ],
       "tags": [
         "filter",
         "irrigation",
@@ -151,6 +155,12 @@
         "cwt-ps-par"
       ],
       "image": "assets/parts/as7341.png",
+      "image_source": "vendor",
+      "image_source_url": "https://www.adafruit.com/product/4698",
+      "use_cases": [
+        "spectrum drift over fixture life",
+        "far-red and UV supplement verification"
+      ],
       "example": {
         "lang": "yaml",
         "title": "AS7341 with gain and integration pinned",
@@ -162,7 +172,8 @@
         "spectrum",
         "i2c",
         "par"
-      ]
+      ],
+      "image_large": "assets/parts/as7341-lg.png"
     },
     {
       "id": "atlas-ezo-ec",
@@ -242,12 +253,19 @@
         "cwt-bl-ec-4400"
       ],
       "image": "assets/parts/atlas-ezo-ec.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://atlas-scientific.com/embedded-solutions/ezo-conductivity-circuit/",
+      "use_cases": [
+        "nutrient EC monitoring",
+        "feed strength verification"
+      ],
       "tags": [
         "ec",
         "fertigation",
         "i2c",
         "expensive"
-      ]
+      ],
+      "image_large": "assets/parts/atlas-ezo-ec-lg.png"
     },
     {
       "id": "atlas-ezo-ph",
@@ -344,6 +362,12 @@
         "cwt-bl-ec-4400"
       ],
       "image": "assets/parts/atlas-ezo-ph.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://atlas-scientific.com/embedded-solutions/ezo-ph-circuit/",
+      "use_cases": [
+        "reservoir pH monitoring",
+        "pH dosing feedback"
+      ],
       "example": {
         "lang": "yaml",
         "title": "EZO-pH on I2C with temperature compensation",
@@ -356,7 +380,8 @@
         "i2c",
         "expensive",
         "consumable-probe"
-      ]
+      ],
+      "image_large": "assets/parts/atlas-ezo-ph-lg.png"
     },
     {
       "id": "atlas-ezo-rtd",
@@ -433,11 +458,18 @@
         "ds18b20"
       ],
       "image": "assets/parts/atlas-ezo-rtd.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://atlas-scientific.com/embedded-solutions/ezo-rtd-temperature-circuit/",
+      "use_cases": [
+        "reservoir temperature",
+        "EC temperature compensation"
+      ],
       "tags": [
         "temperature",
         "fertigation",
         "i2c"
-      ]
+      ],
+      "image_large": "assets/parts/atlas-ezo-rtd-lg.png"
     },
     {
       "id": "bh1750",
@@ -525,6 +557,13 @@
         "cwt-ps-par"
       ],
       "image": "assets/parts/bh1750.png",
+      "image_source": "vendor",
+      "image_source_url": "https://www.adafruit.com/product/4681",
+      "use_cases": [
+        "photoperiod verification",
+        "driver failure detection",
+        "relative light level trend"
+      ],
       "example": {
         "lang": "yaml",
         "title": "BH1750 as a photoperiod / driver-failure check",
@@ -536,7 +575,8 @@
         "lux",
         "i2c",
         "photoperiod"
-      ]
+      ],
+      "image_large": "assets/parts/bh1750-lg.png"
     },
     {
       "id": "bosch-bme280",
@@ -618,6 +658,10 @@
         "m5-env3"
       ],
       "image": "assets/parts/bosch-bme280.svg",
+      "use_cases": [
+        "room T/RH/pressure",
+        "VPD calculation input"
+      ],
       "tags": [
         "temperature",
         "humidity",
@@ -704,6 +748,10 @@
         "bosch-bme280"
       ],
       "image": "assets/parts/bosch-bme680.svg",
+      "use_cases": [
+        "room T/RH/pressure",
+        "VOC trend tracking"
+      ],
       "tags": [
         "voc",
         "gas",
@@ -785,6 +833,9 @@
         "m5-env3"
       ],
       "image": "assets/parts/bosch-bmp280.svg",
+      "use_cases": [
+        "barometric pressure for altitude compensation"
+      ],
       "tags": [
         "pressure",
         "i2c",
@@ -849,6 +900,10 @@
         "growlink-terralink"
       ],
       "image": "assets/parts/chill-division-sdi12.svg",
+      "use_cases": [
+        "substrate dryback tracking",
+        "MQTT auto-discovery substrate sensing"
+      ],
       "tags": [
         "vwc",
         "substrate",
@@ -923,6 +978,9 @@
         "atlas-ezo-ec"
       ],
       "image": "assets/parts/cwt-bl-ec-4400.svg",
+      "use_cases": [
+        "inline nutrient EC monitoring"
+      ],
       "tags": [
         "ec",
         "fertigation",
@@ -1004,6 +1062,10 @@
         "rs485-ttl-transceiver"
       ],
       "image": "assets/parts/cwt-leaf-th.svg",
+      "use_cases": [
+        "leaf surface wetness for disease pressure",
+        "leaf temperature for VPD accuracy"
+      ],
       "example": {
         "lang": "yaml",
         "title": "CWT-LEAF-TH over RS485, with in-sensor calibration exposed to HA",
@@ -1088,6 +1150,10 @@
         "as7341"
       ],
       "image": "assets/parts/cwt-ps-par.svg",
+      "use_cases": [
+        "PAR / PPFD measurement",
+        "DLI accumulation"
+      ],
       "tags": [
         "par",
         "ppfd",
@@ -1159,6 +1225,10 @@
         "m5stack-poesp32"
       ],
       "image": "assets/parts/cwt-sws-wind.svg",
+      "use_cases": [
+        "airflow verification",
+        "extraction fan failure detection"
+      ],
       "tags": [
         "airflow",
         "wind",
@@ -1235,6 +1305,10 @@
         "float-switch"
       ],
       "image": "assets/parts/cwt-wls-water-level.svg",
+      "use_cases": [
+        "tank level monitoring",
+        "reservoir refill trigger"
+      ],
       "tags": [
         "tank-level",
         "rs485",
@@ -1313,12 +1387,19 @@
         "atlas-ezo-ph"
       ],
       "image": "assets/parts/dfrobot-gravity-orp.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://www.dfrobot.com/product-1071.html",
+      "use_cases": [
+        "reservoir sanitiser level",
+        "oxidiser dosing feedback"
+      ],
       "tags": [
         "orp",
         "fertigation",
         "analog",
         "pilot"
-      ]
+      ],
+      "image_large": "assets/parts/dfrobot-gravity-orp-lg.png"
     },
     {
       "id": "ds18b20",
@@ -1398,6 +1479,12 @@
         "atlas-ezo-rtd"
       ],
       "image": "assets/parts/ds18b20.png",
+      "image_source": "vendor",
+      "image_source_url": "https://www.adafruit.com/product/381",
+      "use_cases": [
+        "reservoir water temperature",
+        "root-zone water temperature"
+      ],
       "example": {
         "lang": "yaml",
         "title": "DS18B20 water temperature (modern one_wire component)",
@@ -1409,7 +1496,8 @@
         "1-wire",
         "water",
         "reservoir"
-      ]
+      ],
+      "image_large": "assets/parts/ds18b20-lg.png"
     },
     {
       "id": "float-switch",
@@ -1475,6 +1563,11 @@
         "peristaltic-pump-doser"
       ],
       "image": "assets/parts/float-switch.svg",
+      "use_cases": [
+        "tank level failsafe",
+        "pump dry-run protection",
+        "sump high-level alarm"
+      ],
       "example": {
         "lang": "yaml",
         "title": "Debounced float switch as a pump interlock",
@@ -1539,6 +1632,10 @@
         "stm32-abd-doser"
       ],
       "image": "assets/parts/foodgrade-check-valve.svg",
+      "use_cases": [
+        "dosing line backflow prevention",
+        "stock cross-contamination prevention"
+      ],
       "tags": [
         "check-valve",
         "dosing",
@@ -1614,6 +1711,10 @@
         "chill-division-sdi12"
       ],
       "image": "assets/parts/growlink-terralink.svg",
+      "use_cases": [
+        "substrate dryback tracking",
+        "commercial multi-zone VWC"
+      ],
       "example": {
         "lang": "yaml",
         "title": "TerraLink with the TEROS-alignment channel kept visible",
@@ -1710,6 +1811,10 @@
         "solenoid-valve-24vac"
       ],
       "image": "assets/parts/hunter-pgv-solenoid.svg",
+      "use_cases": [
+        "irrigation zone valve",
+        "shot-based fertigation"
+      ],
       "tags": [
         "solenoid",
         "valve",
@@ -1791,6 +1896,12 @@
         "m5stack-dial"
       ],
       "image": "assets/parts/hx711-adc.png",
+      "image_source": "vendor",
+      "image_source_url": "https://www.sparkfun.com/products/13879",
+      "use_cases": [
+        "load cell readout",
+        "gravimetric dryback measurement"
+      ],
       "example": {
         "lang": "yaml",
         "title": "HX711 CO2 cylinder scale",
@@ -1802,7 +1913,8 @@
         "co2-cylinder",
         "weight",
         "field-proven"
-      ]
+      ],
+      "image_large": "assets/parts/hx711-adc-lg.png"
     },
     {
       "id": "infiwin-mt22",
@@ -1881,6 +1993,11 @@
         "thc-s-rs485"
       ],
       "image": "assets/parts/infiwin-mt22.svg",
+      "use_cases": [
+        "substrate dryback tracking",
+        "budget multi-zone VWC",
+        "pore-water EC monitoring"
+      ],
       "example": {
         "lang": "yaml",
         "title": "MT22 raw-count to VWC, plus the uS/cm to dS/m fix",
@@ -1974,6 +2091,9 @@
         "m5stack-4relay"
       ],
       "image": "assets/parts/kincony-f16-relay.svg",
+      "use_cases": [
+        "high channel count relay control"
+      ],
       "example": {
         "lang": "yaml",
         "title": "What NOT to ship - the address scanner still in the live config",
@@ -2048,6 +2168,10 @@
         "hx711-adc"
       ],
       "image": "assets/parts/load-cell-50kg.svg",
+      "use_cases": [
+        "CO2 cylinder weight",
+        "substrate weight for dryback"
+      ],
       "tags": [
         "load-cell",
         "weight"
@@ -2149,6 +2273,12 @@
         "bosch-bme280"
       ],
       "image": "assets/parts/m5-env3.png",
+      "image_source": "vendor",
+      "image_source_url": "https://shop.m5stack.com/products/env-iii-unit-with-temperature-humidity-air-pressure-sensor-sht30-qmp6988",
+      "use_cases": [
+        "room T/RH/pressure in one Grove unit",
+        "VPD calculation input"
+      ],
       "example": {
         "lang": "yaml",
         "title": "ENV III - SHT30 + QMP6988 on one Grove port",
@@ -2162,7 +2292,8 @@
         "vpd",
         "i2c",
         "field-proven"
-      ]
+      ],
+      "image_large": "assets/parts/m5-env3-lg.png"
     },
     {
       "id": "m5stack-2ch-relay",
@@ -2242,12 +2373,19 @@
         "ssr-25da"
       ],
       "image": "assets/parts/m5stack-2ch-relay.png",
+      "image_source": "vendor",
+      "image_source_url": "https://shop.m5stack.com/products/2-channel-spst-relay-unit",
+      "use_cases": [
+        "small zone switching",
+        "low blast-radius actuation"
+      ],
       "tags": [
         "relay",
         "i2c",
         "m5stack",
         "safety"
-      ]
+      ],
+      "image_large": "assets/parts/m5stack-2ch-relay-lg.png"
     },
     {
       "id": "m5stack-4relay",
@@ -2336,6 +2474,13 @@
         "ssr-25da"
       ],
       "image": "assets/parts/m5stack-4relay.png",
+      "image_source": "vendor",
+      "image_source_url": "https://shop.m5stack.com/products/4-relay-unit",
+      "use_cases": [
+        "irrigation zone switching",
+        "dehumidifier control",
+        "CO2 interlock"
+      ],
       "example": {
         "lang": "yaml",
         "title": "4-Relay with the full flood-safety pattern",
@@ -2349,7 +2494,8 @@
         "irrigation",
         "safety",
         "core"
-      ]
+      ],
+      "image_large": "assets/parts/m5stack-4relay-lg.png"
     },
     {
       "id": "m5stack-airq",
@@ -2440,6 +2586,10 @@
         "pcf8563-rtc"
       ],
       "image": "assets/parts/m5stack-airq.svg",
+      "use_cases": [
+        "whole-room air quality reference",
+        "CO2 plus particulate in one node"
+      ],
       "tags": [
         "air-quality",
         "voc",
@@ -2545,12 +2695,19 @@
         "m5stack-poesp32"
       ],
       "image": "assets/parts/m5stack-atom-lite.png",
+      "image_source": "vendor",
+      "image_source_url": "https://shop.m5stack.com/products/atom-lite-esp32-development-kit",
+      "use_cases": [
+        "compact WiFi sensor node",
+        "SDI-12 substrate node host"
+      ],
       "tags": [
         "esp32",
         "wifi",
         "compact",
         "sdi12-host"
-      ]
+      ],
+      "image_large": "assets/parts/m5stack-atom-lite-lg.png"
     },
     {
       "id": "m5stack-atoms3-lite",
@@ -2637,11 +2794,17 @@
         "m5stack-atom-lite"
       ],
       "image": "assets/parts/m5stack-atoms3-lite.png",
+      "image_source": "vendor",
+      "image_source_url": "https://shop.m5stack.com/products/atoms3-lite-esp32s3-dev-kit",
+      "use_cases": [
+        "compact ESP32-S3 sensor node"
+      ],
       "tags": [
         "esp32s3",
         "wifi",
         "compact"
-      ]
+      ],
+      "image_large": "assets/parts/m5stack-atoms3-lite-lg.png"
     },
     {
       "id": "m5stack-dial",
@@ -2725,12 +2888,19 @@
         "meter-teros12"
       ],
       "image": "assets/parts/m5stack-dial.png",
+      "image_source": "vendor",
+      "image_source_url": "https://shop.m5stack.com/products/m5stack-dial-esp32-s3-smart-rotary-knob-w-1-28-round-touch-screen",
+      "use_cases": [
+        "at-tank readout",
+        "local setpoint adjustment"
+      ],
       "tags": [
         "display",
         "hmi",
         "rotary",
         "nfc"
-      ]
+      ],
+      "image_large": "assets/parts/m5stack-dial-lg.png"
     },
     {
       "id": "m5stack-poesp32",
@@ -2836,6 +3006,10 @@
         "m5stack-atom-lite"
       ],
       "image": "assets/parts/m5stack-poesp32.svg",
+      "use_cases": [
+        "wired node for load-bearing actuators",
+        "PoE sensor node"
+      ],
       "example": {
         "lang": "yaml",
         "title": "IP101 Ethernet - the exact pin map used on all 48 nodes",
@@ -2956,6 +3130,26 @@
         "thc-s-rs485"
       ],
       "image": "assets/parts/meter-teros12.svg",
+      "use_cases": [
+        "substrate dryback tracking",
+        "pore-water EC monitoring",
+        "crop steering by VWC",
+        "root-zone temperature"
+      ],
+      "accuracy": [
+        {
+          "metric": "Volumetric water content",
+          "spec": "+/-0.03 m3/m3",
+          "conditions": "Generic calibration - typical in mineral soils that have solution EC.",
+          "range": "0.00-0.70 m3/m3"
+        },
+        {
+          "metric": "Volumetric water content",
+          "spec": "+/-0.01-0.02 m3/m3",
+          "conditions": "Medium-specific calibration, in any porous medium. This is why the repo keeps telling you to calibrate against your own substrate."
+        }
+      ],
+      "datasheet_url": "https://metergroup.com/products/teros-12/",
       "example": {
         "lang": "yaml",
         "title": "SDI-12 probe with soilless VWC and Hilhorst pore-water EC",
@@ -3068,6 +3262,10 @@
         "tca9548a-mux"
       ],
       "image": "assets/parts/mfrc522-rfid.svg",
+      "use_cases": [
+        "door access logging",
+        "staff room-entry tracking"
+      ],
       "example": {
         "lang": "yaml",
         "title": "RC522 over I2C, forwarding scans to Home Assistant",
@@ -3169,13 +3367,20 @@
         "mlx90640-thermal"
       ],
       "image": "assets/parts/mlx90614-ncir.png",
+      "image_source": "vendor",
+      "image_source_url": "https://www.adafruit.com/product/1747",
+      "use_cases": [
+        "single-point leaf surface temperature",
+        "leaf VPD calculation"
+      ],
       "tags": [
         "thermal",
         "leaf-temperature",
         "i2c",
         "vpd",
         "infrared"
-      ]
+      ],
+      "image_large": "assets/parts/mlx90614-ncir-lg.png"
     },
     {
       "id": "mlx90640-thermal",
@@ -3271,6 +3476,13 @@
         "tca9548a-mux"
       ],
       "image": "assets/parts/mlx90640-thermal.png",
+      "image_source": "vendor",
+      "image_source_url": "https://www.adafruit.com/product/4407",
+      "use_cases": [
+        "canopy leaf temperature mapping",
+        "leaf VPD calculation",
+        "hot-spot detection under LEDs"
+      ],
       "example": {
         "lang": "yaml",
         "title": "MLX90640 tuned for canopy leaf temperature",
@@ -3283,7 +3495,8 @@
         "i2c",
         "vpd",
         "canopy"
-      ]
+      ],
+      "image_large": "assets/parts/mlx90640-thermal-lg.png"
     },
     {
       "id": "netafim-lateral-pipe",
@@ -3347,6 +3560,10 @@
         "hunter-pgv-solenoid"
       ],
       "image": "assets/parts/netafim-lateral-pipe.svg",
+      "use_cases": [
+        "dripline distribution",
+        "per-row lateral runs"
+      ],
       "tags": [
         "pipe",
         "lateral",
@@ -3404,6 +3621,10 @@
         "amiad-screen-filter"
       ],
       "image": "assets/parts/netafim-line-flush-valve.svg",
+      "use_cases": [
+        "dripline self-purging",
+        "sediment removal at line end"
+      ],
       "tags": [
         "flush",
         "valve",
@@ -3475,6 +3696,10 @@
         "meter-teros12"
       ],
       "image": "assets/parts/netafim-pcj-dripper.svg",
+      "use_cases": [
+        "even per-plant delivery",
+        "pressure-compensated fertigation"
+      ],
       "tags": [
         "dripper",
         "emitter",
@@ -3575,6 +3800,10 @@
         "m5stack-dial"
       ],
       "image": "assets/parts/pcf8563-rtc.svg",
+      "use_cases": [
+        "schedule continuity through network outage",
+        "local time for lighting cycles"
+      ],
       "example": {
         "lang": "yaml",
         "title": "RTC as fallback, SNTP as primary",
@@ -3666,6 +3895,10 @@
         "stm32-abd-doser"
       ],
       "image": "assets/parts/peristaltic-pump-doser.svg",
+      "use_cases": [
+        "nutrient stock dosing",
+        "pH adjuster dosing"
+      ],
       "example": {
         "lang": "yaml",
         "title": "Dosing pump with the full three-layer safety interlock",
@@ -3731,6 +3964,9 @@
         "senninger-pressure-regulator"
       ],
       "image": "assets/parts/pressure-reducing-valve.svg",
+      "use_cases": [
+        "mains pressure reduction for dripline"
+      ],
       "tags": [
         "pressure",
         "regulator",
@@ -3794,6 +4030,10 @@
         "pressure-reducing-valve"
       ],
       "image": "assets/parts/pvc-pressure-pipe-25.svg",
+      "use_cases": [
+        "pump to zone-valve distribution",
+        "pressurised mains side plumbing"
+      ],
       "tags": [
         "pipe",
         "pvc",
@@ -3881,6 +4121,9 @@
         "thc-s-rs485"
       ],
       "image": "assets/parts/rs485-ttl-transceiver.svg",
+      "use_cases": [
+        "RS485 Modbus sensor interfacing"
+      ],
       "tags": [
         "rs485",
         "modbus",
@@ -3948,6 +4191,9 @@
         "Arduino"
       ],
       "image": "assets/parts/seeed-leapmmw-mmwave.svg",
+      "use_cases": [
+        "room occupancy detection"
+      ],
       "tags": [
         "mmwave",
         "presence",
@@ -4007,6 +4253,10 @@
         "pressure-reducing-valve"
       ],
       "image": "assets/parts/senninger-pressure-regulator.svg",
+      "use_cases": [
+        "per-zone pressure regulation",
+        "independent simultaneous zones"
+      ],
       "tags": [
         "pressure",
         "regulator",
@@ -4091,12 +4341,19 @@
         "sensirion-scd40"
       ],
       "image": "assets/parts/sensirion-scd30.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://sensirion.com/products/catalog/SCD30",
+      "use_cases": [
+        "CO2 monitoring",
+        "legacy NDIR replacement"
+      ],
       "tags": [
         "co2",
         "ndir",
         "i2c",
         "no-collision"
-      ]
+      ],
+      "image_large": "assets/parts/sensirion-scd30-lg.png"
     },
     {
       "id": "sensirion-scd40",
@@ -4172,12 +4429,19 @@
         "sensirion-scd30"
       ],
       "image": "assets/parts/sensirion-scd40.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://sensirion.com/products/catalog/SCD40",
+      "use_cases": [
+        "CO2 monitoring",
+        "ventilation interlock"
+      ],
       "tags": [
         "co2",
         "ndir",
         "i2c",
         "budget"
-      ]
+      ],
+      "image_large": "assets/parts/sensirion-scd40-lg.png"
     },
     {
       "id": "sensirion-scd41",
@@ -4297,6 +4561,33 @@
         "sensirion-scd30"
       ],
       "image": "assets/parts/sensirion-scd41.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://sensirion.com/products/catalog/SCD41",
+      "use_cases": [
+        "CO2 injection control",
+        "sealed-room CO2 monitoring",
+        "room T/RH for VPD",
+        "ventilation interlock"
+      ],
+      "accuracy": [
+        {
+          "metric": "CO2",
+          "spec": "+/-50 ppm +/-2.5 % of measured value",
+          "conditions": "As published by Sensirion for the SCD41; specified across the measurement range.",
+          "range": "400-5000 ppm"
+        },
+        {
+          "metric": "Temperature",
+          "spec": "0.8 C typical",
+          "range": "-10 to 60 C"
+        },
+        {
+          "metric": "Relative humidity",
+          "spec": "6 %RH typical",
+          "range": "0-95 %RH"
+        }
+      ],
+      "datasheet_url": "https://sensirion.com/products/catalog/SCD41",
       "example": {
         "lang": "yaml",
         "title": "SCD41 with the range clamp used on all 29 deployments",
@@ -4309,7 +4600,8 @@
         "i2c",
         "field-proven",
         "climate"
-      ]
+      ],
+      "image_large": "assets/parts/sensirion-scd41-lg.png"
     },
     {
       "id": "sensirion-sen55",
@@ -4408,6 +4700,35 @@
         "m5stack-poesp32"
       ],
       "image": "assets/parts/sensirion-sen55.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://sensirion.com/products/catalog/SEN55",
+      "use_cases": [
+        "particulate monitoring",
+        "VOC trend tracking",
+        "filter change indication",
+        "dust from media handling"
+      ],
+      "accuracy": [
+        {
+          "metric": "PM2.5 mass concentration",
+          "spec": "+/-10 % precision",
+          "range": "0-1000 ug/m3"
+        },
+        {
+          "metric": "Temperature",
+          "spec": "0.45 C typical"
+        },
+        {
+          "metric": "Relative humidity",
+          "spec": "4.5 %RH typical",
+          "range": "0-90 %RH"
+        },
+        {
+          "metric": "VOC Index",
+          "spec": "0-500 index output (relative, not an absolute concentration)"
+        }
+      ],
+      "datasheet_url": "https://sensirion.com/products/catalog/SEN55",
       "example": {
         "lang": "yaml",
         "title": "SEN55 with the deployed VOC/NOx tuning",
@@ -4421,7 +4742,8 @@
         "i2c",
         "field-proven",
         "filter-health"
-      ]
+      ],
+      "image_large": "assets/parts/sensirion-sen55-lg.png"
     },
     {
       "id": "sensirion-sht30",
@@ -4509,13 +4831,34 @@
         "m5-env3"
       ],
       "image": "assets/parts/sensirion-sht30.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://sensirion.com/products/catalog/SHT30-DIS-B",
+      "use_cases": [
+        "room temperature and humidity",
+        "VPD calculation input",
+        "drying room control"
+      ],
+      "accuracy": [
+        {
+          "metric": "Relative humidity",
+          "spec": "+/-2 %RH typical",
+          "range": "0-100 %RH"
+        },
+        {
+          "metric": "Temperature",
+          "spec": "0.2 C typical",
+          "range": "-40 to 125 C"
+        }
+      ],
+      "datasheet_url": "https://sensirion.com/products/catalog/SHT30-DIS-B",
       "tags": [
         "temperature",
         "humidity",
         "vpd",
         "i2c",
         "field-proven"
-      ]
+      ],
+      "image_large": "assets/parts/sensirion-sht30-lg.png"
     },
     {
       "id": "sensirion-sht40",
@@ -4593,11 +4936,18 @@
         "m5-env3"
       ],
       "image": "assets/parts/sensirion-sht40.png",
+      "image_source": "manufacturer",
+      "image_source_url": "https://sensirion.com/products/catalog/SHT40",
+      "use_cases": [
+        "room temperature and humidity",
+        "VPD calculation input"
+      ],
       "tags": [
         "temperature",
         "humidity",
         "i2c"
-      ]
+      ],
+      "image_large": "assets/parts/sensirion-sht40-lg.png"
     },
     {
       "id": "shelly-pro-3em",
@@ -4670,6 +5020,11 @@
         "ssr-25da"
       ],
       "image": "assets/parts/shelly-pro-3em.svg",
+      "use_cases": [
+        "3-phase power monitoring",
+        "equipment failure detection from load curve",
+        "phase balance checking"
+      ],
       "tags": [
         "energy",
         "power",
@@ -4747,6 +5102,10 @@
         "float-switch"
       ],
       "image": "assets/parts/solenoid-valve-24vac.svg",
+      "use_cases": [
+        "irrigation zone valve",
+        "shot-based fertigation"
+      ],
       "tags": [
         "irrigation",
         "valve",
@@ -4834,6 +5193,11 @@
         "m5stack-4relay"
       ],
       "image": "assets/parts/ssr-25da.svg",
+      "use_cases": [
+        "CO2 solenoid switching",
+        "lighting contactor drive",
+        "pump switching"
+      ],
       "example": {
         "lang": "yaml",
         "title": "GPIO SSR driving CO2, with the dead-man timer",
@@ -4896,6 +5260,9 @@
         "peristaltic-pump-doser"
       ],
       "image": "assets/parts/stm32-abd-doser.svg",
+      "use_cases": [
+        "multi-channel nutrient dosing"
+      ],
       "tags": [
         "dosing",
         "stm32",
@@ -4954,6 +5321,10 @@
         "ultrasonic-tank-sensor"
       ],
       "image": "assets/parts/submersible-transfer-pump.svg",
+      "use_cases": [
+        "tank to tank transfer",
+        "sump emptying"
+      ],
       "tags": [
         "pump",
         "submersible",
@@ -5068,6 +5439,12 @@
         "mfrc522-rfid"
       ],
       "image": "assets/parts/tca9548a-mux.png",
+      "image_source": "vendor",
+      "image_source_url": "https://www.adafruit.com/product/2717",
+      "use_cases": [
+        "I2C address collision escape",
+        "multiple identical sensors on one bus"
+      ],
       "example": {
         "lang": "yaml",
         "title": "Two SCD4x on one bus via a mux (moved off 0x70)",
@@ -5080,7 +5457,8 @@
         "bus",
         "collision",
         "infrastructure"
-      ]
+      ],
+      "image_large": "assets/parts/tca9548a-mux-lg.png"
     },
     {
       "id": "thc-s-rs485",
@@ -5150,6 +5528,10 @@
         "chill-division-sdi12"
       ],
       "image": "assets/parts/thc-s-rs485.svg",
+      "use_cases": [
+        "budget substrate VWC and EC",
+        "coco-coir pore-water EC"
+      ],
       "tags": [
         "vwc",
         "substrate",
@@ -5219,6 +5601,10 @@
         "m5stack-4relay"
       ],
       "image": "assets/parts/transformer-24vac.svg",
+      "use_cases": [
+        "24 VAC supply for zone valves",
+        "keeping mains out of the control enclosure"
+      ],
       "tags": [
         "transformer",
         "24vac",
@@ -5283,6 +5669,10 @@
         "atlas-ezo-ph"
       ],
       "image": "assets/parts/tygon-chemical-tubing.svg",
+      "use_cases": [
+        "peristaltic dosing lines",
+        "concentrated pH adjuster transfer"
+      ],
       "tags": [
         "tubing",
         "peristaltic",
@@ -5379,6 +5769,10 @@
         "hx711-adc"
       ],
       "image": "assets/parts/ultrasonic-tank-sensor.svg",
+      "use_cases": [
+        "non-contact tank level",
+        "runoff volume tracking"
+      ],
       "tags": [
         "tank-level",
         "ultrasonic",
@@ -5454,6 +5848,9 @@
         "m5stack-poesp32"
       ],
       "image": "assets/parts/w5500-eth-module.svg",
+      "use_cases": [
+        "wired ESP32 networking"
+      ],
       "example": {
         "lang": "yaml",
         "title": "W5500 over SPI",
@@ -5528,6 +5925,9 @@
         "m5stack-poesp32"
       ],
       "image": "assets/parts/wt32-eth01.svg",
+      "use_cases": [
+        "cheap wired ESP32 node"
+      ],
       "tags": [
         "ethernet",
         "esp32",
@@ -5596,6 +5996,9 @@
         "sensirion-scd41"
       ],
       "image": "assets/parts/zphs01b-multigas.svg",
+      "use_cases": [
+        "multi-gas air quality monitoring"
+      ],
       "tags": [
         "air-quality",
         "multi-gas",

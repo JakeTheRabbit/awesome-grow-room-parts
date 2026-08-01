@@ -56,6 +56,9 @@ platforms:
 alternatives:
   - sensirion-scd41
   - sensirion-scd30
+use_cases:
+- CO2 monitoring
+- ventilation interlock
 image: assets/parts/sensirion-scd40.png
 image_source_url: https://sensirion.com/products/catalog/SCD40
 image_source: manufacturer

@@ -73,6 +73,10 @@ works_with:
 alternatives:
 - as7341
 - cwt-ps-par
+use_cases:
+- photoperiod verification
+- driver failure detection
+- relative light level trend
 image: assets/parts/bh1750.png
 image_source_url: https://www.adafruit.com/product/4681
 image_source: vendor

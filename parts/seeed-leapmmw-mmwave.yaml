@@ -53,6 +53,8 @@ drivers:
 platforms:
 - ESPHome
 - Arduino
+use_cases:
+- room occupancy detection
 image: assets/parts/seeed-leapmmw-mmwave.svg
 tags:
 - mmwave

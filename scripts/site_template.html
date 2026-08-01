@@ -21,7 +21,9 @@
   /* Density. Compact is the default so a 1080p screen clears 25 rows. */
   --row-pad:3px; --thumb:26px; --cell-fs:13px;
 }
-:root[data-density="comfortable"]{ --row-pad:5px; --thumb:34px; --cell-fs:13.5px; }
+:root[data-density="comfortable"]{ --row-pad:5px; --thumb:38px; --cell-fs:13.5px; }
+/* Third step: bigger rows really do mean bigger icons, which is the point. */
+:root[data-density="large"]{ --row-pad:9px; --thumb:64px; --cell-fs:14px; }
 :root[data-theme="light"]{
   --bg:#f6f8f7; --surface:#fff; --raised:#eef2f0; --line:#dde4e0;
   --ink:#16201c; --dim:#5a6862; --quiet:#8a968f; --accent-ink:#fff;
@@ -120,6 +122,19 @@ code,.mono{font-family:var(--mono);font-size:11.5px}
 .chipmini{display:inline-block;padding:0 5px;border-radius:9px;background:var(--raised);
   border:1px solid var(--line);color:var(--dim);font-size:10.5px;margin-right:3px}
 .empty-cell{color:var(--quiet)}
+/* Hover preview. Fixed-position and pointer-events:none so it can never cause
+   layout shift or eat a click. Only mounted on devices with a real pointer -
+   on touch there is no hover, so it would be dead weight. */
+#peek{position:fixed;z-index:200;pointer-events:none;opacity:0;
+  transition:opacity .09s ease-out;background:var(--surface);
+  border:1px solid var(--line);border-radius:10px;padding:6px;
+  box-shadow:0 10px 34px rgba(0,0,0,.55);display:none}
+#peek.on{opacity:1}
+#peek img{display:block;width:240px;height:240px;object-fit:contain;
+  background:#fff;border-radius:6px}
+#peek .cap{font-size:11px;color:var(--dim);padding:5px 3px 1px;max-width:240px;
+  white-space:normal;text-align:center}
+.namecell img{cursor:zoom-in}
 /* Derived (converted) money is visually demoted so it never reads as a price
    anyone actually quoted. The ~ is part of the rendered text, not decoration. */
 .derived{color:var(--quiet);font-style:italic;cursor:help}
@@ -236,6 +251,7 @@ tr.collide td{background:rgba(176,74,74,.13)}
     <div class="seg" id="density" title="Row density">
       <button data-d="compact" aria-pressed="true">Compact</button>
       <button data-d="comfortable" aria-pressed="false">Roomy</button>
+      <button data-d="large" aria-pressed="false">Large</button>
     </div>
     <button class="btn" id="theme" title="Toggle light / dark">&#9686;</button>
   </div>
@@ -290,6 +306,8 @@ tr.collide td{background:rgba(176,74,74,.13)}
     <div id="recipes"></div>
   </div>
 </main>
+
+<div id="peek" aria-hidden="true"></div>
 
 <script id="data" type="application/json">__DATA__</script>
 <script>
@@ -417,6 +435,13 @@ const COLS = [
    cell:p=>((p.i2c&&p.i2c.also_occupies)||[]).map(a=>'<code>'+esc(a)+'</code>').join(' ')||EMPTY},
   {id:'price_source', label:'Price source', sort:p=>(p.price&&p.price.source)||null,
    cell:p=>(p.price&&p.price.source)?'<span class="psrc '+esc(p.price.source)+'">'+esc(p.price.source)+'</span>':EMPTY},
+  {id:'use_cases', label:'Use cases', sort:p=>(p.use_cases||[]).join(','),
+   cell:p=>(p.use_cases||[]).map(u=>'<span class="chipmini">'+esc(u)+'</span>').join('')||EMPTY},
+  {id:'accuracy', label:'Accuracy', sort:p=>(p.accuracy||[]).length?(p.accuracy[0].spec||''):null,
+   cell:p=>(p.accuracy||[]).length
+     ? (p.accuracy||[]).map(a=>'<span title="'+esc((a.conditions||a.range||''))+'">'
+        +esc(a.metric)+' '+esc(a.spec)+'</span>').join('; ')
+     : EMPTY},
   {id:'ip_rating', label:'IP rating', sort:p=>p.ip_rating||'',
    cell:p=>esc(p.ip_rating||'')||EMPTY},
   {id:'calibration', label:'Calibration', sort:p=>p.calibration_required||'',
@@ -451,6 +476,7 @@ const FACETS = [
     return [n<=3.3?'3.3 V':n<=5?'5 V':n<=12?'12 V':n<=24?'24 V':'> 24 V'];}],
   ['vendor','Vendor',p=>{const s=new Set((p.vendors||[]).map(v=>v.name.split(/[-–(]/)[0].trim()));
     return Array.from(s);}],
+  ['use','Use case',p=>p.use_cases||[]],
   ['psrc','Price source',p=>(p.price&&p.price.source)?[p.price.source]:[]],
   ['ip','IP rating',p=>p.ip_rating?[p.ip_rating]:[]],
   ['cal','Calibration',p=>p.calibration_required?[p.calibration_required]:[]]
@@ -503,6 +529,8 @@ PARTS.forEach(p=>{ p._hay=[p.name,p.manufacturer,p.id,p.subcategory,p.category,p
   (p.failure_modes||[]).join(' '),(p.vendors||[]).map(v=>v.name).join(' '),
   (p.i2c&&p.i2c.address)||'',((p.i2c&&p.i2c.alternates)||[]).join(' '),
   ((p.i2c&&p.i2c.also_occupies)||[]).join(' '),(p.platforms||[]).join(' '),
+  (p.use_cases||[]).join(' '),
+  (p.accuracy||[]).map(a=>a.metric+' '+a.spec).join(' '),
   p.ip_rating||'',p.calibration_required||''].join(' ').toLowerCase(); });
 
 function matching(ignore){
@@ -598,7 +626,7 @@ function detailHTML(p){
   const refs=(a,l)=>(a&&a.length)?'<div class="dsec"><h4>'+l+'</h4><div class="chips">'+
     a.filter(r=>byId[r]).map(r=>'<span class="chip" data-goto="'+esc(r)+'">'+esc(byId[r].name)+'</span>').join('')+
     '</div></div>':'';
-  let h='<div class="dwrap"><img class="hero" src="'+esc(p.image)+'" alt=""><div class="dmain">';
+  let h='<div class="dwrap"><img class="hero" src="'+esc(p.image_large||p.image)+'" alt=""><div class="dmain">';
   h+='<div class="dhead"><div><h3>'+esc(p.name)+'</h3><div class="sub">'+esc(p.manufacturer||'')+
      (p.subcategory?' · '+esc(p.subcategory):'')+'</div></div>'+
      '<button class="dclose" aria-label="Close">✕</button></div>';
@@ -614,6 +642,16 @@ function detailHTML(p){
     row('Voltage',volts)+row('Price',price)+
     row('IP rating',esc(p.ip_rating||''))+row('Calibration',esc(p.calibration_required||''))+
     row('Compatibility',(p.platforms||[]).map(esc).join(', '))+'</dl></div>';
+  if(p.use_cases&&p.use_cases.length)
+    h+='<div class="dsec"><h4>What it is for</h4><div class="chips">'+
+       p.use_cases.map(u=>'<span class="chipmini">'+esc(u)+'</span>').join('')+'</div></div>';
+  if(p.accuracy&&p.accuracy.length)
+    h+='<div class="dsec"><h4>Manufacturer-stated accuracy</h4><dl class="kv">'+
+       p.accuracy.map(a=>'<dt>'+esc(a.metric)+'</dt><dd>'+esc(a.spec)+
+         (a.conditions?'<div class="note">'+esc(a.conditions)+'</div>':'')+
+         (a.range?'<div class="note">Range: '+esc(a.range)+'</div>':'')+'</dd>').join('')+
+       '</dl>'+(p.datasheet_url?'<div class="note">Figures taken from the <a href="'+esc(p.datasheet_url)+
+       '" target="_blank" rel="noopener noreferrer">manufacturer datasheet</a> - not estimated or rounded.</div>':'')+'</div>';
   h+=sec('Calibration notes',p.calibration_notes?'<div style="font-size:12.5px">'+esc(p.calibration_notes)+'</div>':'');
   h+=sec('Notes',p.notes?'<div style="font-size:12.5px">'+esc(p.notes)+'</div>':'');
   if(p.failure_modes&&p.failure_modes.length)
@@ -807,6 +845,46 @@ document.getElementById('theme').addEventListener('click',()=>{
   const el=document.documentElement;
   el.dataset.theme = el.dataset.theme==='dark'?'light':'dark';
 });
+
+/* ── Hover preview ────────────────────────────────────────────────────────
+   Only on devices with a fine pointer: `hover:hover` excludes touch, where a
+   hover preview is unreachable and would just block the tap. Positioned fixed
+   and pointer-events:none, so it cannot shift layout or swallow a click. */
+const CAN_HOVER = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+if(CAN_HOVER){
+  const peek=document.getElementById('peek');
+  let timer=null;
+  const hide=()=>{ clearTimeout(timer); peek.classList.remove('on');
+    timer=setTimeout(()=>{peek.style.display='none';},120); };
+  const show=(img,part)=>{
+    const src=part.image_large||part.image;
+    peek.innerHTML='<img src="'+esc(src)+'" alt=""><div class="cap">'+esc(part.name)+'</div>';
+    peek.style.display='block';
+    // Measure, then place - never let it push the viewport.
+    const r=img.getBoundingClientRect(), pw=254, ph=peek.offsetHeight||280;
+    let x=r.right+12, y=r.top+r.height/2-ph/2;
+    if(x+pw>innerWidth-8) x=r.left-pw-12;      // flip to the left edge
+    if(x<8) x=8;
+    y=Math.max(8, Math.min(y, innerHeight-ph-8));
+    peek.style.left=x+'px'; peek.style.top=y+'px';
+    // Reading offsetHeight above already forced a reflow, so the opacity
+    // transition will run from the display:block state. Adding the class
+    // synchronously avoids depending on requestAnimationFrame, which is
+    // throttled in background tabs and would leave the preview invisible.
+    peek.classList.add('on');
+  };
+  document.getElementById('pbody').addEventListener('mouseover',e=>{
+    const img=e.target.closest('.namecell img'); if(!img) return;
+    const tr=img.closest('tr.row'); const p=byId[tr && tr.dataset.id]; if(!p) return;
+    clearTimeout(timer); timer=setTimeout(()=>show(img,p),110);   // debounce sweeps
+  });
+  document.getElementById('pbody').addEventListener('mouseout',e=>{
+    if(e.target.closest('.namecell img')) hide();
+  });
+  document.getElementById('pbody').addEventListener('click',hide);
+  window.addEventListener('scroll',hide,true);
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') hide(); });
+}
 
 let i2cSort={k:'addr',dir:1};
 function renderI2C(){

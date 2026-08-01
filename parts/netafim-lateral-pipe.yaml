@@ -55,6 +55,9 @@ works_with:
 - netafim-pcj-dripper
 - netafim-line-flush-valve
 - hunter-pgv-solenoid
+use_cases:
+- dripline distribution
+- "per-row lateral runs"
 image: assets/parts/netafim-lateral-pipe.svg
 tags:
 - pipe

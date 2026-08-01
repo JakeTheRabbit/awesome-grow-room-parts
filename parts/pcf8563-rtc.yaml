@@ -79,6 +79,9 @@ platforms:
 works_with:
 - m5stack-airq
 - m5stack-dial
+use_cases:
+- schedule continuity through network outage
+- local time for lighting cycles
 image: assets/parts/pcf8563-rtc.svg
 example:
   lang: yaml

@@ -84,6 +84,20 @@ alternatives:
   - infiwin-mt22
   - chill-division-sdi12
   - thc-s-rs485
+use_cases:
+- substrate dryback tracking
+- "pore-water EC monitoring"
+- crop steering by VWC
+- "root-zone temperature"
+accuracy:
+- metric: Volumetric water content
+  spec: "+/-0.03 m3/m3"
+  conditions: "Generic calibration - typical in mineral soils that have solution EC."
+  range: "0.00-0.70 m3/m3"
+- metric: Volumetric water content
+  spec: "+/-0.01-0.02 m3/m3"
+  conditions: "Medium-specific calibration, in any porous medium. This is why the repo keeps telling you to calibrate against your own substrate."
+datasheet_url: https://metergroup.com/products/teros-12/
 image: assets/parts/meter-teros12.svg
 tags:
   - vwc

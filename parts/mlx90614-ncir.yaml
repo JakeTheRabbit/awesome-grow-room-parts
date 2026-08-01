@@ -76,6 +76,9 @@ works_with:
 - tca9548a-mux
 alternatives:
 - mlx90640-thermal
+use_cases:
+- "single-point leaf surface temperature"
+- leaf VPD calculation
 image: assets/parts/mlx90614-ncir.png
 image_source_url: https://www.adafruit.com/product/1747
 image_source: vendor

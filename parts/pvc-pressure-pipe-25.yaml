@@ -50,6 +50,9 @@ works_with:
 - hunter-pgv-solenoid
 - amiad-screen-filter
 - pressure-reducing-valve
+use_cases:
+- "pump to zone-valve distribution"
+- pressurised mains side plumbing
 image: assets/parts/pvc-pressure-pipe-25.svg
 tags:
 - pipe

@@ -83,6 +83,10 @@ platforms:
 works_with:
 - m5stack-poesp32
 - tca9548a-mux
+use_cases:
+- canopy leaf temperature mapping
+- leaf VPD calculation
+- "hot-spot detection under LEDs"
 image: assets/parts/mlx90640-thermal.png
 image_source_url: https://www.adafruit.com/product/4407
 image_source: vendor

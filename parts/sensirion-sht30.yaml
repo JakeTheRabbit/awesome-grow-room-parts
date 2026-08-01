@@ -64,6 +64,18 @@ alternatives:
   - sensirion-sht40
   - bosch-bme280
   - m5-env3
+use_cases:
+- room temperature and humidity
+- VPD calculation input
+- drying room control
+accuracy:
+- metric: Relative humidity
+  spec: "+/-2 %RH typical"
+  range: "0-100 %RH"
+- metric: Temperature
+  spec: 0.2 C typical
+  range: "-40 to 125 C"
+datasheet_url: https://sensirion.com/products/catalog/SHT30-DIS-B
 image: assets/parts/sensirion-sht30.png
 image_source_url: https://sensirion.com/products/catalog/SHT30-DIS-B
 image_source: manufacturer

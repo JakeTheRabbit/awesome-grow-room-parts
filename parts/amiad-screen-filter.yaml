@@ -53,6 +53,9 @@ works_with:
 - hunter-pgv-solenoid
 - netafim-pcj-dripper
 - pressure-reducing-valve
+use_cases:
+- dripper blockage prevention
+- feed line filtration
 image: assets/parts/amiad-screen-filter.svg
 tags:
 - filter

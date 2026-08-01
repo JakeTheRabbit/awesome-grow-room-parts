@@ -83,6 +83,9 @@ platforms:
 works_with:
 - m5stack-poesp32
 - tca9548a-mux
+use_cases:
+- door access logging
+- "staff room-entry tracking"
 image: assets/parts/mfrc522-rfid.svg
 example:
   lang: yaml

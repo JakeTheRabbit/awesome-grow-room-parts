@@ -59,6 +59,9 @@ platforms:
 alternatives:
   - sensirion-sen55
   - bosch-bme280
+use_cases:
+- room T/RH/pressure
+- VOC trend tracking
 image: assets/parts/bosch-bme680.svg
 tags:
   - voc

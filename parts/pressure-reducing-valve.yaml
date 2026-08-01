@@ -47,6 +47,8 @@ works_with:
 - amiad-screen-filter
 - netafim-pcj-dripper
 - senninger-pressure-regulator
+use_cases:
+- mains pressure reduction for dripline
 image: assets/parts/pressure-reducing-valve.svg
 tags:
 - pressure

@@ -66,6 +66,9 @@ works_with:
   - load-cell-50kg
   - mfrc522-rfid
   - meter-teros12
+use_cases:
+- "at-tank readout"
+- local setpoint adjustment
 image: assets/parts/m5stack-dial.png
 image_source_url: https://shop.m5stack.com/products/m5stack-dial-esp32-s3-smart-rotary-knob-w-1-28-round-touch-screen
 image_source: vendor

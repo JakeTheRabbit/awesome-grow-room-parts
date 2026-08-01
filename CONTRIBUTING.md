@@ -83,7 +83,18 @@ drivers:
 platforms: [ESPHome, Home Assistant]   # ecosystems it works with
 works_with: [m5stack-atom-lite]         # ids of other parts — must exist
 alternatives: [meter-teros12]           # ids of parts doing the same job
+use_cases:                          # what it is FOR, concretely
+  - substrate dryback tracking
+  - pore-water EC monitoring
+accuracy:                           # manufacturer figures ONLY - see below
+  - metric: Volumetric water content
+    spec: "+/-0.03 m3/m3"
+    conditions: Generic calibration in mineral soils.
+    range: "0.00-0.70 m3/m3"
+datasheet_url: https://example.com/x1-datasheet.pdf
 image: assets/parts/my-sensor-x1.svg
+image_source: manufacturer         # manufacturer | vendor | press-kit | own-photo
+image_source_url: https://example.com/x1
 example:
   lang: yaml
   title: Acme X1 on a half-duplex SDI-12 bus
@@ -139,6 +150,30 @@ market date it refers to, and its source.
 To refresh the rate: update `rates`, `rate_date`, `captured` and `source` in
 `data/fx.yaml`, then re-run `build_site.py` and `gen_readme.py`. Never edit a
 converted number anywhere else; they are all generated.
+
+---
+
+## Use cases and accuracy
+
+**`use_cases`** is what the part is actually FOR in a grow room, in concrete
+terms: `substrate dryback tracking`, `CO2 injection interlock`, `leaf surface
+temperature for VPD accuracy`. Not `environmental monitoring`, not `smart
+agriculture`. If the part is deployed, describe how it is genuinely wired and
+used rather than what the marketing copy claims. These are searchable and
+filterable, so they are how most people will actually find a part.
+
+**`accuracy`** must be copied from the manufacturer's own datasheet or product
+specification, and `datasheet_url` must point at it. CI enforces that pairing.
+
+- **Do not estimate, infer, round or convert.** Copy the published figure.
+- **Include the conditions.** `+/-50 ppm +/-2.5 % of reading` means little
+  without the ppm range it is specified over. A spec quoted without its
+  conditions almost always flatters the part.
+- **Leave it absent where accuracy is not a meaningful concept.** Relays,
+  fittings, pipe, enclosures and transformers have no accuracy. An empty field
+  is correct; filler text is not.
+- **Reseller spec tables are not datasheets.** They are frequently wrong or
+  stale. Go to the manufacturer.
 
 ---
 

@@ -41,6 +41,9 @@ works_with:
 - netafim-lateral-pipe
 - netafim-pcj-dripper
 - amiad-screen-filter
+use_cases:
+- "dripline self-purging"
+- sediment removal at line end
 image: assets/parts/netafim-line-flush-valve.svg
 tags:
 - flush

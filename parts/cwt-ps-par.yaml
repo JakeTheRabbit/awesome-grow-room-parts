@@ -61,6 +61,9 @@ works_with:
 alternatives:
   - bh1750
   - as7341
+use_cases:
+- PAR / PPFD measurement
+- DLI accumulation
 image: assets/parts/cwt-ps-par.svg
 tags:
   - par

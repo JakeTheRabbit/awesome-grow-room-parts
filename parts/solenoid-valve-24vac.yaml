@@ -55,6 +55,9 @@ works_with:
   - ssr-25da
   - m5stack-poesp32
   - float-switch
+use_cases:
+- irrigation zone valve
+- "shot-based fertigation"
 image: assets/parts/solenoid-valve-24vac.svg
 tags:
   - irrigation

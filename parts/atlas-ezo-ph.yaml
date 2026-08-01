@@ -74,6 +74,9 @@ works_with:
   - peristaltic-pump-doser
 alternatives:
   - cwt-bl-ec-4400
+use_cases:
+- reservoir pH monitoring
+- pH dosing feedback
 image: assets/parts/atlas-ezo-ph.png
 image_source_url: https://atlas-scientific.com/embedded-solutions/ezo-ph-circuit/
 image_source: manufacturer

@@ -50,6 +50,10 @@ platforms:
 works_with:
   - ultrasonic-tank-sensor
   - peristaltic-pump-doser
+use_cases:
+- tank level failsafe
+- "pump dry-run protection"
+- "sump high-level alarm"
 image: assets/parts/float-switch.svg
 tags:
   - tank-level

@@ -44,6 +44,9 @@ works_with:
 - hunter-pgv-solenoid
 - netafim-pcj-dripper
 - pressure-reducing-valve
+use_cases:
+- "per-zone pressure regulation"
+- independent simultaneous zones
 image: assets/parts/senninger-pressure-regulator.svg
 tags:
 - pressure

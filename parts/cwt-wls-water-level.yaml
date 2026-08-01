@@ -62,6 +62,9 @@ works_with:
 alternatives:
   - ultrasonic-tank-sensor
   - float-switch
+use_cases:
+- tank level monitoring
+- reservoir refill trigger
 image: assets/parts/cwt-wls-water-level.svg
 tags:
   - tank-level

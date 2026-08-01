@@ -54,6 +54,9 @@ works_with:
 - hunter-pgv-solenoid
 - solenoid-valve-24vac
 - m5stack-4relay
+use_cases:
+- 24 VAC supply for zone valves
+- keeping mains out of the control enclosure
 image: assets/parts/transformer-24vac.svg
 tags:
 - transformer

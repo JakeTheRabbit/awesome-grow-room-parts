@@ -43,6 +43,9 @@ alternatives:
   - meter-teros12
   - infiwin-mt22
   - growlink-terralink
+use_cases:
+- substrate dryback tracking
+- "MQTT auto-discovery substrate sensing"
 image: assets/parts/chill-division-sdi12.svg
 tags:
   - vwc

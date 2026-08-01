@@ -68,6 +68,9 @@ alternatives:
   - float-switch
   - cwt-wls-water-level
   - hx711-adc
+use_cases:
+- "non-contact tank level"
+- runoff volume tracking
 image: assets/parts/ultrasonic-tank-sensor.svg
 tags:
   - tank-level

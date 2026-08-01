@@ -59,6 +59,9 @@ works_with:
 - netafim-line-flush-valve
 - amiad-screen-filter
 - meter-teros12
+use_cases:
+- "even per-plant delivery"
+- "pressure-compensated fertigation"
 image: assets/parts/netafim-pcj-dripper.svg
 tags:
 - dripper

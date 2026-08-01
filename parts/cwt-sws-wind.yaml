@@ -55,6 +55,9 @@ platforms:
 works_with:
   - rs485-ttl-transceiver
   - m5stack-poesp32
+use_cases:
+- airflow verification
+- extraction fan failure detection
 image: assets/parts/cwt-sws-wind.svg
 tags:
   - airflow

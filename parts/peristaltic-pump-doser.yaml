@@ -61,6 +61,9 @@ works_with:
   - m5stack-4relay
   - atlas-ezo-ph
   - stm32-abd-doser
+use_cases:
+- nutrient stock dosing
+- pH adjuster dosing
 image: assets/parts/peristaltic-pump-doser.svg
 tags:
   - dosing

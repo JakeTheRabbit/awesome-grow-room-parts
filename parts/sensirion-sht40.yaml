@@ -56,6 +56,9 @@ platforms:
 alternatives:
   - sensirion-sht30
   - m5-env3
+use_cases:
+- room temperature and humidity
+- VPD calculation input
 image: assets/parts/sensirion-sht40.png
 image_source_url: https://sensirion.com/products/catalog/SHT40
 image_source: manufacturer

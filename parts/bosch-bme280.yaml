@@ -59,6 +59,9 @@ alternatives:
   - sensirion-sht30
   - bosch-bmp280
   - m5-env3
+use_cases:
+- room T/RH/pressure
+- VPD calculation input
 image: assets/parts/bosch-bme280.svg
 tags:
   - temperature

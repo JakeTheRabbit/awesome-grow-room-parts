@@ -70,6 +70,9 @@ works_with:
 alternatives:
 - bh1750
 - cwt-ps-par
+use_cases:
+- spectrum drift over fixture life
+- "far-red and UV supplement verification"
 image: assets/parts/as7341.png
 image_source_url: https://www.adafruit.com/product/4698
 image_source: vendor

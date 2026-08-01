@@ -53,6 +53,9 @@ alternatives:
   - meter-teros12
   - infiwin-mt22
   - chill-division-sdi12
+use_cases:
+- substrate dryback tracking
+- "commercial multi-zone VWC"
 image: assets/parts/growlink-terralink.svg
 tags:
   - vwc
