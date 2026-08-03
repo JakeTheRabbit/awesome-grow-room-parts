@@ -100,6 +100,16 @@ ol.against p{margin:0;color:var(--dim);font-size:13.5px}
 .notob h4{margin-top:0}
 .notob p{margin:0 0 6px;font-size:13.5px;color:var(--dim)}
 .notob .src{font-size:12px}
+/* Capability class. A monitor and a controller are not substitutes, and a
+   cost table that ranks them together implies they are. */
+.cap{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  padding:2px 7px;border-radius:9px;border:1px solid var(--line);color:var(--quiet);vertical-align:2px}
+.cap-control{color:var(--accent);border-color:rgba(78,168,122,.55);background:rgba(78,168,122,.10)}
+.cap-monitor{color:var(--amber);border-color:rgba(176,138,48,.55);background:rgba(176,138,48,.10)}
+.cap-analytics{color:var(--blue);border-color:rgba(63,143,164,.55);background:rgba(63,143,164,.10)}
+.capnote{font-size:12.5px;color:var(--amber);margin:0 0 10px}
+tr.grouphead td{background:var(--raised);font-size:11px;text-transform:uppercase;
+  letter-spacing:.05em;color:var(--quiet);font-weight:700}
 footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 50px;
   color:var(--quiet);font-size:12.5px}
 @media(max-width:700px){ dl.kv{grid-template-columns:1fr;gap:2px}
@@ -282,27 +292,47 @@ function render(){
     const be=breakEven(v,D,rooms,sqft);
     const months = (V.rec>0) ? Math.round(D.hw / (V.rec/12)) : null;
     return {v, V, total:cum(V,years), be, months};
-  }).sort((a,b)=>a.total-b.total);
+  });
+  const CAPORD={control:0, analytics:1, monitor:2};
+  rows.sort((a,b)=>{
+    const ca=CAPORD[a.v.capability||'control'], cb=CAPORD[b.v.capability||'control'];
+    return ca!==cb ? ca-cb : a.total-b.total;
+  });
 
   const diyTotal=cum(D,years);
   const max=Math.max(diyTotal,...rows.map(r=>r.total));
 
   // Headline: cheapest vendor vs DIY, in plain terms.
-  const cheapest=rows[0];
+  // Compare like with like: the cheapest option that can actually run a room.
+  const controllers=rows.filter(r=>(r.v.capability||'control')==='control');
+  const cheapest=controllers[0]||rows[0];
   const multiple=diyTotal>0 ? (cheapest.total/diyTotal) : 0;
   document.getElementById('headline').innerHTML =
     `Over <b>${years} year${years>1?'s':''}</b> at <b>${rooms} room${rooms>1?'s':''}</b>, a DIY build totals `+
-    `<b>${money(diyTotal)}</b> with no recurring cost. The cheapest platform here is `+
+    `<b>${money(diyTotal)}</b> with no recurring cost. The cheapest platform that can actually run a room is `+
     `<b>${esc(cheapest.v.name)}</b> at <b>${money(cheapest.total)}</b>`+
     (multiple>=1 ? ` — <b>${multiple.toFixed(1)}&times;</b> the DIY figure.` : `, which is below the DIY figure at this scale.`);
 
+  const CAPLBL={control:'Runs the room — comparable to a DIY controller build',
+                analytics:'Analytics and agronomy — not a controller',
+                monitor:'Monitoring only — cannot run a room, not a substitute for a controller'};
   let h='<thead><tr><th>Option</th><th class="num">Up-front</th><th class="num">Per year</th>'+
         `<th class="num">Total, ${years}yr</th><th class="num">vs DIY</th><th>Break-even</th><th>Confidence</th></tr></thead><tbody>`;
   h+=`<tr class="diyrow"><td><b>DIY build</b><div class="note">derived from this repo's recipes</div></td>`+
      `<td class="num">${money(D.hw)}</td><td class="num">$0</td>`+
      `<td class="num"><b>${money(diyTotal)}</b></td><td class="num">&mdash;</td>`+
      `<td class="never">n/a</td><td><span class="conf conf-high">DERIVED</span></td></tr>`;
+  let lastCap=null;
   for(const r of rows){
+    const cap=r.v.capability||'control';
+    if(cap!==lastCap){
+      h+=`<tr class="grouphead"><td colspan="7">${esc(CAPLBL[cap]||cap)}`+
+         (cap!=='control'?`<div class="note" style="text-transform:none;letter-spacing:0;font-weight:400">`+
+           `The "vs DIY" column is not like-for-like in this group: the DIY figure is a controller `+
+           `plus substrate sensing, which is a different job. Read these rows against each other, `+
+           `not against the DIY build.</div>`:'')+`</td></tr>`;
+      lastCap=cap;
+    }
     const fr=r.v.four_room||{};
     const be=r.be.year===null
       ? '<span class="never">never at this scale</span>'
@@ -313,6 +343,7 @@ function render(){
        (!r.V.exact&&!r.V.canopy?`<div class="note">scaled from published 1- and 4-room figures</div>`:'')+
        ((r.v.four_room||{}).recurring_alt?`<div class="note">+${money((r.v.four_room||{}).recurring_alt/4*rooms)}/yr if API enabled on ${rooms} controller${rooms===1?'':'s'}</div>`:'')+
        (r.V.recUnknown?`<div class="note">ongoing cost not published</div>`:'')+
+       ((r.v.four_room||{}).converted_from?`<div class="note">vendor prices in GBP, converted at ${esc(String((r.v.four_room||{}).converted_from).replace('GBP at ',''))}</div>`:'')+
        `</td>`+
        `<td class="num">${money(r.V.hw)}</td>`+
        `<td class="num">${r.V.recUnknown?'<span class="tag tag-d" title="Not publicly available">(d)</span>':(r.V.rec?money(r.V.rec):'$0')}</td>`+

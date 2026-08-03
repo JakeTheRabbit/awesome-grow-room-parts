@@ -16,6 +16,11 @@ base: NZD
 rates:
   USD: 0.5879
 
+# Rates needed to convert vendor pricing quoted in other currencies onto the
+# common USD basis used by the comparison page. Same sourcing discipline.
+cross_rates:
+  GBP_USD: 1.3483
+
 # The market date the rate itself refers to.
 rate_date: "2026-08-01"
 # The date this file was last updated.
@@ -24,6 +29,10 @@ captured: "2026-08-02"
 source: >-
   open.er-api.com /v6/latest/NZD, reporting 1 NZD = 0.587891 USD for
   2026-08-01. Rounded to 4 decimal places.
+cross_rate_source: >-
+  GBP to USD 1.3483 from open.er-api.com for 2026-08-03, cross-checked against
+  the ECB reference rate via frankfurter.dev (1.3421 for 2026-07-31). The two
+  agree to within about 0.5%.
 cross_check: >-
   Corroborated by xe.com mid-market (1 NZD = 0.5878 USD, same day) and by the
   ECB reference rate via frankfurter.dev (1 NZD = 0.5863 USD for 2026-07-31).

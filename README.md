@@ -32,9 +32,13 @@ DIY build, with an interactive break-even calculator. Every figure carries the
 confidence level and the source it came from, and modelled numbers are not presented
 with the same weight as published ones.
 
-At four rooms over five years: **TrolMaster ~$6.4k · Pulse ~$12k · Growlink ~$27k ·
-AROYA ~$76k** at 8,000 sq ft canopy · **Argus ~$195k** in their own published worked
-example for a 9-zone indoor cannabis grower (2018 dollars).
+The table groups by what each product actually **does**, because a monitor and a
+controller are not substitutes and ranking them together implies they are.
+Runs the room: **TrolMaster ~$6.4k · Growlink ~$27k · Argus ~$51k** at four rooms over
+five years (Argus's own published 9-zone cannabis example is ~$195k, 2018 dollars).
+Analytics rather than control: **AROYA ~$76k** at 8,000 sq ft canopy.
+Monitoring only, and not a substitute for a controller: **Grow Sensor ~$3.8k ·
+Pulse ~$12k**.
 
 Some of what the research turned up:
 
@@ -48,6 +52,9 @@ Some of what the research turned up:
 - **Only two of five vendors will say what happens to your hardware if you stop paying.**
   TrolMaster and Pulse both answer it. AROYA's FAQ declines and routes to a sales demo.
   Growlink's Terms of Service contains no "Effect of Termination" clause at all.
+- **Monitoring is not control.** Pulse Grow and Grow Sensor are monitoring and alerting
+  platforms with no relay outputs and no equipment control — they cannot run a room, and
+  the page groups them separately rather than listing their cost beside a controller's.
 - **Priva and iUNU could not be priced at all** — not published anywhere, including
   through distributors. iUNU has also exited cannabis: their own contact form no longer
   lists it as a crop.

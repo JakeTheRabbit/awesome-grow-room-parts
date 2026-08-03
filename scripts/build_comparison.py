@@ -125,6 +125,16 @@ def main():
     diy_substrate = recipes.get("substrate-sensing-array", {}).get("total_usd", 0)
     diy_per_room = round(diy_room + diy_substrate, 2)
 
+    gbp_usd = (fx.get("cross_rates") or {}).get("GBP_USD")
+    for v in data["vendors"]:
+        for scope in ("four_room", "single_room"):
+            blk = v.get(scope) or {}
+            if blk.get("hardware_gbp") is not None:
+                if not gbp_usd:
+                    raise SystemExit(f"{v['id']}: priced in GBP but no GBP_USD cross-rate in data/fx.yaml")
+                blk["hardware"] = round(blk["hardware_gbp"] * gbp_usd)
+                blk["converted_from"] = f"GBP at {gbp_usd}"
+
     payload = {
         "vendors": data["vendors"],
         "aroya_tiers": AROYA_TIERS,
@@ -160,6 +170,11 @@ def main():
         f'<tr><td>{esc(h["item"])}</td><td>{esc(h["detail"])}</td></tr>'
         for h in data["hidden_costs"])
 
+    CAP_LABEL = {
+        "control": "Runs the room",
+        "monitor": "Monitoring only",
+        "analytics": "Analytics / agronomy",
+    }
     vend_html = ""
     for v in data["vendors"]:
         cites = "".join(
@@ -168,8 +183,9 @@ def main():
             for c in v.get("citations") or [])
         fr = v.get("four_room") or {}
         vend_html += f'''<div class="vcard">
-  <h3>{esc(v["name"])}</h3>
+  <h3>{esc(v["name"])} <span class="cap cap-{esc(v.get("capability", ""))}">{esc(CAP_LABEL.get(v.get("capability"), ""))}</span></h3>
   <p class="pos">{esc(v["positioning"])}</p>
+  {f'<p class="capnote">{esc(v["capability_note"])}</p>' if v.get("capability_note") else ''}
   <dl class="kv">
     <dt>Subscription</dt><dd>{esc(v["subscription_model"])}</dd>
     <dt>Recurring cost</dt><dd>{esc(v["recurring_note"])}</dd>

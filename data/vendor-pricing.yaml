@@ -34,6 +34,9 @@ vendors:
   - id: trolmaster
     name: TrolMaster
     positioning: Environment control. Dominant at small and mid indoor scale.
+    capability: control
+    capability_note: >-
+      Environment control with relay/device outputs. Runs the room.
     subscription_model: >-
       App is free with no paid remote tier. API access is billed separately at
       $15 per month per device.
@@ -74,6 +77,9 @@ vendors:
   - id: pulse
     name: Pulse Grow
     positioning: Sensor-agnostic monitoring. The natural buy comparison for a DIY-inclined operator.
+    capability: monitor
+    capability_note: >-
+      Monitoring and alerting only. No relay outputs, no valve or equipment control - Pulse cannot run a room on its own and is not a substitute for a controller.
     subscription_model: >-
       Working free tier. Enthusiast $10/user/month, Professional $35/user/month.
     recurring_note: >-
@@ -108,6 +114,9 @@ vendors:
   - id: growlink
     name: Growlink
     positioning: Direct AROYA competitor. Published SaaS tiers.
+    capability: control
+    capability_note: >-
+      Irrigation and environment control with valve and device outputs.
     subscription_model: >-
       Root free, Sprout $25/month, Bloom $250/month per facility,
       Harvest $1,000/month per facility.
@@ -151,6 +160,9 @@ vendors:
   - id: aroya
     name: AROYA (Addium)
     positioning: Category-defining in cannabis crop steering. Highest subscription exposure.
+    capability: analytics
+    capability_note: >-
+      Substrate crop-steering analytics and agronomy coaching. Actuation generally comes from separate irrigation hardware.
     subscription_model: >-
       $150 to $3,900 per month, billed per canopy square foot, facility-wide.
       Room count is not the billing unit.
@@ -200,6 +212,9 @@ vendors:
   - id: argus
     name: Argus Controls
     positioning: Enterprise horticultural control. The only vendor with a published price list carrying real dollar figures.
+    capability: control
+    capability_note: >-
+      Full engineered control system, configured by the vendor.
     min_rooms: 4
     min_rooms_note: >-
       Argus is not sold at single-room scale - the Titan software floor alone is
@@ -234,6 +249,54 @@ vendors:
     citations:
       - label: "Estimating Guide V3, including a 9-zone indoor cannabis worked example"
         url: https://www.arguscontrols.com/
+        tag: a
+
+  - id: growsensor
+    name: Grow Sensor
+    positioning: Canopy-level optical and climate sensing. Leaf VPD, PPFD, spectrum and DLI.
+    capability: monitor
+    capability_note: >-
+      Monitoring only. No relay outputs and no equipment control - it measures
+      the canopy, it does not run the room.
+    subscription_model: >-
+      No subscription for the app. The vendor FAQ states "The Grow App is free
+      to use with your Grow Sensor. Premium features, such as AI insights, may
+      require a subscription in the future." The PRO bundle includes one year
+      of the GrowOps crop-tracking platform; the price after that year is not
+      published.
+    recurring_note: >-
+      Currently no recurring cost to use the sensor. Two forward-looking
+      unknowns are stated by the vendor rather than inferred: premium features
+      "may require a subscription in the future", and GrowOps renewal pricing
+      after the bundled first year is not published.
+    stops_paying_answer: >-
+      Not applicable at present - there is no subscription required to use the
+      sensor or the app.
+    stops_paying_confidence: HIGH
+    stops_paying_tag: a
+    four_room:
+      hardware_gbp: 2796
+      recurring_per_year: 0
+      tag: a
+      confidence: HIGH
+      confidence_note: >-
+        Vendor Shopify product feed. Four PRO systems at GBP 699. Converted to
+        USD using the cross-rate in data/fx.yaml.
+      source: https://shop.growsensor.co/products/grow-sensor-pro-bundle
+      source_label: shop.growsensor.co vendor product feed
+    single_room:
+      hardware_gbp: 699
+      recurring_per_year: 0
+      tag: a
+      confidence: HIGH
+      source: https://shop.growsensor.co/products/grow-sensor-pro-bundle
+      source_label: shop.growsensor.co vendor product feed
+    citations:
+      - label: "PRO system GBP 699, PRO unit GBP 599, SubSense substrate probe GBP 199"
+        url: https://shop.growsensor.co/products/grow-sensor-pro-bundle
+        tag: a
+      - label: "Product overview - leaf VPD, leaf temperature, PPFD, spectrum, DLI"
+        url: https://www.growsensor.co/
         tag: a
 
 # ---------------------------------------------------------------------------
