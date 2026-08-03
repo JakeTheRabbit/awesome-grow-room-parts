@@ -166,6 +166,19 @@ def main():
         f'{esc(v["url"])}</a></p></div>'
         for v in data["not_obtainable"])
 
+    recs = data.get("recommendations") or {}
+    rec_html = "".join(
+        f'<div class="rec rec-{esc(p.get("rating","qualified"))}">'
+        f'<h3>{esc(p["subject"])}</h3>'
+        f'<p class="verdict">{esc(p["verdict"])}</p>'
+        f'<p>{esc(p["detail"])}</p>'
+        + (f'<p><b>Why it fits a DIY-minded build:</b> {esc(p["why_it_fits"])}</p>'
+           if p.get("why_it_fits") else "")
+        + (f'<p class="caveat"><b>Caveat.</b> {esc(p["caveat"])}</p>'
+           if p.get("caveat") else "")
+        + "</div>"
+        for p in recs.get("picks") or [])
+
     hidden_html = "".join(
         f'<tr><td>{esc(h["item"])}</td><td>{esc(h["detail"])}</td></tr>'
         for h in data["hidden_costs"])
@@ -211,6 +224,8 @@ def main():
            .replace("__AGAINST__", against_html)
            .replace("__NOTOBTAINABLE__", notob_html)
            .replace("__HIDDEN__", hidden_html)
+           .replace("__RECS__", rec_html)
+           .replace("__REC_CLASS__", esc(recs.get("evidence_class", "")))
            .replace("__MIDDLE_HEAD__", esc(data["middle_path"]["headline"]))
            .replace("__MIDDLE__", esc(data["middle_path"]["detail"]))
            .replace("__METHODOLOGY__", esc(data["meta"]["methodology"]))

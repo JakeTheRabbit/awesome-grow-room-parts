@@ -1,0 +1,86 @@
+id: co2-injection-controller
+name: Standalone CO2 injection controller
+summary: >-
+  Two CO2 tank solenoids on GPIO-driven SSRs, with the tightest dead-man timer
+  in this catalogue. CO2 is the one output where a stuck-on failure is a
+  life-safety problem rather than a crop problem, and this config is written
+  accordingly.
+skill_level: intermediate
+estimated_build_time: 2 hours plus electrical
+network: WiFi, with de-energise on disconnect
+items:
+  - part: ssr-25da
+    qty: 2
+    role: One per CO2 tank solenoid, driven straight off a GPIO.
+  - part: m5stack-atoms3-lite
+    qty: 1
+    role: Host. Any ESP32 with two spare GPIOs will do.
+  - part: sensirion-scd41
+    qty: 1
+    role: The CO2 reading the injection logic runs against, on a separate node or this one.
+notes: >-
+  The injection logic itself lives in Home Assistant; this node's job is to
+  execute switch commands safely and to fail closed when it cannot hear from
+  anyone. Keep the setpoint logic off the device and the safety on it.
+watch_out: >-
+  The auto-shutoff here is 60 seconds, not the 20 minutes used on irrigation
+  valves, and that difference is the entire point. An irrigation valve stuck
+  open floods a room. A CO2 solenoid stuck open displaces oxygen in a sealed
+  space that people walk into. Sixty seconds is longer than any single
+  legitimate injection burst and short enough that a wedged controller cannot
+  fill the room. This node also de-energises both solenoids on WiFi disconnect
+  rather than using a grace timer, which is the opposite of the irrigation
+  advice in SAFETY.md and is deliberate: a brief network blip interrupting an
+  injection burst costs you nothing, because the next burst simply resumes.
+  None of this replaces a CO2 alarm and an interlock on the room's occupancy.
+example:
+  lang: yaml
+  title: Two solenoids, 60-second dead-man, de-energise on disconnect
+  source: distilled from a production CO2 node (credentials scrubbed)
+  code: |
+    esp32:
+      board: esp32-s3-devkitc-1
+      framework:
+        type: arduino
+
+    api:
+      encryption:
+        key: !secret api_encryption_key
+      # SAFETY: if Home Assistant is unreachable this long, reboot - and
+      # restore_mode ALWAYS_OFF below then guarantees both tanks come back shut.
+      reboot_timeout: 5min
+
+    wifi:
+      ssid: !secret wifi_ssid
+      password: !secret wifi_password
+      # SAFETY: no grace timer here, unlike irrigation. Losing the network
+      # mid-injection costs nothing - the next burst resumes. Leaving a CO2
+      # solenoid open with nobody listening is a different kind of problem.
+      on_disconnect:
+        - switch.turn_off: tank_1
+        - switch.turn_off: tank_2
+
+    switch:
+      - platform: gpio
+        pin: GPIO2
+        id: tank_1
+        name: "CO2 Tank 1"
+        # SAFETY: never resume gas injection by itself after a power cut.
+        restore_mode: ALWAYS_OFF
+        # SAFETY: 60s dead-man. Longer than any legitimate burst, short enough
+        # that a wedged controller cannot fill an occupied room.
+        on_turn_on:
+          - delay: 60s
+          - switch.turn_off: tank_1
+
+      - platform: gpio
+        pin: GPIO1
+        id: tank_2
+        name: "CO2 Tank 2"
+        restore_mode: ALWAYS_OFF
+        on_turn_on:
+          - delay: 60s
+          - switch.turn_off: tank_2
+
+      - platform: restart
+        name: "Restart"

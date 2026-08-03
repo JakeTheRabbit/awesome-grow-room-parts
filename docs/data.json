@@ -6079,9 +6079,133 @@
       "watch_out": "WiFi is fine for a monitor-only build. The moment you add a valve or a heater to this, move to wired Ethernet and read SAFETY.md first - a dropped WiFi link with an open valve is how tents flood."
     },
     {
+      "id": "canopy-multisensor-poe",
+      "name": "Canopy multi-sensor node (CO2 + T/RH + light)",
+      "summary": "The workhorse sensing node: CO2, temperature, humidity, pressure and light on one PoE-powered I2C chain, publishing VPD, PPFD and DLI computed on the device rather than in Home Assistant. This is a real production config, not a worked example.",
+      "skill_level": "intermediate",
+      "estimated_build_time": "2 hours plus calibration",
+      "network": "Wired Ethernet (PoE, 802.3af)",
+      "items": [
+        {
+          "part": "m5stack-poesp32",
+          "qty": 1,
+          "role": "Host and wired network. Sensing this useful should not depend on WiFi."
+        },
+        {
+          "part": "sensirion-scd41",
+          "qty": 1,
+          "role": "CO2. Its own T/RH channels are read but deliberately not published."
+        },
+        {
+          "part": "m5-env3",
+          "qty": 1,
+          "role": "The T/RH that actually gets published, plus the pressure the SCD41 is compensated against."
+        },
+        {
+          "part": "bh1750",
+          "qty": 1,
+          "role": "Lux, converted to PPFD through a two-point calibration and integrated to DLI."
+        }
+      ],
+      "notes": "I2C map is clean: SCD41 0x62, SHT30 0x44, QMP6988 0x70, BH1750 0x23. No multiplexer needed. Note the ENV.III occupies two addresses - if you later add a TCA9548A it defaults to 0x70 and will collide with the QMP6988, so move the mux to 0x71.",
+      "watch_out": "Four things in this config are load-bearing and are the reason it is worth copying rather than writing from scratch. First, every raw reading is cached into a global and the published sensors read the cache, so a single missed I2C read does not flap the entity to UNKNOWN and poison your history. Second, the SCD41's own temperature and humidity are read but marked internal and never published - the CO2 measurement self-heats the package, so the ENV.III is the honest source and publishing both would give you two disagreeing numbers for the same room. Third, ASC is off and forced recalibration is a button with a settable reference, because automatic self-calibration assumes weekly exposure to 400 ppm fresh air, which never happens in a sealed enriched room. Fourth, the SCD41 is pressure-compensated from the QMP6988 on the same board, which is free accuracy most builds leave on the table.",
+      "example": {
+        "lang": "yaml",
+        "title": "Cached readings, pressure-compensated CO2, and lux to PPFD to DLI",
+        "source": "distilled from a production canopy node (credentials scrubbed)",
+        "code": "# Wired PoE node. The full config is long; this is the part that matters.\nethernet:\n  type: IP101\n  mdc_pin: GPIO23\n  mdio_pin: GPIO18\n  clk_mode: GPIO0_IN\n  phy_addr: 1\n  power_pin: GPIO5\n\ni2c:\n  id: bus_a\n  sda: 16\n  scl: 17\n  scan: true\n\n# Last-known-good cache. Published sensors read these rather than the\n# hardware, so one missed I2C read does not flap an entity to UNKNOWN.\nglobals:\n  - id: last_co2\n    type: float\n    initial_value: 'NAN'\n  - id: last_env3_temp\n    type: float\n    initial_value: 'NAN'\n  - id: last_env3_rh\n    type: float\n    initial_value: 'NAN'\n  - id: last_env3_pressure\n    type: float\n    initial_value: 'NAN'\n  - id: last_lux\n    type: float\n    initial_value: 'NAN'\n\nsensor:\n  - platform: scd4x\n    id: scd41\n    # ASC assumes weekly exposure to 400ppm fresh air. In a sealed enriched\n    # room that never happens, so it must be off and recalibrated manually.\n    automatic_self_calibration: false\n    ambient_pressure_compensation_source: ambient_pressure_mbar\n    update_interval: 30s\n    co2:\n      id: co2_raw\n      internal: true\n      on_value:\n        then:\n          - globals.set: { id: last_co2, value: !lambda \"return x;\" }\n    temperature:\n      id: scd41_temp_raw\n      internal: true    # self-heated - read, never published\n    humidity:\n      id: scd41_rh_raw\n      internal: true    # ditto - the ENV.III is the honest source\n\n  - platform: sht3xd          # ENV.III half one\n    i2c_id: bus_a\n    address: 0x44\n    update_interval: 30s\n    temperature:\n      id: env3_temp_raw\n      internal: true\n      filters: [ offset: 0.0 ]        # trim against a reference thermometer\n      on_value:\n        then:\n          - globals.set: { id: last_env3_temp, value: !lambda \"return x;\" }\n    humidity:\n      id: env3_rh_raw\n      internal: true\n      filters:\n        - offset: 0.0\n        - clamp: { min_value: 0, max_value: 100 }\n      on_value:\n        then:\n          - globals.set: { id: last_env3_rh, value: !lambda \"return x;\" }\n\n  - platform: qmp6988         # ENV.III half two - 0x70, watch for mux clash\n    i2c_id: bus_a\n    address: 0x70\n    update_interval: 30s\n    pressure:\n      id: env3_pressure_raw\n      internal: true\n      on_value:\n        then:\n          - globals.set: { id: last_env3_pressure, value: !lambda \"return x;\" }\n\n  # Feeds the SCD41's pressure compensation. Free accuracy, usually skipped.\n  - platform: template\n    id: ambient_pressure_mbar\n    internal: true\n    unit_of_measurement: \"hPa\"\n    accuracy_decimals: 0\n    lambda: |-\n      float p = id(last_env3_pressure);\n      if (isnan(p)) return NAN;\n      if (p < 800) p = 800;\n      if (p > 1100) p = 1100;\n      return roundf(p);\n\n  - platform: bh1750\n    i2c_id: bus_a\n    address: 0x23\n    id: lux_raw\n    internal: true\n    update_interval: 10s\n    on_value:\n      then:\n        - globals.set: { id: last_lux, value: !lambda \"return x;\" }\n\n  # ---- Published: exactly ONE temperature and ONE humidity ----\n  - platform: template\n    name: \"Temperature\"\n    device_class: temperature\n    state_class: measurement\n    unit_of_measurement: \"°C\"\n    accuracy_decimals: 2\n    lambda: \"return id(last_env3_temp);\"\n\n  - platform: template\n    name: \"Humidity\"\n    device_class: humidity\n    state_class: measurement\n    unit_of_measurement: \"%\"\n    accuracy_decimals: 1\n    lambda: \"return id(last_env3_rh);\"\n\n  - platform: template\n    name: \"CO2\"\n    device_class: carbon_dioxide\n    state_class: measurement\n    unit_of_measurement: \"ppm\"\n    accuracy_decimals: 0\n    lambda: \"return id(last_co2);\"\n\n  # VPD computed on the device, so it survives a Home Assistant restart.\n  - platform: template\n    name: \"VPD\"\n    state_class: measurement\n    unit_of_measurement: \"kPa\"\n    accuracy_decimals: 2\n    lambda: |-\n      float t = id(last_env3_temp);\n      float rh = id(last_env3_rh);\n      if (isnan(t) || isnan(rh)) return NAN;\n      float svp = 0.61078 * exp((17.27 * t) / (t + 237.3));\n      return svp * (1.0 - (rh / 100.0));\n\n  # Lux is NOT PPFD. Two-point fit against a real quantum sensor under YOUR\n  # fixtures; without that this number is meaningless across spectra.\n  - platform: template\n    id: ppfd_calibrated\n    internal: true\n    lambda: |-\n      float lux = id(last_lux);\n      if (isnan(lux)) return NAN;\n      float lux1 = id(lux_cal_1).state,  ppfd1 = id(ppfd_cal_1).state;\n      float lux2 = id(lux_cal_2).state,  ppfd2 = id(ppfd_cal_2).state;\n      if (lux1 <= 0 || lux2 <= 0 || lux1 == lux2) return NAN;\n      float m = (ppfd2 - ppfd1) / (lux2 - lux1);\n      float ppfd = m * lux + (ppfd1 - m * lux1);\n      return ppfd < 0 ? 0 : ppfd;\n\n  - platform: integration\n    name: \"PPFD Integral\"\n    id: ppfd_integral_umol\n    sensor: ppfd_calibrated\n    time_unit: s\n    accuracy_decimals: 0\n\n  - platform: template\n    name: \"DLI\"\n    state_class: total_increasing\n    unit_of_measurement: \"mol/m²/day\"\n    accuracy_decimals: 2\n    lambda: |-\n      float umol = id(ppfd_integral_umol).state;\n      if (isnan(umol)) return NAN;\n      return umol / 1000000.0f;\n\nbutton:\n  # Forced recalibration against a settable reference, since ASC is off.\n  - platform: template\n    name: \"SCD41 Forced Recalibration\"\n    on_press:\n      then:\n        - scd4x.perform_forced_calibration:\n            id: scd41\n            value: !lambda \"return (uint16_t) id(scd41_frc_ppm).state;\"\n"
+      }
+    },
+    {
+      "id": "co2-injection-controller",
+      "name": "Standalone CO2 injection controller",
+      "summary": "Two CO2 tank solenoids on GPIO-driven SSRs, with the tightest dead-man timer in this catalogue. CO2 is the one output where a stuck-on failure is a life-safety problem rather than a crop problem, and this config is written accordingly.",
+      "skill_level": "intermediate",
+      "estimated_build_time": "2 hours plus electrical",
+      "network": "WiFi, with de-energise on disconnect",
+      "items": [
+        {
+          "part": "ssr-25da",
+          "qty": 2,
+          "role": "One per CO2 tank solenoid, driven straight off a GPIO."
+        },
+        {
+          "part": "m5stack-atoms3-lite",
+          "qty": 1,
+          "role": "Host. Any ESP32 with two spare GPIOs will do."
+        },
+        {
+          "part": "sensirion-scd41",
+          "qty": 1,
+          "role": "The CO2 reading the injection logic runs against, on a separate node or this one."
+        }
+      ],
+      "notes": "The injection logic itself lives in Home Assistant; this node's job is to execute switch commands safely and to fail closed when it cannot hear from anyone. Keep the setpoint logic off the device and the safety on it.",
+      "watch_out": "The auto-shutoff here is 60 seconds, not the 20 minutes used on irrigation valves, and that difference is the entire point. An irrigation valve stuck open floods a room. A CO2 solenoid stuck open displaces oxygen in a sealed space that people walk into. Sixty seconds is longer than any single legitimate injection burst and short enough that a wedged controller cannot fill the room. This node also de-energises both solenoids on WiFi disconnect rather than using a grace timer, which is the opposite of the irrigation advice in SAFETY.md and is deliberate: a brief network blip interrupting an injection burst costs you nothing, because the next burst simply resumes. None of this replaces a CO2 alarm and an interlock on the room's occupancy.",
+      "example": {
+        "lang": "yaml",
+        "title": "Two solenoids, 60-second dead-man, de-energise on disconnect",
+        "source": "distilled from a production CO2 node (credentials scrubbed)",
+        "code": "esp32:\n  board: esp32-s3-devkitc-1\n  framework:\n    type: arduino\n\napi:\n  encryption:\n    key: !secret api_encryption_key\n  # SAFETY: if Home Assistant is unreachable this long, reboot - and\n  # restore_mode ALWAYS_OFF below then guarantees both tanks come back shut.\n  reboot_timeout: 5min\n\nwifi:\n  ssid: !secret wifi_ssid\n  password: !secret wifi_password\n  # SAFETY: no grace timer here, unlike irrigation. Losing the network\n  # mid-injection costs nothing - the next burst resumes. Leaving a CO2\n  # solenoid open with nobody listening is a different kind of problem.\n  on_disconnect:\n    - switch.turn_off: tank_1\n    - switch.turn_off: tank_2\n\nswitch:\n  - platform: gpio\n    pin: GPIO2\n    id: tank_1\n    name: \"CO2 Tank 1\"\n    # SAFETY: never resume gas injection by itself after a power cut.\n    restore_mode: ALWAYS_OFF\n    # SAFETY: 60s dead-man. Longer than any legitimate burst, short enough\n    # that a wedged controller cannot fill an occupied room.\n    on_turn_on:\n      - delay: 60s\n      - switch.turn_off: tank_1\n\n  - platform: gpio\n    pin: GPIO1\n    id: tank_2\n    name: \"CO2 Tank 2\"\n    restore_mode: ALWAYS_OFF\n    on_turn_on:\n      - delay: 60s\n      - switch.turn_off: tank_2\n\n  - platform: restart\n    name: \"Restart\"\n"
+      }
+    },
+    {
+      "id": "full-canopy-stack",
+      "name": "Full canopy stack — light, thermal, CO2, T/RH and substrate",
+      "summary": "Everything needed to steer a room properly: canopy climate and CO2, real leaf temperature from a thermal array rather than an air proxy, light as PPFD and DLI, and substrate VWC and pore-water EC. This is the combination that makes leaf VPD and dryback tracking possible at the same time, which is what the commercial platforms are actually selling.",
+      "skill_level": "advanced",
+      "estimated_build_time": "a day per room, plus calibration",
+      "network": "Wired Ethernet (PoE) for the climate and thermal nodes",
+      "items": [
+        {
+          "part": "m5stack-poesp32",
+          "qty": 2,
+          "role": "One host for the climate node, one for the thermal camera."
+        },
+        {
+          "part": "sensirion-scd41",
+          "qty": 1,
+          "role": "CO2 for injection control and ventilation interlock."
+        },
+        {
+          "part": "m5-env3",
+          "qty": 1,
+          "role": "Published temperature and humidity, plus pressure compensation for the SCD41."
+        },
+        {
+          "part": "bh1750",
+          "qty": 1,
+          "role": "Light level, calibrated to PPFD and integrated to DLI."
+        },
+        {
+          "part": "mlx90640-thermal",
+          "qty": 1,
+          "role": "Canopy leaf temperature. The reason this stack beats an air-VPD-only build."
+        },
+        {
+          "part": "m5stack-atom-lite",
+          "qty": 1,
+          "role": "SDI-12 host for the substrate probes."
+        },
+        {
+          "part": "meter-teros12",
+          "qty": 2,
+          "role": "Substrate VWC, pore-water EC and root-zone temperature."
+        }
+      ],
+      "notes": "Why leaf temperature changes the picture: air VPD tells you what the air is doing, leaf VPD tells you what the plant is doing, and under high-intensity LEDs those two numbers diverge - leaf can sit below air temperature under transpiration, or above it when stomata close. Steering on air VPD alone means steering on a proxy. The MLX90640 gives a real leaf surface temperature, and combined with the ENV.III T/RH you get leaf VPD rather than air VPD. The substrate probes then close the loop: leaf VPD tells you what the plant wants to transpire, dryback tells you whether it can.",
+      "watch_out": "Set MLX90640 emissivity to 0.95 for foliage. Leaving it at the 1.0 default under-reads leaf temperature by several degrees, and every leaf-VPD number downstream inherits that error silently. Use a region of interest over the canopy rather than the frame average, or a hot LED driver in shot drags the whole number. Run the thermal camera's I2C bus at 400kHz - 100kHz cannot sustain a 768-pixel frame and you get torn frames that look like sensor noise. On the substrate side, raw SDI-12 counts are not VWC: the conversion polynomial is media-specific and the coco curve is wrong for rockwool. Calibrate against gravimetric samples from your own substrate before steering anything on those numbers.",
+      "example": {
+        "lang": "yaml",
+        "title": "MLX90640 tuned for leaf temperature, with leaf VPD from the same node",
+        "source": "distilled from a production thermal node (credentials scrubbed)",
+        "code": "external_components:\n  - source:\n      type: git\n      url: https://codeberg.org/stackdrift/esphome-components\n      ref: main\n      path: \".\"\n    components: [mlx90640]\n\ni2c:\n  sda: GPIO16\n  scl: GPIO17\n  frequency: 400kHz     # 100kHz cannot sustain a 768-pixel frame\n  scan: true\n\n# The component DEPENDS on these platforms, so they must exist even empty.\nnumber:\nselect:\n\nmlx90640:\n  id: thermal_cam\n  address: 0x33\n  refresh_rate: \"16Hz\"\n  resolution: \"18-bit\"\n  pattern: \"chess\"\n  update_interval: 20000            # ms\n\n  emissivity: 0.95                  # foliage. NOT the 1.0 default.\n  ta_shift: 8.0                     # reflected temp = ambient - 8C\n\n  # Central canopy patch, not the whole frame - otherwise a hot driver\n  # in shot drags the average and you steer on the luminaire.\n  roi:\n    enabled: true\n    center_row: 12\n    center_col: 16\n    size: 5                         # size N -> (2N+1) square\n\n  temperature_sensors:\n    roi_avg:\n      name: \"Leaf Temperature\"\n      id: leaf_temperature\n      filters:\n        - median: { window_size: 5, send_every: 1, send_first_at: 1 }\n    roi_min: { name: \"Leaf Temperature Min\" }\n    roi_max: { name: \"Leaf Temperature Max\" }\n    avg:     { name: \"Canopy Average Temperature\" }\n    max:     { name: \"Canopy Max Temperature\" }\n\nsensor:\n  # Leaf VPD: saturation vapour pressure at LEAF temperature against the\n  # actual vapour pressure of the air. This is the number worth steering on.\n  # Air temperature and RH are imported from the climate node.\n  - platform: homeassistant\n    id: air_temp\n    entity_id: sensor.canopy_node_temperature\n    internal: true\n  - platform: homeassistant\n    id: air_rh\n    entity_id: sensor.canopy_node_humidity\n    internal: true\n\n  - platform: template\n    name: \"Leaf VPD\"\n    state_class: measurement\n    unit_of_measurement: \"kPa\"\n    accuracy_decimals: 2\n    lambda: |-\n      float tl = id(leaf_temperature).state;   // leaf surface\n      float ta = id(air_temp).state;           // air\n      float rh = id(air_rh).state;\n      if (isnan(tl) || isnan(ta) || isnan(rh)) return NAN;\n      // SVP at the leaf, actual VP from the air.\n      float svp_leaf = 0.61078 * exp((17.27 * tl) / (tl + 237.3));\n      float svp_air  = 0.61078 * exp((17.27 * ta) / (ta + 237.3));\n      float vp_air   = svp_air * (rh / 100.0);\n      float vpd = svp_leaf - vp_air;\n      return vpd < 0 ? 0 : vpd;\n"
+      }
+    },
+    {
       "id": "poe-room-controller",
       "name": "PoE room controller (irrigation + CO2)",
-      "summary": "The pattern the the reference facility flower rooms actually run: a wired PoE node that both senses and actuates, with the flood-safety pattern mandatory on every output. This is the build that can move water, so it is the build that has to fail safe.",
+      "summary": "The pattern the reference facility flower rooms actually run: a wired PoE node that both senses and actuates, with the flood-safety pattern mandatory on every output. This is the build that can move water, so it is the build that has to fail safe.",
       "skill_level": "intermediate",
       "estimated_build_time": "half a day plus wiring",
       "network": "Wired Ethernet (PoE, 802.3af)",
@@ -6158,9 +6282,13 @@
     "rates": {
       "USD": 0.5879
     },
+    "cross_rates": {
+      "GBP_USD": 1.3483
+    },
     "rate_date": "2026-08-01",
     "captured": "2026-08-02",
     "source": "open.er-api.com /v6/latest/NZD, reporting 1 NZD = 0.587891 USD for 2026-08-01. Rounded to 4 decimal places.",
+    "cross_rate_source": "GBP to USD 1.3483 from open.er-api.com for 2026-08-03, cross-checked against the ECB reference rate via frankfurter.dev (1.3421 for 2026-07-31). The two agree to within about 0.5%.",
     "cross_check": "Corroborated by xe.com mid-market (1 NZD = 0.5878 USD, same day) and by the ECB reference rate via frankfurter.dev (1 NZD = 0.5863 USD for 2026-07-31). The three agree to within about 0.3%, which is well inside the noise on hardware pricing.",
     "note": "These conversions are indicative only. They are a mid-market snapshot, not a retail rate - a card payment or an international transfer will land a few percent worse once spread and fees are applied. Component prices move further and faster than currencies do, so treat the price BAND ($ / $$ / $$$ / $$$$) as the durable signal and any specific figure as a point-in-time observation. Only currencies listed in `rates` can be derived; a part priced in a currency with no rate here is displayed in its own currency only."
   }

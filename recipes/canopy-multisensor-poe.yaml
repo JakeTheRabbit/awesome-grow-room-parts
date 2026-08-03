@@ -1,0 +1,235 @@
+id: canopy-multisensor-poe
+name: Canopy multi-sensor node (CO2 + T/RH + light)
+summary: >-
+  The workhorse sensing node: CO2, temperature, humidity, pressure and light on
+  one PoE-powered I2C chain, publishing VPD, PPFD and DLI computed on the device
+  rather than in Home Assistant. This is a real production config, not a
+  worked example.
+skill_level: intermediate
+estimated_build_time: 2 hours plus calibration
+network: Wired Ethernet (PoE, 802.3af)
+items:
+  - part: m5stack-poesp32
+    qty: 1
+    role: Host and wired network. Sensing this useful should not depend on WiFi.
+  - part: sensirion-scd41
+    qty: 1
+    role: CO2. Its own T/RH channels are read but deliberately not published.
+  - part: m5-env3
+    qty: 1
+    role: The T/RH that actually gets published, plus the pressure the SCD41 is compensated against.
+  - part: bh1750
+    qty: 1
+    role: Lux, converted to PPFD through a two-point calibration and integrated to DLI.
+notes: >-
+  I2C map is clean: SCD41 0x62, SHT30 0x44, QMP6988 0x70, BH1750 0x23. No
+  multiplexer needed. Note the ENV.III occupies two addresses - if you later add
+  a TCA9548A it defaults to 0x70 and will collide with the QMP6988, so move the
+  mux to 0x71.
+watch_out: >-
+  Four things in this config are load-bearing and are the reason it is worth
+  copying rather than writing from scratch. First, every raw reading is cached
+  into a global and the published sensors read the cache, so a single missed I2C
+  read does not flap the entity to UNKNOWN and poison your history. Second, the
+  SCD41's own temperature and humidity are read but marked internal and never
+  published - the CO2 measurement self-heats the package, so the ENV.III is the
+  honest source and publishing both would give you two disagreeing numbers for
+  the same room. Third, ASC is off and forced recalibration is a button with a
+  settable reference, because automatic self-calibration assumes weekly exposure
+  to 400 ppm fresh air, which never happens in a sealed enriched room. Fourth,
+  the SCD41 is pressure-compensated from the QMP6988 on the same board, which is
+  free accuracy most builds leave on the table.
+example:
+  lang: yaml
+  title: Cached readings, pressure-compensated CO2, and lux to PPFD to DLI
+  source: distilled from a production canopy node (credentials scrubbed)
+  code: |
+    # Wired PoE node. The full config is long; this is the part that matters.
+    ethernet:
+      type: IP101
+      mdc_pin: GPIO23
+      mdio_pin: GPIO18
+      clk_mode: GPIO0_IN
+      phy_addr: 1
+      power_pin: GPIO5
+
+    i2c:
+      id: bus_a
+      sda: 16
+      scl: 17
+      scan: true
+
+    # Last-known-good cache. Published sensors read these rather than the
+    # hardware, so one missed I2C read does not flap an entity to UNKNOWN.
+    globals:
+      - id: last_co2
+        type: float
+        initial_value: 'NAN'
+      - id: last_env3_temp
+        type: float
+        initial_value: 'NAN'
+      - id: last_env3_rh
+        type: float
+        initial_value: 'NAN'
+      - id: last_env3_pressure
+        type: float
+        initial_value: 'NAN'
+      - id: last_lux
+        type: float
+        initial_value: 'NAN'
+
+    sensor:
+      - platform: scd4x
+        id: scd41
+        # ASC assumes weekly exposure to 400ppm fresh air. In a sealed enriched
+        # room that never happens, so it must be off and recalibrated manually.
+        automatic_self_calibration: false
+        ambient_pressure_compensation_source: ambient_pressure_mbar
+        update_interval: 30s
+        co2:
+          id: co2_raw
+          internal: true
+          on_value:
+            then:
+              - globals.set: { id: last_co2, value: !lambda "return x;" }
+        temperature:
+          id: scd41_temp_raw
+          internal: true    # self-heated - read, never published
+        humidity:
+          id: scd41_rh_raw
+          internal: true    # ditto - the ENV.III is the honest source
+
+      - platform: sht3xd          # ENV.III half one
+        i2c_id: bus_a
+        address: 0x44
+        update_interval: 30s
+        temperature:
+          id: env3_temp_raw
+          internal: true
+          filters: [ offset: 0.0 ]        # trim against a reference thermometer
+          on_value:
+            then:
+              - globals.set: { id: last_env3_temp, value: !lambda "return x;" }
+        humidity:
+          id: env3_rh_raw
+          internal: true
+          filters:
+            - offset: 0.0
+            - clamp: { min_value: 0, max_value: 100 }
+          on_value:
+            then:
+              - globals.set: { id: last_env3_rh, value: !lambda "return x;" }
+
+      - platform: qmp6988         # ENV.III half two - 0x70, watch for mux clash
+        i2c_id: bus_a
+        address: 0x70
+        update_interval: 30s
+        pressure:
+          id: env3_pressure_raw
+          internal: true
+          on_value:
+            then:
+              - globals.set: { id: last_env3_pressure, value: !lambda "return x;" }
+
+      # Feeds the SCD41's pressure compensation. Free accuracy, usually skipped.
+      - platform: template
+        id: ambient_pressure_mbar
+        internal: true
+        unit_of_measurement: "hPa"
+        accuracy_decimals: 0
+        lambda: |-
+          float p = id(last_env3_pressure);
+          if (isnan(p)) return NAN;
+          if (p < 800) p = 800;
+          if (p > 1100) p = 1100;
+          return roundf(p);
+
+      - platform: bh1750
+        i2c_id: bus_a
+        address: 0x23
+        id: lux_raw
+        internal: true
+        update_interval: 10s
+        on_value:
+          then:
+            - globals.set: { id: last_lux, value: !lambda "return x;" }
+
+      # ---- Published: exactly ONE temperature and ONE humidity ----
+      - platform: template
+        name: "Temperature"
+        device_class: temperature
+        state_class: measurement
+        unit_of_measurement: "°C"
+        accuracy_decimals: 2
+        lambda: "return id(last_env3_temp);"
+
+      - platform: template
+        name: "Humidity"
+        device_class: humidity
+        state_class: measurement
+        unit_of_measurement: "%"
+        accuracy_decimals: 1
+        lambda: "return id(last_env3_rh);"
+
+      - platform: template
+        name: "CO2"
+        device_class: carbon_dioxide
+        state_class: measurement
+        unit_of_measurement: "ppm"
+        accuracy_decimals: 0
+        lambda: "return id(last_co2);"
+
+      # VPD computed on the device, so it survives a Home Assistant restart.
+      - platform: template
+        name: "VPD"
+        state_class: measurement
+        unit_of_measurement: "kPa"
+        accuracy_decimals: 2
+        lambda: |-
+          float t = id(last_env3_temp);
+          float rh = id(last_env3_rh);
+          if (isnan(t) || isnan(rh)) return NAN;
+          float svp = 0.61078 * exp((17.27 * t) / (t + 237.3));
+          return svp * (1.0 - (rh / 100.0));
+
+      # Lux is NOT PPFD. Two-point fit against a real quantum sensor under YOUR
+      # fixtures; without that this number is meaningless across spectra.
+      - platform: template
+        id: ppfd_calibrated
+        internal: true
+        lambda: |-
+          float lux = id(last_lux);
+          if (isnan(lux)) return NAN;
+          float lux1 = id(lux_cal_1).state,  ppfd1 = id(ppfd_cal_1).state;
+          float lux2 = id(lux_cal_2).state,  ppfd2 = id(ppfd_cal_2).state;
+          if (lux1 <= 0 || lux2 <= 0 || lux1 == lux2) return NAN;
+          float m = (ppfd2 - ppfd1) / (lux2 - lux1);
+          float ppfd = m * lux + (ppfd1 - m * lux1);
+          return ppfd < 0 ? 0 : ppfd;
+
+      - platform: integration
+        name: "PPFD Integral"
+        id: ppfd_integral_umol
+        sensor: ppfd_calibrated
+        time_unit: s
+        accuracy_decimals: 0
+
+      - platform: template
+        name: "DLI"
+        state_class: total_increasing
+        unit_of_measurement: "mol/m²/day"
+        accuracy_decimals: 2
+        lambda: |-
+          float umol = id(ppfd_integral_umol).state;
+          if (isnan(umol)) return NAN;
+          return umol / 1000000.0f;
+
+    button:
+      # Forced recalibration against a settable reference, since ASC is off.
+      - platform: template
+        name: "SCD41 Forced Recalibration"
+        on_press:
+          then:
+            - scd4x.perform_forced_calibration:
+                id: scd41
+                value: !lambda "return (uint16_t) id(scd41_frc_ppm).state;"

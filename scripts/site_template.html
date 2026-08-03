@@ -968,6 +968,11 @@ function renderRecipes(){
       '<tfoot><tr><td colspan="3" class="num"><b>Total'+(partial?' (priced items only)':'')+'</b></td>'+
       '<td class="num"><span class="tot">'+esc(cur?money(total,cur):total.toFixed(2))+'</span></td></tr></tfoot>'+
       '</table></div>'+
+      (r.example?'<div class="dsec" style="margin-top:12px"><h4>Copy-paste config</h4>'+
+        '<div class="codehead"><span class="note" style="margin:0">'+esc(r.example.title||'')+'</span>'+
+        '<button class="copy" data-copy="rec-'+esc(r.id)+'">Copy</button></div>'+
+        '<pre><code id="code-rec-'+esc(r.id)+'">'+esc(r.example.code)+'</code></pre>'+
+        (r.example.source?'<div class="note">'+esc(r.example.source)+'</div>':'')+'</div>':'')+
       (r.notes?'<div class="note"><b>Notes.</b> '+esc(r.notes)+'</div>':'')+
       (r.watch_out?'<div class="note" style="margin-top:6px"><div class="warnbox"><b>Watch out.</b> '+
         esc(r.watch_out)+'</div></div>':'')+'</div>';

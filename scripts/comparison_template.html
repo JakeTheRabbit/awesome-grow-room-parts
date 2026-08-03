@@ -108,6 +108,15 @@ ol.against p{margin:0;color:var(--dim);font-size:13.5px}
 .cap-monitor{color:var(--amber);border-color:rgba(176,138,48,.55);background:rgba(176,138,48,.10)}
 .cap-analytics{color:var(--blue);border-color:rgba(63,143,164,.55);background:rgba(63,143,164,.10)}
 .capnote{font-size:12.5px;color:var(--amber);margin:0 0 10px}
+.rec{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:15px;margin-bottom:12px;border-left:3px solid var(--line)}
+.rec-strong{border-left-color:var(--accent)}
+.rec-qualified{border-left-color:var(--amber)}
+.rec h3{margin:0 0 2px}
+.rec .verdict{margin:0 0 8px;font-weight:700;font-size:13.5px;color:var(--accent)}
+.rec-qualified .verdict{color:var(--amber)}
+.rec p{font-size:13.5px;color:var(--dim);margin:0 0 8px}
+.rec .caveat{color:var(--quiet);font-size:12.5px;margin-bottom:0}
 tr.grouphead td{background:var(--raised);font-size:11px;text-transform:uppercase;
   letter-spacing:.05em;color:var(--quiet);font-weight:700}
 footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 50px;
@@ -211,6 +220,21 @@ None appear in the tables above, on either side.</p>
 <p style="margin:0"><b>__AGAINST_PREAMBLE__</b></p>
 </div>
 <ol class="against">__AGAINST__</ol>
+
+<h2 id="recommend">What to actually buy</h2>
+<div class="callout amber">
+<p style="margin:0"><b>Different evidence class, read it that way.</b> __REC_CLASS__</p>
+</div>
+__RECS__
+
+<h2 id="builds">Build recipes for the DIY side</h2>
+<p>The DIY figures on this page are not hypothetical - they come from working
+configurations in the parts catalogue, including a canopy multi-sensor node
+(CO&sup2;, temperature, humidity, pressure, light, VPD, PPFD and DLI on one PoE
+node), a standalone CO&sup2; injection controller with a 60-second dead-man
+timer, and a full canopy stack that adds thermal leaf temperature and substrate
+sensing. Each carries the actual ESPHome config, scrubbed of credentials.</p>
+<p><a href="./#recipes">Browse the build recipes &rarr;</a></p>
 
 <h2 id="middle">__MIDDLE_HEAD__</h2>
 <p>__MIDDLE__</p>

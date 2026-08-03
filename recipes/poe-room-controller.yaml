@@ -1,7 +1,7 @@
 id: poe-room-controller
 name: PoE room controller (irrigation + CO2)
 summary: >-
-  The pattern the the reference facility flower rooms actually run: a wired PoE node that
+  The pattern the reference facility flower rooms actually run: a wired PoE node that
   both senses and actuates, with the flood-safety pattern mandatory on every
   output. This is the build that can move water, so it is the build that has to
   fail safe.

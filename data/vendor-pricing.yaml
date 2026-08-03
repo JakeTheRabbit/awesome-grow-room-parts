@@ -464,3 +464,81 @@ middle_path:
     Assistant over the documented API and write their own crop-steering logic.
     Pulse Grow is the natural bridge - documented self-service API, TEROS 12
     retrofit kits at $39-69, and a working free tier.
+
+# ---------------------------------------------------------------------------
+# Operator recommendations. This is a DIFFERENT class of evidence from
+# everything above: first-hand experience running this kit in production,
+# not vendor-published pricing or third-party reports. It is opinion, it is
+# labelled as opinion on the page, and it is kept separate so that it cannot
+# be mistaken for the sourced research.
+recommendations:
+  evidence_class: >-
+    First-hand operator experience from running these products in a production
+    facility. Not vendor-published, not third-party reported. Treat it as an
+    informed opinion from someone with the kit in the ground, and weigh it
+    accordingly.
+  picks:
+    - subject: Grow Sensor
+      verdict: Recommended without reservation
+      rating: strong
+      detail: >-
+        Genuinely excellent, and the one commercial product here that earns its
+        money outright. It measures the things that are hard to measure well -
+        PPFD, spectrum, DLI, leaf temperature and true leaf VPD - and it does it
+        as a calibrated instrument rather than a lux sensor with a conversion
+        factor bolted on. Getting real leaf VPD without building an MLX90640
+        node yourself is the headline: that is the number worth steering on, and
+        most builds approximate it from air temperature because the direct
+        measurement is awkward.
+      why_it_fits: >-
+        It integrates into Home Assistant, so it behaves like the rest of a DIY
+        stack rather than a walled garden - the data lands next to everything
+        else and you can build your own logic on top. There is no subscription
+        to use the sensor or the app. Combined with the no-subscription position
+        and a two-year warranty, it is the rare case where buying is simply
+        better than building: replicating calibrated spectral measurement in DIY
+        is genuinely hard, and this removes that problem for the price of a
+        mid-range part.
+      caveat: >-
+        It is still a monitor. It measures the canopy, it does not run the room
+        - pair it with a controller. And the forward-looking unknowns stand as
+        the vendor states them: premium features "may require a subscription in
+        the future", and GrowOps renewal pricing after the bundled first year is
+        not published.
+
+    - subject: METER TEROS 12 substrate probes
+      verdict: The reference standard, and worth the premium
+      rating: strong
+      detail: >-
+        The AROYA-lineage substrate probes are the best in this catalogue and
+        the ones to build around. Running both a TEROS 12 and a lower-cost
+        SDI-12 clone in the same room, side by side, the TEROS 12 is clearly the
+        better instrument - and substrate data is the one place where sensor
+        quality directly changes irrigation decisions rather than just tidying a
+        dashboard.
+      why_it_fits: >-
+        Crucially, buying the good probe does not mean buying the platform. The
+        TEROS 12 speaks SDI-12 and DDI, METER explicitly document third-party
+        logger use, and it costs a fraction of the AROYA subscription it is
+        usually sold alongside. This is the clearest instance of the pattern the
+        research found across sophisticated operators: buy the sensors, refuse
+        the platform.
+      caveat: >-
+        Factory calibration is generic. The media-specific conversion still
+        matters, and METER's own published figures make the point - plus or
+        minus 0.03 m3/m3 on the generic calibration against plus or minus
+        0.01-0.02 with a medium-specific one.
+
+    - subject: Lower-cost SDI-12 substrate probes
+      verdict: Usable, and clearly second
+      rating: qualified
+      detail: >-
+        The budget SDI-12 probes work and they are a legitimate way to get more
+        zones covered for the money. Run against a TEROS 12 in the same
+        substrate, they are the weaker instrument. If the budget only stretches
+        to good probes in some zones, put the TEROS 12 where the irrigation
+        decision is actually made and fill the rest with the cheaper ones.
+      caveat: >-
+        They need their own media-specific calibration curve, and the raw counts
+        are not comparable to a TEROS 12's. Do not mix the two in one averaged
+        zone figure.
