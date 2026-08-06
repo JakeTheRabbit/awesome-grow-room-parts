@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216 260" width="216" height="260" role="img" aria-label="THC-S RS485 soil moisture / EC / temperature probe">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#2a1f12"/>
-      <stop offset="1" stop-color="#101010"/>
+      <stop offset="0" stop-color="#2a2620"/>
+      <stop offset="1" stop-color="#1a1918"/>
     </linearGradient>
   </defs>
   <rect width="216" height="260" rx="12" fill="url(#g)"/>
   <rect x="28" y="36" width="160" height="136" rx="10" fill="#000" opacity=".22"/>
-  <rect x="98" y="52" width="20" height="64" rx="4" fill="#8a6a3a" opacity=".6"/><path d="M108 116 l14 30 h-28 z" fill="#8a6a3a" opacity=".75"/><path d="M60 140 h96" stroke="#8a6a3a" stroke-width="4" opacity=".35"/>
-  <rect x="12" y="12" width="52" height="8" rx="4" fill="#3f7fa4" opacity=".9"/>
-  <text x="108" y="182" text-anchor="middle" font-size="14" fill="#e8e8e8" font-family="ui-sans-serif,system-ui,sans-serif">THC-S RS485 soil moisture</text><text x="108" y="201" text-anchor="middle" font-size="14" fill="#e8e8e8" font-family="ui-sans-serif,system-ui,sans-serif">/ EC / temperature probe</text><text x="108" y="224" text-anchor="middle" font-size="11" fill="#9a9a9a" font-family="ui-sans-serif,system-ui,sans-serif">Generic (JXCT-class)</text>
+  <rect x="98" y="52" width="20" height="64" rx="4" fill="#9a8355" opacity=".6"/><path d="M108 116 l14 30 h-28 z" fill="#9a8355" opacity=".75"/><path d="M60 140 h96" stroke="#9a8355" stroke-width="4" opacity=".35"/>
+  <rect x="12" y="12" width="52" height="8" rx="4" fill="#4d8b9c" opacity=".9"/>
+  <text x="108" y="182" text-anchor="middle" font-size="14" fill="#c9c6bd" font-family="ui-sans-serif,system-ui,sans-serif">THC-S RS485 soil moisture</text><text x="108" y="201" text-anchor="middle" font-size="14" fill="#c9c6bd" font-family="ui-sans-serif,system-ui,sans-serif">/ EC / temperature probe</text><text x="108" y="224" text-anchor="middle" font-size="11" fill="#908d85" font-family="ui-sans-serif,system-ui,sans-serif">Generic (JXCT-class)</text>
 </svg>

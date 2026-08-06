@@ -21,29 +21,29 @@ OUT = os.path.join(ROOT, "assets", "parts")
 # Per-category colour + a simple geometric motif. Muted enough to sit behind
 # the part name without fighting it.
 STYLE = {
-    "Air quality & CO2":        ("#2f8f6f", "#0f2f26", "waves"),
-    "Substrate sensing":        ("#8a6a3a", "#2a1f12", "probe"),
-    "Water & fertigation":      ("#3a7fa8", "#0f2430", "drop"),
-    "Thermal & optical":        ("#b5563f", "#2e1410", "grid"),
-    "Light measurement":        ("#b59a3f", "#2e2610", "rays"),
-    "Controllers & boards":     ("#5a6a8a", "#161c28", "chip"),
-    "Networking & power":       ("#4a7a8a", "#12242a", "chip"),
-    "Actuation & relays":       ("#8a4a6a", "#2a1220", "relay"),
-    "Access control & presence": ("#6a5a8a", "#1c1628", "wave-arc"),
-    "Displays & HMI":           ("#4a8a7a", "#122622", "screen"),
-    "Bus infrastructure":       ("#7a7a4a", "#232312", "bus"),
-    "Irrigation hardware":      ("#3a8a5a", "#102618", "drop"),
-    "Energy monitoring":        ("#8a7a3a", "#282212", "bolt"),
-    "Climate control":          ("#5a8aa8", "#16242e", "waves"),
-    "Gas & leak detection":     ("#a8763a", "#2e1e10", "waves"),
+    "Air quality & CO2":        ("#4f9b6f", "#232a26", "waves"),
+    "Substrate sensing":        ("#9a8355", "#2a2620", "probe"),
+    "Water & fertigation":      ("#4d8b9c", "#212a2d", "drop"),
+    "Thermal & optical":        ("#a86a58", "#2c2320", "grid"),
+    "Light measurement":        ("#a8863c", "#2b2822", "rays"),
+    "Controllers & boards":     ("#77839c", "#242528", "chip"),
+    "Networking & power":       ("#6a8a94", "#22272a", "chip"),
+    "Actuation & relays":       ("#9c6a80", "#2a2326", "relay"),
+    "Access control & presence": ("#8a7a9c", "#262428", "wave-arc"),
+    "Displays & HMI":           ("#6a9c8e", "#222826", "screen"),
+    "Bus infrastructure":       ("#8d8d63", "#282720", "bus"),
+    "Irrigation hardware":      ("#5f9b78", "#222823", "drop"),
+    "Energy monitoring":        ("#9c8d5f", "#2a2822", "bolt"),
+    "Climate control":          ("#7a9cae", "#24272b", "waves"),
+    "Gas & leak detection":     ("#b0895c", "#2c2822", "waves"),
 }
-DEFAULT = ("#6a6a6a", "#1e1e1e", "chip")
+DEFAULT = ("#8a8880", "#262624", "chip")
 
 TIER_BADGE = {
-    "field-proven": "#3fa46a",
-    "works":        "#3f7fa4",
-    "experimental": "#b08a30",
-    "avoid":        "#b04a4a",
+    "field-proven": "#4f9b6f",
+    "works":        "#4d8b9c",
+    "experimental": "#a8863c",
+    "avoid":        "#a85a54",
 }
 
 
@@ -124,17 +124,17 @@ def build(part):
     lines = wrap(part.get("name", part["id"]), 26, 3)
     label = "".join(
         f'<text x="108" y="{182 + i*19}" text-anchor="middle" font-size="14" '
-        f'fill="#e8e8e8" font-family="ui-sans-serif,system-ui,sans-serif">{esc(l)}</text>'
+        f'fill="#c9c6bd" font-family="ui-sans-serif,system-ui,sans-serif">{esc(l)}</text>'
         for i, l in enumerate(lines))
     maker = esc((part.get("manufacturer") or "")[:30])
     maker_el = (f'<text x="108" y="{182 + len(lines)*19 + 4}" text-anchor="middle" font-size="11" '
-                f'fill="#9a9a9a" font-family="ui-sans-serif,system-ui,sans-serif">{maker}</text>'
+                f'fill="#908d85" font-family="ui-sans-serif,system-ui,sans-serif">{maker}</text>'
                 if maker else "")
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216 260" width="216" height="260" role="img" aria-label="{esc(part.get('name', part['id']))}">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="{bg}"/>
-      <stop offset="1" stop-color="#101010"/>
+      <stop offset="1" stop-color="#1a1918"/>
     </linearGradient>
   </defs>
   <rect width="216" height="260" rx="12" fill="url(#g)"/>

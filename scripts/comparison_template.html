@@ -7,17 +7,18 @@
 <meta name="description" content="Sourced cost comparison of AROYA, Growlink, TrolMaster, Pulse and Argus against a DIY build, with an interactive break-even calculator. Every figure carries its confidence level and source.">
 <style>
 :root{
-  --bg:#0d0f0e; --surface:#141817; --raised:#1b201e; --line:#2a312e;
-  --ink:#e6ebe8; --dim:#98a49e; --quiet:#6b7772;
-  --accent:#4ea87a; --accent-ink:#0d0f0e; --tint:rgba(78,168,122,.09);
-  --warn:#b04a4a; --amber:#b08a30; --blue:#3f8fa4;
+  --bg:#1f1e1d; --surface:#262624; --raised:#2f2e2c; --line:#3b3a37;
+  --ink:#c9c6bd; --dim:#9d9a90; --quiet:#908d85;
+  --accent:#5fa87e; --accent-ink:#1a1918; --tint:rgba(95,168,126,.10);
+  --warn:#a85a54; --amber:#a8863c; --blue:#4d8b9c;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
   --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
 :root[data-theme="light"]{
-  --bg:#f6f8f7; --surface:#fff; --raised:#eef2f0; --line:#dde4e0;
-  --ink:#16201c; --dim:#5a6862; --quiet:#8a968f; --accent-ink:#fff;
-  --tint:rgba(78,168,122,.10);
+  --accent:#2f7a54;
+  --bg:#faf9f5; --surface:#ffffff; --raised:#f0eee6; --line:#dedbd0;
+  --ink:#3d3d3a; --dim:#63615a; --quiet:#706e6b; --accent-ink:#fff;
+  --tint:rgba(95,168,126,.12);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -47,20 +48,20 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .tablewrap{border:1px solid var(--line);border-radius:9px;overflow-x:auto}
 .tag{font-family:var(--mono);font-size:10.5px;padding:1px 4px;border-radius:4px;
   border:1px solid var(--line);color:var(--quiet);cursor:help;vertical-align:1px}
-.tag-a{color:var(--accent);border-color:rgba(78,168,122,.5)}
-.tag-b{color:var(--blue);border-color:rgba(63,143,164,.5)}
-.tag-c{color:var(--amber);border-color:rgba(176,138,48,.5)}
-.tag-d{color:var(--warn);border-color:rgba(176,74,74,.55)}
+.tag-a{color:var(--accent);border-color:rgba(95,168,126,.5)}
+.tag-b{color:var(--blue);border-color:rgba(77,139,156,.5)}
+.tag-c{color:var(--amber);border-color:rgba(168,134,60,.5)}
+.tag-d{color:var(--warn);border-color:rgba(168,90,84,.55)}
 .conf{font-size:10px;padding:1px 6px;border-radius:9px;font-weight:700;letter-spacing:.03em;
   border:1px solid var(--line);color:var(--quiet);cursor:help}
-.conf-high{color:var(--accent);border-color:rgba(78,168,122,.5)}
-.conf-medium{color:var(--amber);border-color:rgba(176,138,48,.55);background:rgba(176,138,48,.09)}
-.conf-low{color:var(--warn);border-color:rgba(176,74,74,.5)}
+.conf-high{color:var(--accent);border-color:rgba(95,168,126,.5)}
+.conf-medium{color:var(--amber);border-color:rgba(168,134,60,.55);background:rgba(168,134,60,.09)}
+.conf-low{color:var(--warn);border-color:rgba(168,90,84,.5)}
 .note{font-size:12px;color:var(--quiet);margin-top:4px}
 .callout{border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--surface);
   border-radius:0 9px 9px 0;padding:14px 16px;margin:16px 0}
-.callout.warn{border-left-color:var(--warn);background:rgba(176,74,74,.07)}
-.callout.amber{border-left-color:var(--amber);background:rgba(176,138,48,.07)}
+.callout.warn{border-left-color:var(--warn);background:rgba(168,90,84,.07)}
+.callout.amber{border-left-color:var(--amber);background:rgba(168,134,60,.07)}
 .callout h3{margin-top:0}
 /* calculator */
 .calc{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:16px;margin:14px 0}
@@ -72,7 +73,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 select{background:var(--raised);border:1px solid var(--line);color:var(--ink);
   padding:6px 9px;border-radius:7px;font-family:var(--sans);font-size:13px}
 .headline{font-size:15px;line-height:1.5;padding:12px 14px;background:var(--tint);
-  border:1px solid rgba(78,168,122,.35);border-radius:9px;margin-bottom:12px}
+  border:1px solid rgba(95,168,126,.35);border-radius:9px;margin-bottom:12px}
 .headline b{color:var(--accent)}
 .bar{height:9px;border-radius:5px;background:var(--raised);overflow:hidden;min-width:70px}
 .bar i{display:block;height:100%;background:var(--accent)}
@@ -104,9 +105,9 @@ ol.against p{margin:0;color:var(--dim);font-size:13.5px}
    cost table that ranks them together implies they are. */
 .cap{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
   padding:2px 7px;border-radius:9px;border:1px solid var(--line);color:var(--quiet);vertical-align:2px}
-.cap-control{color:var(--accent);border-color:rgba(78,168,122,.55);background:rgba(78,168,122,.10)}
-.cap-monitor{color:var(--amber);border-color:rgba(176,138,48,.55);background:rgba(176,138,48,.10)}
-.cap-analytics{color:var(--blue);border-color:rgba(63,143,164,.55);background:rgba(63,143,164,.10)}
+.cap-control{color:var(--accent);border-color:rgba(95,168,126,.55);background:rgba(95,168,126,.10)}
+.cap-monitor{color:var(--amber);border-color:rgba(168,134,60,.55);background:rgba(168,134,60,.10)}
+.cap-analytics{color:var(--blue);border-color:rgba(77,139,156,.55);background:rgba(77,139,156,.10)}
 .capnote{font-size:12.5px;color:var(--amber);margin:0 0 10px}
 .rec{background:var(--surface);border:1px solid var(--line);border-radius:10px;
   padding:15px;margin-bottom:12px;border-left:3px solid var(--line)}
@@ -398,7 +399,7 @@ function drawChart(rows, D, years, max){
   const W=svg.clientWidth||880, H=250, pad={l:52,r:10,t:10,b:24};
   const x=y=>pad.l+(y/years)*(W-pad.l-pad.r);
   const yy=v=>H-pad.b-(v/max)*(H-pad.t-pad.b);
-  const colors=['#4ea87a','#3f8fa4','#b08a30','#b04a4a','#8a6a9a','#7a8a4a'];
+  const colors=['#5fa87e','#4d8b9c','#a8863c','#a85a54','#8a7a9c','#869154'];
   let s='';
   // axes
   for(let i=0;i<=4;i++){
@@ -414,8 +415,8 @@ function drawChart(rows, D, years, max){
     for(let t=0;t<=years;t++) d+=(t?' L':'M')+x(t)+' '+yy(o.hw+o.rec*t);
     return `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}"/>`;
   };
-  s+=line(D,'#4ea87a',3);
-  let legend=`<span><i style="background:#4ea87a"></i>DIY</span>`;
+  s+=line(D,'#5fa87e',3);
+  let legend=`<span><i style="background:#5fa87e"></i>DIY</span>`;
   rows.forEach((r,i)=>{
     const c=colors[(i+1)%colors.length];
     s+=line(r.V,c,1.8);

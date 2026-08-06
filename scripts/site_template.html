@@ -12,10 +12,10 @@
    breakpoint that turns rows into stacked label/value cards rather than a
    horizontally scrolling mess. */
 :root{
-  --bg:#0d0f0e; --surface:#141817; --raised:#1b201e; --line:#2a312e;
-  --ink:#e6ebe8; --dim:#98a49e; --quiet:#6b7772;
-  --accent:#4ea87a; --accent-ink:#0d0f0e; --tint:rgba(78,168,122,.09);
-  --t-proven:#3fa46a; --t-works:#3f8fa4; --t-exp:#b08a30; --t-avoid:#b04a4a;
+  --bg:#1f1e1d; --surface:#262624; --raised:#2f2e2c; --line:#3b3a37;
+  --ink:#c9c6bd; --dim:#9d9a90; --quiet:#908d85;
+  --accent:#5fa87e; --accent-ink:#1a1918; --tint:rgba(95,168,126,.10);
+  --t-proven:#4f9b6f; --t-works:#4d8b9c; --t-exp:#a8863c; --t-avoid:#a85a54;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
   --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   /* Density. Compact is the default so a 1080p screen clears 25 rows. */
@@ -25,9 +25,10 @@
 /* Third step: bigger rows really do mean bigger icons, which is the point. */
 :root[data-density="large"]{ --row-pad:9px; --thumb:64px; --cell-fs:14px; }
 :root[data-theme="light"]{
-  --bg:#f6f8f7; --surface:#fff; --raised:#eef2f0; --line:#dde4e0;
-  --ink:#16201c; --dim:#5a6862; --quiet:#8a968f; --accent-ink:#fff;
-  --tint:rgba(78,168,122,.10);
+  --accent:#2f7a54;
+  --bg:#faf9f5; --surface:#ffffff; --raised:#f0eee6; --line:#dedbd0;
+  --ink:#3d3d3a; --dim:#63615a; --quiet:#706e6b; --accent-ink:#fff;
+  --tint:rgba(95,168,126,.12);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%}
@@ -145,8 +146,8 @@ code,.mono{font-family:var(--mono);font-size:11.5px}
    estimate is a guess. Anyone budgeting a build needs to tell them apart. */
 .psrc{font-size:9.5px;padding:0 4px;border-radius:8px;margin-left:4px;
   border:1px solid var(--line);color:var(--quiet);cursor:help;vertical-align:1px}
-.psrc.receipt,.psrc.invoice{background:rgba(63,164,106,.16);border-color:rgba(63,164,106,.5);color:var(--t-proven)}
-.psrc.listing{background:rgba(63,143,164,.14);border-color:rgba(63,143,164,.45);color:var(--t-works)}
+.psrc.receipt,.psrc.invoice{background:rgba(79,155,111,.16);border-color:rgba(79,155,111,.5);color:var(--t-proven)}
+.psrc.listing{background:rgba(77,139,156,.14);border-color:rgba(77,139,156,.45);color:var(--t-works)}
 .psrc.estimate{background:transparent}
 #fxnote{color:var(--quiet)}
 #fxnote code{color:var(--dim)}
@@ -168,7 +169,7 @@ tr.drawer>td{padding:0;max-width:none;white-space:normal;background:var(--surfac
 .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
 .dsec ul{margin:0;padding-left:16px;font-size:12.5px}
 .dsec li{margin-bottom:3px}
-.warnbox{background:rgba(176,74,74,.12);border:1px solid rgba(176,74,74,.4);
+.warnbox{background:rgba(168,90,84,.12);border:1px solid rgba(168,90,84,.4);
   border-radius:6px;padding:8px 10px;font-size:12.5px}
 .vend{display:flex;justify-content:space-between;gap:8px;padding:5px 8px;background:var(--raised);
   border:1px solid var(--line);border-radius:5px;margin-bottom:4px;font-size:12.5px;flex-wrap:wrap}
@@ -199,7 +200,7 @@ pre{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:
 .lede{color:var(--dim);font-size:13px;max-width:72ch;margin:0 0 16px}
 .bordered{border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .bordered thead{position:static;background:var(--raised)}
-tr.collide td{background:rgba(176,74,74,.13)}
+tr.collide td{background:rgba(168,90,84,.13)}
 .badge-collide{background:var(--t-avoid);color:#fff;font-size:10px;padding:1px 6px;
   border-radius:9px;font-weight:700}
 .badge-ok{color:var(--quiet);font-size:11px}

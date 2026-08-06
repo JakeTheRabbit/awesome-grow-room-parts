@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216 260" width="216" height="260" role="img" aria-label="WT32-ETH01 (ESP32 + LAN8720 Ethernet)">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#161c28"/>
-      <stop offset="1" stop-color="#101010"/>
+      <stop offset="0" stop-color="#242528"/>
+      <stop offset="1" stop-color="#1a1918"/>
     </linearGradient>
   </defs>
   <rect width="216" height="260" rx="12" fill="url(#g)"/>
   <rect x="28" y="36" width="160" height="136" rx="10" fill="#000" opacity=".22"/>
-  <rect x="66" y="66" width="84" height="76" rx="8" stroke="#5a6a8a" stroke-width="4" fill="none" opacity=".7"/><circle cx="80" cy="80" r="5" fill="#5a6a8a" opacity=".8"/><rect x="56" y="56" width="8" height="10" fill="#5a6a8a" opacity=".55"/><rect x="56" y="142" width="8" height="10" fill="#5a6a8a" opacity=".55"/><rect x="74" y="56" width="8" height="10" fill="#5a6a8a" opacity=".55"/><rect x="74" y="142" width="8" height="10" fill="#5a6a8a" opacity=".55"/><rect x="92" y="56" width="8" height="10" fill="#5a6a8a" opacity=".55"/><rect x="92" y="142" width="8" height="10" fill="#5a6a8a" opacity=".55"/><rect x="110" y="56" width="8" height="10" fill="#5a6a8a" opacity=".55"/><rect x="110" y="142" width="8" height="10" fill="#5a6a8a" opacity=".55"/><rect x="128" y="56" width="8" height="10" fill="#5a6a8a" opacity=".55"/><rect x="128" y="142" width="8" height="10" fill="#5a6a8a" opacity=".55"/><rect x="146" y="56" width="8" height="10" fill="#5a6a8a" opacity=".55"/><rect x="146" y="142" width="8" height="10" fill="#5a6a8a" opacity=".55"/>
-  <rect x="12" y="12" width="52" height="8" rx="4" fill="#3f7fa4" opacity=".9"/>
-  <text x="108" y="182" text-anchor="middle" font-size="14" fill="#e8e8e8" font-family="ui-sans-serif,system-ui,sans-serif">WT32-ETH01 (ESP32 +</text><text x="108" y="201" text-anchor="middle" font-size="14" fill="#e8e8e8" font-family="ui-sans-serif,system-ui,sans-serif">LAN8720 Ethernet)</text><text x="108" y="224" text-anchor="middle" font-size="11" fill="#9a9a9a" font-family="ui-sans-serif,system-ui,sans-serif">Wireless-Tag</text>
+  <rect x="66" y="66" width="84" height="76" rx="8" stroke="#77839c" stroke-width="4" fill="none" opacity=".7"/><circle cx="80" cy="80" r="5" fill="#77839c" opacity=".8"/><rect x="56" y="56" width="8" height="10" fill="#77839c" opacity=".55"/><rect x="56" y="142" width="8" height="10" fill="#77839c" opacity=".55"/><rect x="74" y="56" width="8" height="10" fill="#77839c" opacity=".55"/><rect x="74" y="142" width="8" height="10" fill="#77839c" opacity=".55"/><rect x="92" y="56" width="8" height="10" fill="#77839c" opacity=".55"/><rect x="92" y="142" width="8" height="10" fill="#77839c" opacity=".55"/><rect x="110" y="56" width="8" height="10" fill="#77839c" opacity=".55"/><rect x="110" y="142" width="8" height="10" fill="#77839c" opacity=".55"/><rect x="128" y="56" width="8" height="10" fill="#77839c" opacity=".55"/><rect x="128" y="142" width="8" height="10" fill="#77839c" opacity=".55"/><rect x="146" y="56" width="8" height="10" fill="#77839c" opacity=".55"/><rect x="146" y="142" width="8" height="10" fill="#77839c" opacity=".55"/>
+  <rect x="12" y="12" width="52" height="8" rx="4" fill="#4d8b9c" opacity=".9"/>
+  <text x="108" y="182" text-anchor="middle" font-size="14" fill="#c9c6bd" font-family="ui-sans-serif,system-ui,sans-serif">WT32-ETH01 (ESP32 +</text><text x="108" y="201" text-anchor="middle" font-size="14" fill="#c9c6bd" font-family="ui-sans-serif,system-ui,sans-serif">LAN8720 Ethernet)</text><text x="108" y="224" text-anchor="middle" font-size="11" fill="#908d85" font-family="ui-sans-serif,system-ui,sans-serif">Wireless-Tag</text>
 </svg>
