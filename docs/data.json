@@ -925,6 +925,73 @@
       ]
     },
     {
+      "id": "co2-regulator-solenoid",
+      "name": "CO2 cylinder regulator, flowmeter and mains solenoid set",
+      "manufacturer": "Generic / Growshop NZ",
+      "part_numbers": [
+        "CO1000"
+      ],
+      "category": "Climate control",
+      "subcategory": "CO2 injection regulator and electrically operated shutoff",
+      "bus": [
+        "Mains"
+      ],
+      "voltage": {
+        "nominal": 230.0,
+        "note": "The listed NZ set uses a 230 V solenoid with a local three-pin plug. The regulator and flowmeter are mechanical."
+      },
+      "price": {
+        "band": "$$",
+        "observed": 149.0,
+        "source": "listing",
+        "currency": "NZD",
+        "observed_date": "2026-08-09"
+      },
+      "vendors": [
+        {
+          "name": "Growshop NZ CO2 regulator and solenoid set",
+          "url": "https://growshop.co.nz/products/co2regulatorsolenoidset",
+          "part_number": "CO1000",
+          "region": "NZ"
+        }
+      ],
+      "ip_rating": "unknown",
+      "calibration_required": "factory",
+      "quality_tier": "works",
+      "evidence": "HAGR identifies this regulator and solenoid set as the unit in use. The current vendor listing confirms a 0-15 SCFH flowmeter, 0-4000 psi high-pressure gauge, 230 V solenoid, 4.2 mm hose tail and NZ hire-cylinder coupling. The regulator is not represented in ESPHome, so it is rated works rather than field-proven.",
+      "failure_modes": [
+        "A solenoid stuck open can displace oxygen in an enclosed room. Use an independent CO2 alarm, occupancy and ventilation interlocks, and a short device-level dead-man timer. Home Assistant alone is not a life-safety controller.",
+        "Cylinder pressure does not report remaining liquid CO2 reliably; pressure stays nearly flat until the liquid is gone. Weigh the cylinder if remaining capacity matters.",
+        "Cylinder valve threads vary by country and gas supplier. Confirm the coupling matches the actual cylinder before ordering.",
+        "The listing gives no ingress rating for the solenoid. Keep the mains assembly dry and outside spray or condensation paths.",
+        "High sustained flow can chill or ice the regulator and change delivered flow. Size tubing and injection bursts rather than leaving the valve continuously energised."
+      ],
+      "notes": "The safe automation pattern is deliberately fail-closed. Restore outputs off after reboot, de-energise on network loss, cap every injection burst locally, and treat the room CO2 alarm as independent hardware. The flowmeter sets an approximate delivery rate; the SCD41 closes the control loop on measured room concentration.",
+      "platforms": [
+        "Home Assistant",
+        "Standalone"
+      ],
+      "works_with": [
+        "ssr-25da",
+        "sensirion-scd41",
+        "hx711-adc",
+        "load-cell-50kg"
+      ],
+      "image": "assets/parts/co2-regulator-solenoid.svg",
+      "use_cases": [
+        "bottled CO2 injection",
+        "grow-room CO2 enrichment"
+      ],
+      "tags": [
+        "co2",
+        "regulator",
+        "solenoid",
+        "climate-control",
+        "safety",
+        "mains"
+      ]
+    },
+    {
       "id": "cwt-bl-ec-4400",
       "name": "ComWinTop CWT-BL-EC-4400-S inline EC sensor",
       "manufacturer": "ComWinTop",
@@ -2726,6 +2793,89 @@
         "sdi12-host"
       ],
       "image_large": "assets/parts/m5stack-atom-lite-lg.png"
+    },
+    {
+      "id": "m5stack-atom-pwm",
+      "name": "M5Stack Atom PWM DC driver",
+      "manufacturer": "M5Stack",
+      "part_numbers": [
+        "K065",
+        "Atom PWM"
+      ],
+      "category": "Actuation & relays",
+      "subcategory": "Single-channel MOSFET PWM base with Atom Lite controller",
+      "bus": [
+        "PWM",
+        "GPIO",
+        "WiFi"
+      ],
+      "voltage": {
+        "min": 12.0,
+        "max": 24.0,
+        "nominal": 12.0,
+        "logic": 3.3,
+        "note": "The base accepts 12-24 V DC and M5Stack rates its switched output to 100 W maximum. GPIO22 drives the onboard PWM stage."
+      },
+      "price": {
+        "band": "$$"
+      },
+      "vendors": [],
+      "ip_rating": "none",
+      "calibration_required": "none",
+      "quality_tier": "works",
+      "deployment_count": 1,
+      "deployment_evidence": [
+        "pwm_led_lights.yaml"
+      ],
+      "evidence": "One HAGR ESPHome config drives the Atom PWM on GPIO22 at 1 kHz and exposes it as a monochromatic Home Assistant light. M5Stack documentation identifies the current product as Atom PWM K065 and confirms the GPIO22 pin map, 12-24 V input and 100 W MOSFET output.",
+      "failure_modes": [
+        "This is a low-side DC MOSFET driver, not an isolated 0-10 V lighting interface. Do not connect it to an unknown dimming pair until the driver manual confirms PWM or contact-closure compatibility and a safe common reference.",
+        "The 100 W rating is for a DC load under suitable thermal conditions. It is not permission to switch a grow light's mains input or full LED-driver output.",
+        "A shared ground can import noise or fault voltage from a lighting driver into the ESP32. Use an opto-isolated interface when the driver's dimming input is not explicitly SELV and common-ground safe.",
+        "PWM polarity differs between drivers. An inverted output can make 0 percent command full brightness; verify the off state before connecting the crop light.",
+        "WiFi loss must not leave a light at an unsafe state. Pair the dimming channel with a hard photoperiod cutoff or contactor that does not depend on this node."
+      ],
+      "notes": "Use this only on the low-voltage control side of a compatible driver. The HAGR example uses ESPHome LEDC at 1 kHz with inverted output. Confirm frequency, polarity and electrical interface against the exact lighting-driver datasheet before copying it.",
+      "drivers": [
+        {
+          "name": "M5Stack Atom PWM documentation",
+          "url": "https://docs.m5stack.com/en/atom/atom_pwm",
+          "kind": "manual"
+        },
+        {
+          "name": "ESPHome LEDC output",
+          "url": "https://esphome.io/components/output/ledc.html",
+          "kind": "esphome-core"
+        }
+      ],
+      "platforms": [
+        "ESPHome",
+        "Home Assistant",
+        "Arduino",
+        "M5Stack"
+      ],
+      "works_with": [
+        "m5stack-atom-lite"
+      ],
+      "image": "assets/parts/m5stack-atom-pwm.svg",
+      "use_cases": [
+        "compatible low-voltage LED-driver dimming",
+        "DC load PWM control"
+      ],
+      "example": {
+        "lang": "yaml",
+        "title": "Atom PWM exposed as a Home Assistant light",
+        "source": "distilled from HAGR esphome/pwm_led_lights.yaml",
+        "code": "output:\n  - platform: ledc\n    pin: GPIO22\n    frequency: 1000 Hz\n    id: grow_light_pwm\n    inverted: true  # verify this against the exact driver before use\n\nlight:\n  - platform: monochromatic\n    name: \"Grow light PWM\"\n    output: grow_light_pwm\n    gamma_correct: 1.0\n"
+      },
+      "tags": [
+        "pwm",
+        "lighting",
+        "m5stack",
+        "mosfet",
+        "dimming",
+        "safety"
+      ]
     },
     {
       "id": "m5stack-atoms3-lite",
@@ -5581,6 +5731,75 @@
       ]
     },
     {
+      "id": "tp-link-kasa-kp303",
+      "name": "TP-Link Kasa KP303 three-outlet smart power strip",
+      "manufacturer": "TP-Link",
+      "part_numbers": [
+        "KP303"
+      ],
+      "category": "Networking & power",
+      "subcategory": "Three-outlet WiFi power strip",
+      "bus": [
+        "WiFi",
+        "Mains"
+      ],
+      "voltage": {
+        "nominal": 240.0,
+        "note": "AU/NZ version is rated 240 V, 10 A and 2400 W total. Ratings and plug types differ by region; use only the local certified version."
+      },
+      "price": {
+        "band": "$$"
+      },
+      "vendors": [
+        {
+          "name": "TP-Link KP303 product page",
+          "url": "https://www.tp-link.com/au/home-networking/smart-plug/kp303/",
+          "part_number": "KP303",
+          "region": "AU/NZ"
+        }
+      ],
+      "ip_rating": "none",
+      "calibration_required": "none",
+      "quality_tier": "works",
+      "evidence": "HAGR identifies the KP303 as the smart strip in use. TP-Link documents three independently controlled outlets, two always-on USB ports, 2.4 GHz WiFi and a 10 A / 2400 W total rating for the AU version. Home Assistant's official TP-Link integration explicitly lists KP303 power-strip support and uses local polling.",
+      "failure_modes": [
+        "Indoor-only and not moisture rated. Do not mount it in spray, runoff, floor-level flood or heavy-condensation zones.",
+        "The current limit is shared across all three outlets. Three individually controlled sockets do not provide three times the strip's total rating.",
+        "Relays can weld closed under motors, compressors, heaters and other high-inrush loads. Use the strip for modest loads or contactor coils, not as the final safety disconnect for critical equipment.",
+        "The two USB ports are always energised and cannot be switched individually.",
+        "Newer firmware may require TP-Link account credentials for local authentication. Provision and verify Home Assistant control before depending on an automation."
+      ],
+      "notes": "Useful for lamps, small fans and humidifiers where three independent Home Assistant switch entities are convenient. It is not a wet-location power distribution unit, a motor contactor, or an emergency cutoff.",
+      "drivers": [
+        {
+          "name": "Home Assistant TP-Link Smart Home integration",
+          "url": "https://www.home-assistant.io/integrations/tplink/",
+          "kind": "manual"
+        },
+        {
+          "name": "TP-Link KP303 documentation",
+          "url": "https://www.tp-link.com/au/home-networking/smart-plug/kp303/",
+          "kind": "manual"
+        }
+      ],
+      "platforms": [
+        "Home Assistant",
+        "Standalone"
+      ],
+      "image": "assets/parts/tp-link-kasa-kp303.svg",
+      "use_cases": [
+        "small environmental loads",
+        "independent switching of three outlets"
+      ],
+      "tags": [
+        "smart-plug",
+        "power-strip",
+        "wifi",
+        "kasa",
+        "home-assistant"
+      ]
+    },
+    {
       "id": "transformer-24vac",
       "name": "240 V to 24 VAC 150 VA transformer",
       "manufacturer": "generic (toroidal / EI lighting transformer)",
@@ -6124,6 +6343,11 @@
       "estimated_build_time": "2 hours plus electrical",
       "network": "WiFi, with de-energise on disconnect",
       "items": [
+        {
+          "part": "co2-regulator-solenoid",
+          "qty": 2,
+          "role": "One cylinder regulator, flowmeter and normally-closed injection solenoid per tank."
+        },
         {
           "part": "ssr-25da",
           "qty": 2,

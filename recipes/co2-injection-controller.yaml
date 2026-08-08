@@ -9,6 +9,9 @@ skill_level: intermediate
 estimated_build_time: 2 hours plus electrical
 network: WiFi, with de-energise on disconnect
 items:
+  - part: co2-regulator-solenoid
+    qty: 2
+    role: One cylinder regulator, flowmeter and normally-closed injection solenoid per tank.
   - part: ssr-25da
     qty: 2
     role: One per CO2 tank solenoid, driven straight off a GPIO.

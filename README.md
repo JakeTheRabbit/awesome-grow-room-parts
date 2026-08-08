@@ -152,7 +152,7 @@ python scripts/check_links.py     # vendor/driver link rot
 
 <!-- AUTOGEN:PARTS START -->
 
-_66 parts. Generated from `parts/*.yaml` by `scripts/gen_readme.py` — edit the YAML, not this table._
+_69 parts. Generated from `parts/*.yaml` by `scripts/gen_readme.py` — edit the YAML, not this table._
 
 _Prices: each part records **one** price - what was actually paid, in the currency it was paid in. Figures marked `~` are **derived, not quoted**, converted at `1 NZD = 0.5879 USD` (rate date 2026-08-01; see [`data/fx.yaml`](data/fx.yaml)). Rates move, so treat the band as the durable signal. Parts with no observed price show a band only. `^r` = from a purchase receipt (what was actually paid); `^l` = a vendor listing; unmarked = an estimate._
 
@@ -215,6 +215,7 @@ Documented dead ends. Listed so nobody repeats the work.
 |---|---|---:|---|---|---|
 | [M5Stack 4-Relay Unit](parts/m5stack-4relay.yaml) | **field-proven** | 18 | I2C/Grove | 0x26 | NZ$22.72 (~US$13.36) ^r |
 | [SSR-25DA solid state relay](parts/ssr-25da.yaml) | **field-proven** | 8 | GPIO |  | NZ$18.00 (~US$10.58) |
+| [M5Stack Atom PWM DC driver](parts/m5stack-atom-pwm.yaml) | works | 1 | PWM/GPIO/WiFi |  | $$ |
 | [M5Stack 2-channel SPST relay unit](parts/m5stack-2ch-relay.yaml) | works |  | I2C/Grove | 0x25 | NZ$24.75 (~US$14.55) ^l |
 | [KinCony F16 16-channel relay controller](parts/kincony-f16-relay.yaml) | experimental | 1 | Ethernet/RS485/Modbus/I2C | 0x24 | NZ$210.00 (~US$123.46) |
 
@@ -244,6 +245,12 @@ Documented dead ends. Listed so nobody repeats the work.
 | [PCF8563 real-time clock](parts/pcf8563-rtc.yaml) | **field-proven** | 13 | I2C | 0x51 | NZ$6.00 (~US$3.53) |
 | [TCA9548A 8-channel I2C multiplexer](parts/tca9548a-mux.yaml) | **field-proven** | 9 | I2C | 0x70 | NZ$12.00 (~US$7.05) |
 | [MAX485 / SP3485 RS485-to-TTL transceiver](parts/rs485-ttl-transceiver.yaml) | works | 2 | RS485/Modbus/UART |  | NZ$8.00 (~US$4.70) |
+
+#### Climate control
+
+| Part | Tier | Live | Bus | I²C | Price |
+|---|---|---:|---|---|---|
+| [CO2 cylinder regulator, flowmeter and mains solenoid set](parts/co2-regulator-solenoid.yaml) | works |  | Mains |  | NZ$149.00 (~US$87.60) ^l |
 
 #### Controllers & boards
 
@@ -294,6 +301,7 @@ Documented dead ends. Listed so nobody repeats the work.
 |---|---|---:|---|---|---|
 | [M5Stack PoESP32 / ESP32 Ethernet unit (IP101G PHY)](parts/m5stack-poesp32.yaml) | **field-proven** | 48 | Ethernet/PoE/Grove/I2C/UART |  | NZ$65.00 (~US$38.21) |
 | [W5500 SPI Ethernet module](parts/w5500-eth-module.yaml) | works | 2 | SPI/Ethernet |  | NZ$12.00 (~US$7.05) |
+| [TP-Link Kasa KP303 three-outlet smart power strip](parts/tp-link-kasa-kp303.yaml) | works |  | WiFi/Mains |  | $$ |
 
 #### Substrate sensing
 
