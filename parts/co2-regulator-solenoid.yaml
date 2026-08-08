@@ -1,0 +1,55 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: co2-regulator-solenoid
+name: CO2 cylinder regulator, flowmeter and mains solenoid set
+manufacturer: Generic / Growshop NZ
+part_numbers:
+- CO1000
+category: Climate control
+subcategory: CO2 injection regulator and electrically operated shutoff
+bus:
+- Mains
+voltage:
+  nominal: 230.0
+  note: The listed NZ set uses a 230 V solenoid with a local three-pin plug. The regulator and flowmeter are mechanical.
+price:
+  band: $$
+  observed: 149.0
+  source: listing
+  currency: NZD
+  observed_date: '2026-08-09'
+vendors:
+- name: Growshop NZ CO2 regulator and solenoid set
+  url: https://growshop.co.nz/products/co2regulatorsolenoidset
+  part_number: CO1000
+  region: NZ
+ip_rating: unknown
+calibration_required: factory
+quality_tier: works
+evidence: HAGR identifies this regulator and solenoid set as the unit in use. The current vendor listing confirms a 0-15 SCFH flowmeter, 0-4000 psi high-pressure gauge, 230 V solenoid, 4.2 mm hose tail and NZ hire-cylinder coupling. The regulator is not represented in ESPHome, so it is rated works rather than field-proven.
+failure_modes:
+- A solenoid stuck open can displace oxygen in an enclosed room. Use an independent CO2 alarm, occupancy and ventilation interlocks, and a short device-level dead-man timer. Home Assistant alone is not a life-safety controller.
+- Cylinder pressure does not report remaining liquid CO2 reliably; pressure stays nearly flat until the liquid is gone. Weigh the cylinder if remaining capacity matters.
+- Cylinder valve threads vary by country and gas supplier. Confirm the coupling matches the actual cylinder before ordering.
+- The listing gives no ingress rating for the solenoid. Keep the mains assembly dry and outside spray or condensation paths.
+- High sustained flow can chill or ice the regulator and change delivered flow. Size tubing and injection bursts rather than leaving the valve continuously energised.
+notes: The safe automation pattern is deliberately fail-closed. Restore outputs off after reboot, de-energise on network loss, cap every injection burst locally, and treat the room CO2 alarm as independent hardware. The flowmeter sets an approximate delivery rate; the SCD41 closes the control loop on measured room concentration.
+platforms:
+- Home Assistant
+- Standalone
+works_with:
+- ssr-25da
+- sensirion-scd41
+- hx711-adc
+- load-cell-50kg
+use_cases:
+- bottled CO2 injection
+- grow-room CO2 enrichment
+image: assets/parts/co2-regulator-solenoid.svg
+tags:
+- co2
+- regulator
+- solenoid
+- climate-control
+- safety
+- mains

@@ -1,0 +1,79 @@
+# Part entry for awesome-grow-room-parts.
+# Schema: ../schema/part.schema.json  |  Validated in CI.
+id: m5stack-atom-pwm
+name: M5Stack Atom PWM DC driver
+manufacturer: M5Stack
+part_numbers:
+- K065
+- Atom PWM
+category: Actuation & relays
+subcategory: Single-channel MOSFET PWM base with Atom Lite controller
+bus:
+- PWM
+- GPIO
+- WiFi
+voltage:
+  min: 12.0
+  max: 24.0
+  nominal: 12.0
+  logic: 3.3
+  note: The base accepts 12-24 V DC and M5Stack rates its switched output to 100 W maximum. GPIO22 drives the onboard PWM stage.
+price:
+  band: $$
+vendors: []
+ip_rating: none
+calibration_required: none
+quality_tier: works
+deployment_count: 1
+deployment_evidence:
+- pwm_led_lights.yaml
+evidence: One HAGR ESPHome config drives the Atom PWM on GPIO22 at 1 kHz and exposes it as a monochromatic Home Assistant light. M5Stack documentation identifies the current product as Atom PWM K065 and confirms the GPIO22 pin map, 12-24 V input and 100 W MOSFET output.
+failure_modes:
+- This is a low-side DC MOSFET driver, not an isolated 0-10 V lighting interface. Do not connect it to an unknown dimming pair until the driver manual confirms PWM or contact-closure compatibility and a safe common reference.
+- The 100 W rating is for a DC load under suitable thermal conditions. It is not permission to switch a grow light's mains input or full LED-driver output.
+- A shared ground can import noise or fault voltage from a lighting driver into the ESP32. Use an opto-isolated interface when the driver's dimming input is not explicitly SELV and common-ground safe.
+- PWM polarity differs between drivers. An inverted output can make 0 percent command full brightness; verify the off state before connecting the crop light.
+- WiFi loss must not leave a light at an unsafe state. Pair the dimming channel with a hard photoperiod cutoff or contactor that does not depend on this node.
+notes: Use this only on the low-voltage control side of a compatible driver. The HAGR example uses ESPHome LEDC at 1 kHz with inverted output. Confirm frequency, polarity and electrical interface against the exact lighting-driver datasheet before copying it.
+drivers:
+- name: M5Stack Atom PWM documentation
+  url: https://docs.m5stack.com/en/atom/atom_pwm
+  kind: manual
+- name: ESPHome LEDC output
+  url: https://esphome.io/components/output/ledc.html
+  kind: esphome-core
+platforms:
+- ESPHome
+- Home Assistant
+- Arduino
+- M5Stack
+works_with:
+- m5stack-atom-lite
+use_cases:
+- compatible low-voltage LED-driver dimming
+- DC load PWM control
+image: assets/parts/m5stack-atom-pwm.svg
+tags:
+- pwm
+- lighting
+- m5stack
+- mosfet
+- dimming
+- safety
+example:
+  lang: yaml
+  title: Atom PWM exposed as a Home Assistant light
+  source: distilled from HAGR esphome/pwm_led_lights.yaml
+  code: |
+    output:
+      - platform: ledc
+        pin: GPIO22
+        frequency: 1000 Hz
+        id: grow_light_pwm
+        inverted: true  # verify this against the exact driver before use
+
+    light:
+      - platform: monochromatic
+        name: "Grow light PWM"
+        output: grow_light_pwm
+        gamma_correct: 1.0
